@@ -9,24 +9,32 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private Vector3 playerCenterOffset = Vector3.zero;
     [SerializeField] private float moveSpeed,moveIncrement =1;
     private Vector3 horizontal, vertical, movePoint;
-    public LayerMask obstacles,mirrorMask;
+    public LayerMask obstacles;
+    public static Transform playerTransform;
  
     private void Start()
     {
+        playerTransform = transform;
         movePoint = transform.position;
+    }
+    private void FixedUpdate()
+    {
+        PlayerMoveSnapToGrid();
     }
     private void Update()
     {
-        PlayerMoveSnapToGrid();
+        
+      
     }
 
     private void PlayerMoveSnapToGrid()
     {
         horizontal = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
         vertical = new Vector3(0f, 0f, Input.GetAxisRaw("Vertical"));
-        transform.position = Vector3.MoveTowards(transform.position, movePoint + playerCenterOffset, moveSpeed * Time.deltaTime);
+        Vector3 force = (horizontal + vertical).normalized * moveIncrement;
+        GetComponent<Rigidbody>().AddForce(  force,ForceMode.Force);
 
-        if (Vector3.Distance(transform.position, movePoint + playerCenterOffset) <= 0.05f)
+       /* if (Vector3.Distance(transform.position, movePoint + playerCenterOffset) <= 0.05f)
         {
             if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1)
             {
@@ -44,7 +52,9 @@ public class PlayerMove : MonoBehaviour
                     movePoint += vertical * moveIncrement;
                 }
             }
-        }
+
+
+        }*/
     }
 
    

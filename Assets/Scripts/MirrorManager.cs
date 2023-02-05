@@ -1,46 +1,44 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Experimental.AI;
 using System;
-using System.Diagnostics.Tracing;
+
 
 public class MirrorManager : MonoBehaviour
 {
     public Mirror mirror;
 
-    private Mirror currentMirror,hoodMirror;
+    private Mirror currentMirror;
     public LayerMask mirrorMask;
-    private Vector3 offset, futurePosition, currentPosition,closestBoundPos;
+    private Vector3 offset;
 
-    private bool hasBeenClicked = false,canDrag = true;
+    private bool hasBeenClicked = false, startDraging = false;
 
+    private Mirror[] hoodMirrors;
     public static Func<bool> OnCheckingSlidable;
-
-    private Bounds bound;
-
-    SpringJoint joint;
-
 
     private void OnEnable()
     {
+        LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
     }
     private void OnDisable()
     {
+        LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
 
-
+    }
+    void ReceiveHoodMirror(Mirror[] hoodMirror) 
+    {
+        hoodMirrors = hoodMirror;
     }
     void CheckMouseDown()
     {
 
-        if (!Input.GetMouseButton(0)) return;
+        if (!startDraging) return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit[] allHits;
         allHits = Physics.RaycastAll(ray, Mathf.Infinity, mirrorMask);
 
         Vector3 finalWorldPos = Vector3.zero;
+        Vector3 hitPoint = Vector3.zero;
         foreach (RaycastHit singleHit in allHits) 
         {
            
@@ -54,26 +52,23 @@ public class MirrorManager : MonoBehaviour
                 {
                     hasBeenClicked = true;
                     currentMirror = singleHit.transform.gameObject.GetComponent<Mirror>();
-                    bound = currentMirror. GetComponent<Collider>().bounds;
-                   // joint = new SpringJoint();
                     offset = singleHit.transform.position - singleHit.point;
-
-                     
+                    hitPoint = singleHit.point;
                 }
             }
         }
         if (currentMirror) 
         {
-            currentPosition = currentMirror.transform.position;
-            futurePosition = finalWorldPos + offset;
-            Vector3 direction = Vector3.Normalize( futurePosition - currentPosition);
-            float distance = (futurePosition - currentPosition).magnitude;
-            /*joint.connectedBody = currentMirror.GetComponent<Rigidbody>();
-            joint.autoConfigureConnectedAnchor = true;
-            joint.connectedAnchor = futurePosition;*/
-            currentMirror.GetComponent<Rigidbody>().AddForce(direction *30 * distance, ForceMode.Force);
+            Vector3 direction = Vector3.Normalize(finalWorldPos - (currentMirror.transform.position - offset));
+            float distance = (finalWorldPos - (currentMirror.transform.position - offset)).magnitude;
+            
+            currentMirror.GetComponent<Rigidbody>().AddForce(direction*50 * distance, ForceMode.Force);
 
-            //BoxCollider[] boxs = currentMirror. GetComponents<BoxCollider>();
+            foreach (Mirror m in hoodMirrors) 
+            {
+                if (currentMirror == m)
+                    return;
+            }
 
             if (OnCheckingSlidable.Invoke())
             {
@@ -85,37 +80,20 @@ public class MirrorManager : MonoBehaviour
             }
         }
     }
-
-    void CheckMouseUp() 
-    {
-        if (Input.GetMouseButtonUp(0))
-        {
-            currentMirror = null;
-            hasBeenClicked = false;
-        }
-    }
-    void Start()
-    {
-        
-    }
     private void FixedUpdate()
     {
-        if (canDrag)
-        {
             CheckMouseDown();
-
-        }
-     
-
     }
 
     void Update()
     {
-        CheckMouseUp();
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(closestBoundPos, 0.1f);
+        
+        startDraging = Input.GetMouseButton(0);
+        if (Input.GetMouseButtonUp(0))
+        {
+            currentMirror = null;
+            hasBeenClicked = false;
+            offset = Vector3.zero;
+        }
     }
 }

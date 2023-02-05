@@ -9,7 +9,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private Vector3 playerCenterOffset = Vector3.zero;
     [SerializeField] private float moveSpeed,moveIncrement =1;
     private Vector3 horizontal, vertical, movePoint;
-    public LayerMask obstacles,mirrorMask;
+    public LayerMask obstacles;
     public static Transform playerTransform;
  
     private void Start()

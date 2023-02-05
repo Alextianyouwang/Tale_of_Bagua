@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Mirror : MonoBehaviour
@@ -30,11 +28,6 @@ public class Mirror : MonoBehaviour
         {
             b.isTrigger = !value;
         }
-    }
-
-    void Update()
-    {
-        
     }
 
     private void OnTriggerExit(Collider other)

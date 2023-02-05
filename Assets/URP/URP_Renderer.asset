@@ -98,7 +98,8 @@ MonoBehaviour:
   - {fileID: 1697634699497040114}
   - {fileID: -8791808890346293534}
   - {fileID: 1765049130557389460}
-  m_RendererFeatureMap: 941e1c57a56df6a1ff37480035906048f2e8e5c5c3358f17e2b6c92d6538fd85943afc25d5b67e18
+  - {fileID: 1860806714652391004}
+  m_RendererFeatureMap: 941e1c57a56df6a1ff37480035906048f2e8e5c5c3358f17e2b6c92d6538fd85943afc25d5b67e185c768416d9e9d219
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -213,6 +214,19 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &1860806714652391004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdd64165d8c9427499c1f790eefc21e9, type: 3}
+  m_Name: DepthNormalsFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
 --- !u!114 &5215326925807433727
 MonoBehaviour:
   m_ObjectHideFlags: 0

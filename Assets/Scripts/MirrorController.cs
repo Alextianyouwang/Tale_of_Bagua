@@ -27,7 +27,9 @@ public class MirrorController : MonoBehaviour
     public int CanBeActivateAfter;
     public void OnCollisionEnter(Collision other)
     {
-        //if (CanBeActivateAfter == LayerCheck.allMirrorsOnTop) 
+
+        //print(LayerCheck.allMirrorsOnTop);
+        if (CanBeActivateAfter == LayerCheck.allMirrorsOnTop) 
         {
             if (other.gameObject.tag == "Player")
             {

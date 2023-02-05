@@ -91,6 +91,7 @@ public class LayerCheck : MonoBehaviour
         hoodMirrors = new Mirror[mirrorHits.Length];
 
         allMirrorsOnTop = allHitsMirrors.Length;
+        print(allMirrorsOnTop);
         if (allHitsMirrors.Length <= levels.Count) 
         {
             currentLevel = levels[allHitsMirrors.Length - 1];

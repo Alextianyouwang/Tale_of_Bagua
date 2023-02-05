@@ -12,8 +12,12 @@ Shader "Custom/Stencil_Add"
 			"Queue" = "Geometry"
 			"RenderPipeline" = "UniversalPipeline"
 		}
-		Blend One Zero
-			ZTest Always Cull Off ZWrite Off
+	
+        Pass
+        {
+			Blend One Zero
+			ZWrite Off
+			ColorMask 0
 
 			Stencil
 			{
@@ -22,9 +26,6 @@ Shader "Custom/Stencil_Add"
 				Pass IncrSat
 				Fail Keep
 			}
-        Pass
-        {
-			
         }
     }
 }

@@ -1,33 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MirrorController : MonoBehaviour
 {
-    public GameObject NextItem;
-    public GameObject NewMirror;
+  public GameObject NextItem;
+   // public GameObject NewMirror;
     public GameObject Panel;
-    public int CanBeEnableWhenMirroEqual;
 
+    /*    public void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.tag == "Player")
+            {
+              
+                NewMirror.SetActive(true);
+                Panel.SetActive(true);
+
+                gameObject.SetActive(false);
+
+                print("Player");
+            }
+
+
+        }*/
+
+    public int CanBeActivateAfter;
     public void OnCollisionEnter(Collision other)
     {
-        if (CanBeEnableWhenMirroEqual == LayerCheck.allMirrorOnTop)
-        if (other.gameObject.tag =="Player")
+        //if (CanBeActivateAfter == LayerCheck.allMirrorsOnTop) 
         {
-                if (LayerCheck.allMirrorOnTop == 4)
-                {
-                    SceneManager.LoadScene("Closing Cut");
-                }
-                else 
-                {
-                    NextItem.SetActive(true);
-                    NewMirror.SetActive(true);
-                    Panel.SetActive(true);
+            if (other.gameObject.tag == "Player")
+            {
+                Panel.SetActive(true);
+                NextItem.SetActive(true);
+                gameObject.SetActive(false);
 
-                    gameObject.SetActive(false);
-                }
+            }
         }
-        
+       
+
     }
 }

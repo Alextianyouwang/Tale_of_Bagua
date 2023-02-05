@@ -6,28 +6,29 @@ public class PanelController : MonoBehaviour
 {
     public GameObject[] Slides;
     int slideIndex = 0;
-    float timeCounter = 0f;
-    public float slideTime = 4f;
+    float timeCounter = 4f;
 
     private void Start()
     {
-
+        Slides[slideIndex].SetActive(true);
     }
 
     public void Update()
     {
         timeCounter -= Time.deltaTime;
+
         if(timeCounter < 0)
         {
-            Slides[slideIndex-1<0?0: slideIndex -1].SetActive(false);
-            if (slideIndex <= Slides.Length-1) 
-                Slides[slideIndex].SetActive(true);
-            if (slideIndex == Slides.Length )
-                gameObject.SetActive(false);
-
+            Slides[slideIndex].SetActive(false); 
             slideIndex++;
-            timeCounter = slideTime;
+            timeCounter = 4f;
+            Slides[slideIndex].SetActive(true);
         }
 
+        if(slideIndex >= Slides.Length-1)
+        {
+            gameObject.SetActive(false);
+            slideIndex = 0;
+        }
     }
 }

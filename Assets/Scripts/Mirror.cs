@@ -17,7 +17,7 @@ public class Mirror : MonoBehaviour
             b.isTrigger = true;
         }
     }
-
+    
     public void ToggleBoxesRigidCollider(bool value) 
     {
         if (colliderToggleState == value)

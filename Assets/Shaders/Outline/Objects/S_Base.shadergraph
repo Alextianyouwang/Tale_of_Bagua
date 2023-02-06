@@ -188,6 +188,12 @@
         },
         {
             "m_Id": "ba191fa6f01e4991b1748e53b736cfb3"
+        },
+        {
+            "m_Id": "c36f4a86af5d4b218fa81481d0b3e056"
+        },
+        {
+            "m_Id": "94fd80736913476bacf7050c6c9624e3"
         }
     ],
     "m_Keywords": [
@@ -3858,6 +3864,12 @@
     "m_Name": "",
     "m_ChildObjectList": [
         {
+            "m_Id": "c36f4a86af5d4b218fa81481d0b3e056"
+        },
+        {
+            "m_Id": "94fd80736913476bacf7050c6c9624e3"
+        },
+        {
             "m_Id": "b645d838bdbd4b6ab576f728c17daa8b"
         },
         {
@@ -4170,6 +4182,33 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "94fd80736913476bacf7050c6c9624e3",
+    "m_Guid": {
+        "m_GuidSerialized": "3cd04dec-8591-440c-a465-507833bf7e45"
+    },
+    "m_Name": "Blend",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Blend",
+    "m_DefaultReferenceName": "_Blend",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 1.0,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
 }
 
 {
@@ -5553,6 +5592,35 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "VertexDescription.Normal"
+}
+
+{
+    "m_SGVersion": 3,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.ColorShaderProperty",
+    "m_ObjectId": "c36f4a86af5d4b218fa81481d0b3e056",
+    "m_Guid": {
+        "m_GuidSerialized": "417f9104-5ad0-417d-8229-330e8091d071"
+    },
+    "m_Name": "RGB",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "RGB",
+    "m_DefaultReferenceName": "_RGB",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": {
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0
+    },
+    "isMainColor": false,
+    "m_ColorMode": 0
 }
 
 {

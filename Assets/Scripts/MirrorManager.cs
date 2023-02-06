@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 public class MirrorManager : MonoBehaviour
 {
@@ -8,12 +9,14 @@ public class MirrorManager : MonoBehaviour
 
     private Mirror currentMirror;
     public LayerMask mirrorMask;
-    private Vector3 offset;
+    private Vector3 offset,finalPos;
+    
 
     private bool hasBeenClicked = false, startDraging = false;
 
     private Mirror[] hoodMirrors;
     public static Func<bool> OnCheckingSlidable;
+
 
     private void OnEnable()
     {
@@ -36,16 +39,16 @@ public class MirrorManager : MonoBehaviour
 
         RaycastHit[] allHits;
         allHits = Physics.RaycastAll(ray, Mathf.Infinity, mirrorMask);
-        Mirror[] selecetedMirrors;
+        Mirror[] selecetedMirrors = new Mirror[allHits.Length];
         Vector3 finalWorldPos = Vector3.zero;
-        Vector3 hitPoint = Vector3.zero;
         selecetedMirrors = allHits.Select(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
-      
         foreach (RaycastHit singleHit in allHits) 
         {
-            if (singleHit.transform.gameObject.tag != "Mirror")
+            if (singleHit.transform.gameObject.tag == "MirrorPlane")
             {
+               
                 finalWorldPos = singleHit.point + Vector3.up * 0.1f;
+                finalPos = finalWorldPos;
             }
             if (singleHit.transform.gameObject.tag == "Mirror") 
             {
@@ -53,32 +56,38 @@ public class MirrorManager : MonoBehaviour
                 {
                     hasBeenClicked = true;
                     currentMirror = singleHit.transform.gameObject.GetComponent<Mirror>();
-                    offset = singleHit.transform.position - singleHit.point;
-                    hitPoint = singleHit.point;
+                    
+                    offset = currentMirror.transform.position - singleHit.point;
                 }
+                else
+                    continue;
             }
         }
-        if (currentMirror) 
+        if (currentMirror && hasBeenClicked) 
         {
-            Vector3 direction = Vector3.Normalize(finalWorldPos - (currentMirror.transform.position - offset));
+            Vector3 direction = Vector3.Normalize(finalWorldPos-(currentMirror.transform.position - offset));
             float distance = (finalWorldPos - (currentMirror.transform.position - offset)).magnitude;
             
-            currentMirror.GetComponent<Rigidbody>().AddForce(direction*50 * distance, ForceMode.Force);
+            currentMirror.GetComponent<Rigidbody>().AddForce(direction*20 * distance, ForceMode.Force);
 
+            bool canPerformControl = true;
             foreach (Mirror m in hoodMirrors) 
             {
                 if (currentMirror == m)
-                   return;
+                    canPerformControl = false;
             }
-
-            if (OnCheckingSlidable.Invoke())
+            if (canPerformControl) 
             {
-                currentMirror.ToggleBoxesRigidCollider(true);
+                if (OnCheckingSlidable.Invoke())
+                {
+                    currentMirror.ToggleBoxesRigidCollider(true);
+                }
+                else
+                {
+                    currentMirror.ToggleBoxesRigidCollider(false);
+                }
             }
-            else 
-            {
-                currentMirror.ToggleBoxesRigidCollider(false);
-            }
+          
         }
     }
     private void FixedUpdate()
@@ -96,5 +105,11 @@ public class MirrorManager : MonoBehaviour
             hasBeenClicked = false;
             offset = Vector3.zero;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(finalPos, 0.5f);
     }
 }

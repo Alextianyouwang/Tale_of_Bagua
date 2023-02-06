@@ -93,7 +93,6 @@ public class LayerCheck : MonoBehaviour
         if (allHitsMirrors.Length <= levels.Count) 
         {
             currentLevel = levels[allHitsMirrors.Length - 1];
-            print(currentLevel);
             currentLevel.ToggleRigidColliders(true);
             DisableOtherLevels(currentLevel);
             if (prevLevel != currentLevel && prevLevel != null) 

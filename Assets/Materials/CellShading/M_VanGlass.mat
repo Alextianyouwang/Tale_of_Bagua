@@ -38,7 +38,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - T_ColorRamp_Tex:
-        m_Texture: {fileID: 2800000, guid: 3c86732b34091d14abba5ece2b87e81d, type: 3}
+        m_Texture: {fileID: 2800000, guid: bd6e511bc7e88474789f122c3bf34308, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - T_D_Tex:
@@ -85,13 +85,13 @@ Material:
     - OL_NormalThreshold: 0.349
     - OL_NormalTightening: 3.46
     - OL_Thickness: 0
-    - PBR_Metallic: 0.165
-    - PBR_Smoothness: 0
+    - PBR_Metallic: 0
+    - PBR_Smoothness: 1
     - T_D_Blend: 0
     - T_D_Edge_1: 0
     - T_D_Edge_2: 0
-    - T_Smoothness: 0.195
-    - Vector1_6644cb0f636946898639297a58ca2f6e: 0.112
+    - T_Smoothness: 0.194
+    - Vector1_6644cb0f636946898639297a58ca2f6e: 0.17
     - _IndicatiorMultiplier: 0.08
     - _InnerRadius: 2.98
     - _Opacity: 1

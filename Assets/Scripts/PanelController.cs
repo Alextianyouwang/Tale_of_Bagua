@@ -25,7 +25,7 @@ public class PanelController : MonoBehaviour
             Slides[slideIndex].SetActive(true);
         }
 
-        if(slideIndex >= Slides.Length)
+        if(slideIndex >= Slides.Length -1)
         {
             gameObject.SetActive(false);
         }

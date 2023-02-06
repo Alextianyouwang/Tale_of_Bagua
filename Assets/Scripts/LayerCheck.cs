@@ -14,11 +14,13 @@ public class LayerCheck : MonoBehaviour
 
     RaycastHit[] allHitsMirrors;
     public static Action OnLevelChange;
+    public static int allMirrorOnTop;
 
     public static Action<Mirror[]> OnShareHoodMirror;
 
     private void OnEnable()
     {
+        allMirrorOnTop = 0;
         MirrorManager.OnCheckingSlidable += CheckIfPlayerOverlapWithNextLevel;   
     }
     private void OnDisable()
@@ -87,7 +89,7 @@ public class LayerCheck : MonoBehaviour
         allHitsMirrors = Physics.RaycastAll(transform.position, Vector3.up, 100f, mirrorMask);
         RaycastHit[] mirrorHits = allHitsMirrors.Where(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
         hoodMirrors = new Mirror[mirrorHits.Length];
-
+        allMirrorOnTop = hoodMirrors.Length;
         if (allHitsMirrors.Length <= levels.Count) 
         {
             currentLevel = levels[allHitsMirrors.Length - 1];

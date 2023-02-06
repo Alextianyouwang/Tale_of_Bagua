@@ -1,6 +1,6 @@
 using UnityEngine;
 using System;
-
+using System.Linq;
 
 public class MirrorManager : MonoBehaviour
 {
@@ -36,12 +36,13 @@ public class MirrorManager : MonoBehaviour
 
         RaycastHit[] allHits;
         allHits = Physics.RaycastAll(ray, Mathf.Infinity, mirrorMask);
-
+        Mirror[] selecetedMirrors;
         Vector3 finalWorldPos = Vector3.zero;
         Vector3 hitPoint = Vector3.zero;
+        selecetedMirrors = allHits.Select(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
+      
         foreach (RaycastHit singleHit in allHits) 
         {
-           
             if (singleHit.transform.gameObject.tag != "Mirror")
             {
                 finalWorldPos = singleHit.point + Vector3.up * 0.1f;
@@ -67,7 +68,7 @@ public class MirrorManager : MonoBehaviour
             foreach (Mirror m in hoodMirrors) 
             {
                 if (currentMirror == m)
-                    return;
+                   return;
             }
 
             if (OnCheckingSlidable.Invoke())

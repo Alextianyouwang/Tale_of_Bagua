@@ -12,7 +12,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Opening Cut");
     }
 
     public void QuitGame()

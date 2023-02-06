@@ -30,7 +30,7 @@ public class NextLine : MonoBehaviour
                 SceneManager.LoadScene("Main Menu");
             } else 
             { 
-                SceneManager.LoadScene("SampleScene"); 
+                SceneManager.LoadScene("GameScene"); 
             }
                 
                 

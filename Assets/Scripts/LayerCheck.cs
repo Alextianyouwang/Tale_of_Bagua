@@ -51,7 +51,7 @@ public class LayerCheck : MonoBehaviour
             if (c.gameObject.GetComponentInParent<Level>()) 
             {
                 Level localLevel = c.gameObject.GetComponentInParent<Level>();
-                if ( localLevel == nextLevel)
+                if ( localLevel == nextLevel )
                     rigidCollider = true;
             }
         }        
@@ -73,10 +73,7 @@ public class LayerCheck : MonoBehaviour
             if (c.gameObject.GetComponentInParent<Level>())
             {
                 Level localLevel = c.gameObject.GetComponentInParent<Level>();
-                if ( localLevel == lastLevel
-                    /*     ||  localLevel == lastLastLevel||
-                           localLevel == lastLastLastLevel ||
-                           localLevel == lastLastLastlastLevel*/
+                if (localLevel == lastLevel &&  currentLevel != nextLevel
                     )
                     rigidCollider = true;
             }
@@ -89,6 +86,7 @@ public class LayerCheck : MonoBehaviour
         allHitsMirrors = Physics.RaycastAll(transform.position, Vector3.up, 100f, mirrorMask);
         RaycastHit[] mirrorHits = allHitsMirrors.Where(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
         hoodMirrors = new Mirror[mirrorHits.Length];
+
         allMirrorOnTop = hoodMirrors.Length;
         if (allHitsMirrors.Length <= levels.Count) 
         {

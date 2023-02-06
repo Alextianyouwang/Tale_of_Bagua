@@ -68,7 +68,7 @@ public class MirrorManager : MonoBehaviour
             Vector3 direction = Vector3.Normalize(finalWorldPos-(currentMirror.transform.position - offset));
             float distance = (finalWorldPos - (currentMirror.transform.position - offset)).magnitude;
             
-            currentMirror.GetComponent<Rigidbody>().AddForce(direction*20 * distance, ForceMode.Force);
+            currentMirror.GetComponent<Rigidbody>().AddForce(direction*10 * distance, ForceMode.Force);
 
             bool canPerformControl = true;
             foreach (Mirror m in hoodMirrors) 

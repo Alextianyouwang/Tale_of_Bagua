@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Mirror : MonoBehaviour
 {
-    public BoxCollider[] boxs;
+    public Collider[] boxs;
     bool colliderToggleState = false;
     void Start()
     {
@@ -11,11 +11,9 @@ public class Mirror : MonoBehaviour
 
     void GetBoxs() 
     {
-        boxs = GetComponents<BoxCollider>();
-        foreach (BoxCollider b in boxs)
-        {
+        boxs = GetComponents<Collider>();
+        foreach (Collider b in boxs)
             b.isTrigger = true;
-        }
     }
    
     public void ToggleBoxesRigidCollider(bool value) 
@@ -23,18 +21,9 @@ public class Mirror : MonoBehaviour
         if (colliderToggleState == value)
             return;
         colliderToggleState = value;
-
-        foreach (BoxCollider b in boxs)
-        {
+        foreach (Collider b in boxs)
             b.isTrigger = !value;
-        }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-            ToggleBoxesRigidCollider(false);
-        }
-    }
+    
 }

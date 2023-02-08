@@ -15,8 +15,6 @@ public class MirrorController : MonoBehaviour
         if (CanBeEnableWhenMirroEqual == LayerCheck.allMirrorOnTop)
         if (other.gameObject.tag =="Player")
         {
-
-                
                 if (LayerCheck.allMirrorOnTop == 4)
                 {
                     SceneManager.LoadScene("Closing Cut");
@@ -30,7 +28,6 @@ public class MirrorController : MonoBehaviour
                     gameObject.SetActive(false);
                 }
         }
-
         
     }
 }

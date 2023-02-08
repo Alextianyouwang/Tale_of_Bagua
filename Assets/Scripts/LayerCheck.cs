@@ -8,24 +8,29 @@ public class LayerCheck : MonoBehaviour
 {
     public LayerMask mirrorMask,obstacleMask;
     public List<Level> levels = new List<Level>();
-    private Level currentLevel,prevLevel;
-
+    private Mirror currentMirror;
+    private Level currentLevel,lastLevel,nextLevel;
     private Mirror[] hoodMirrors;
+    public Mirror[] allMirrors;
+    private Collider[] overlapping;
 
     RaycastHit[] allHitsMirrors;
-    public static Action OnLevelChange;
     public static int allMirrorOnTop;
 
     public static Action<Mirror[]> OnShareHoodMirror;
+    public static bool isPlayerOnLastLevel;
 
     private void OnEnable()
     {
         allMirrorOnTop = 0;
-        MirrorManager.OnCheckingSlidable += CheckIfPlayerOverlapWithNextLevel;   
+        MirrorManager.OnCheckingSlidable += CheckSelectedMirrorSlidable;
+        MirrorManager.OnSharingCurrentMirror += ReceiveCurrentMirror;
+
     }
     private void OnDisable()
     {
-        MirrorManager.OnCheckingSlidable -= CheckIfPlayerOverlapWithNextLevel;
+        MirrorManager.OnCheckingSlidable -= CheckSelectedMirrorSlidable;
+        MirrorManager.OnSharingCurrentMirror -= ReceiveCurrentMirror;
     }
     void DisableOtherLevels(Level current) 
     {
@@ -38,91 +43,80 @@ public class LayerCheck : MonoBehaviour
     void Update()
     {
         CheckLayers();
+        isPlayerOnLastLevel = CheckIfPlayerOnLastLevel();
     }
-    private bool CheckIfPlayerOverlapWithNextLevel() 
+    void ReceiveCurrentMirror(Mirror mirror) 
     {
-        Collider[] overlapping = Physics.OverlapSphere(transform.position, 0.1f,obstacleMask);
-        Level currentLevel = levels[allHitsMirrors.Length - 1],
-              lastLevel = levels[allHitsMirrors.Length - 2 <= 0 ? 0 : allHitsMirrors.Length - 2],
-              nextLevel = levels[allHitsMirrors.Length >=levels.Count-1?levels.Count-1:allHitsMirrors.Length];
-        bool rigidCollider = false;
-        foreach (Collider c in overlapping) 
-        {
-            if (c.gameObject.GetComponentInParent<Level>()) 
-            {
-                Level localLevel = c.gameObject.GetComponentInParent<Level>();
-                if ( localLevel == nextLevel )
-                    rigidCollider = true;
-            }
-        }        
-        return  rigidCollider;
+        currentMirror = mirror;
     }
-
-    private bool CheckIfPlayerOverlapWithCurrentLevel()
+    private bool CheckIfPlayerOnLastLevel() 
     {
-        Collider[] overlapping = Physics.OverlapSphere(transform.position, 0.1f, obstacleMask);
         Level currentLevel = levels[allHitsMirrors.Length - 1],
-              lastLevel = levels[allHitsMirrors.Length - 2 <= 0 ? 0 : allHitsMirrors.Length - 2],
-              lastLastLevel = levels[allHitsMirrors.Length - 3 <= 0 ? 0 : allHitsMirrors.Length - 3],
-              lastLastLastLevel = levels[allHitsMirrors.Length - 4 <= 0 ? 0 : allHitsMirrors.Length - 4],
-              lastLastLastlastLevel = levels[allHitsMirrors.Length - 5 <= 0 ? 0 : allHitsMirrors.Length - 5],
               nextLevel = levels[allHitsMirrors.Length >= levels.Count - 1 ? levels.Count - 1 : allHitsMirrors.Length];
-        bool rigidCollider = false;
+        return currentLevel == nextLevel;
+    }
+    private bool CheckFreeMirrorEnterable()
+    {
         foreach (Collider c in overlapping)
         {
             if (c.gameObject.GetComponentInParent<Level>())
             {
                 Level localLevel = c.gameObject.GetComponentInParent<Level>();
-                if (localLevel == lastLevel &&  currentLevel != nextLevel
-                    )
-                    rigidCollider = true;
+                if (localLevel == nextLevel)
+                    return true;
             }
         }
+        return false;
+    }
+    private bool CheckSelectedMirrorSlidable() 
+    {
+        foreach (Collider c in overlapping) 
+        {
+            if (c.gameObject.GetComponentInParent<Level>()) 
+            {
+                Level localLevel = c.gameObject.GetComponentInParent<Level>();
+                if (currentLevel == nextLevel ? localLevel == lastLevel : localLevel == nextLevel)
+                    return true;
+            }
+        }
+        return false;
+    }
 
-        return rigidCollider;
+    private bool CheckHoodeMirrorSliable()
+    {
+        foreach (Collider c in overlapping)
+        {
+            if (c.gameObject.GetComponentInParent<Level>())
+            {
+                Level localLevel = c.gameObject.GetComponentInParent<Level>();
+                if (localLevel == lastLevel && currentLevel != nextLevel)
+                    return true;
+            }
+        }
+        return false;
     }
     private void CheckLayers()
     {
+        overlapping = Physics.OverlapSphere(transform.position, 0.1f, obstacleMask);
         allHitsMirrors = Physics.RaycastAll(transform.position, Vector3.up, 100f, mirrorMask);
         RaycastHit[] mirrorHits = allHitsMirrors.Where(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
         hoodMirrors = new Mirror[mirrorHits.Length];
 
         allMirrorOnTop = hoodMirrors.Length;
-        if (allHitsMirrors.Length <= levels.Count) 
-        {
-            currentLevel = levels[allHitsMirrors.Length - 1];
-            currentLevel.ToggleRigidColliders(true);
-            DisableOtherLevels(currentLevel);
-            if (prevLevel != currentLevel && prevLevel != null) 
-            {
-                OnLevelChange?.Invoke();
-            }
-            prevLevel = currentLevel;
-        }
-       
-        for (int i = 0; i < hoodMirrors.Length; i++)
-        {
-           
+        currentLevel = levels[allHitsMirrors.Length - 1];
+        lastLevel = levels[allHitsMirrors.Length - 2 <= 0 ? 0 : allHitsMirrors.Length - 2];
+        nextLevel = levels[allHitsMirrors.Length >= levels.Count - 1 ? levels.Count - 1 : allHitsMirrors.Length];
+        currentLevel.ToggleRigidColliders(true);
+        DisableOtherLevels(currentLevel);
+
+        for (int i = 0; i < hoodMirrors.Length; i++) 
             hoodMirrors[i] = mirrorHits[i].transform.gameObject.GetComponent<Mirror>();
-        }
+        Mirror[] freeMirror = allMirrors.Where(x => !hoodMirrors.Contains(x) && x != currentMirror && x.isActiveAndEnabled).ToArray();
+        foreach (Mirror m in freeMirror) 
+            m.ToggleBoxesRigidCollider(CheckFreeMirrorEnterable());
+        Mirror[] notSelectedHoodMirror = hoodMirrors.Where(x => x != currentMirror).ToArray();
         OnShareHoodMirror?.Invoke(hoodMirrors);
-
-
-        foreach (Mirror m in hoodMirrors)
-        {
-            if (CheckIfPlayerOverlapWithCurrentLevel())
-            {
-                m.ToggleBoxesRigidCollider(true);
-
-            }
-            else
-            {
-                m.ToggleBoxesRigidCollider(false);
-
-            }
-        }
-
+        foreach (Mirror m in isPlayerOnLastLevel ? notSelectedHoodMirror : hoodMirrors)
+            m.ToggleBoxesRigidCollider(CheckHoodeMirrorSliable());
     }
-
-    
 }

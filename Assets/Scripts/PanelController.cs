@@ -7,6 +7,7 @@ public class PanelController : MonoBehaviour
     public GameObject[] Slides;
     int slideIndex = 0;
     float timeCounter = 0f;
+    public float slideTime = 4f;
 
     private void Start()
     {
@@ -25,7 +26,7 @@ public class PanelController : MonoBehaviour
                 gameObject.SetActive(false);
 
             slideIndex++;
-            timeCounter = 4f;
+            timeCounter = slideTime;
         }
 
     }

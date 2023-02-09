@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 111500
+  controlID: 72146
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 111501
+  controlID: 72147
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 111502
+  controlID: 72148
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -229,7 +229,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 1
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: -101, y: -26}
+      snapOffsetDelta: {x: -101, y: -1}
       snapCorner: 3
       id: Tool Settings
       index: 0
@@ -262,7 +262,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 1
       id: unity-search-toolbar
       index: 1
@@ -295,7 +295,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Light Settings
       index: 0
@@ -306,7 +306,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Camera
       index: 1
@@ -317,7 +317,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Cloth Constraints
       index: 2
@@ -328,7 +328,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Cloth Collisions
       index: 3
@@ -339,7 +339,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Navmesh Display
       index: 4
@@ -350,7 +350,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Agent Display
       index: 5
@@ -361,7 +361,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Obstacle Display
       index: 6
@@ -372,7 +372,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Occlusion Culling
       index: 7
@@ -383,7 +383,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Physics Debugger
       index: 8
@@ -394,7 +394,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 0
       snapOffset: {x: 0, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 25}
       snapCorner: 0
       id: Scene View/Scene Visibility
       index: 9
@@ -412,7 +412,7 @@ MonoBehaviour:
       layout: 4
   m_WindowGUID: cc27987af1a868c49b0894db9c0f5429
   m_Gizmos: 1
-  m_OverrideSceneCullingMask: 6917529027641081856
+  m_OverrideSceneCullingMask: 4611686018427387906
   m_SceneIsLit: 1
   m_SceneLighting: 1
   m_2DMode: 0
@@ -420,9 +420,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -3.5814948, y: 2.0560794, z: 3.5924015}
+    m_Target: {x: -1.2269043, y: 0.03459418, z: 1.0000877}
     speed: 2
-    m_Value: {x: -3.3225906, y: 2.0453527, z: 3.479204}
+    m_Value: {x: -1.2269043, y: 0.03459418, z: 1.0000877}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -469,13 +469,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.4738152, y: 0.024944166, z: -0.015079546, w: 0.8803282}
+    m_Target: {x: 0.590607, y: -0.02143484, z: 0.012849939, w: 0.80688536}
     speed: 2
-    m_Value: {x: 0.4737375, y: 0.024940075, z: -0.015077073, w: 0.8801838}
+    m_Value: {x: -0.590607, y: 0.02143484, z: -0.012849938, w: -0.8068853}
   m_Size:
-    m_Target: 9.301575
+    m_Target: 5.651984
     speed: 2
-    m_Value: 8.901029
+    m_Value: 5.651984
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -2839,10 +2839,10 @@ MonoBehaviour:
     m_SaveData: []
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 3487}
-      m_SelectedIDs: a0640300
-      m_LastClickedID: 222368
-      m_ExpandedIDs: 7e07c5ff1a20f1ff88a7f1ffdcaaf1ff48abf1ffd2adf1ffd4adf1ffcc21f2ff108dffff78170100a0180100ac1c0100601f01007e2501005c26010096260100742801005053030078540300d0540300ec540300f054030060550300745503004c56030084580300905a0300385b0300b65e0300825f0300b25f0300c65f03001e6003008a600300e460030056610300ae610300fa610300346203006e620300f46203006a630300a0630300086403002a6403004c6403006464030098640300d6640300ea640300
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: f8820000
+      m_LastClickedID: 0
+      m_ExpandedIDs: a64ae2ffca4ae2ff304be2ff8c4be2ffc44be2fff64be2ff5e4ce2ff724ce2ff824ce2ffce6a0300f46a0300086b03003c6b0300be6b0300206c03004e6c03005a6d0300606d0300f86d0300
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -2934,22 +2934,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Materials/HD
+    - Assets/Materials/Flat
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Materials/HD
+  - Assets/Materials/Flat
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\ducon\Documents\GitHub\TheTaleOfBagua
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 106}
-    m_SelectedIDs: 2a500100
-    m_LastClickedID: 86058
-    m_ExpandedIDs: 00000000922d0100942d0100962d0100982d01000e2e010000ca9a3b
+    scrollPos: {x: 0, y: 143}
+    m_SelectedIDs: 7e930000
+    m_LastClickedID: 37758
+    m_ExpandedIDs: 00000000ee840000f0840000f2840000f484000098860000bc8600006c46010000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2977,7 +2977,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000922d0100942d0100962d0100982d010000ca9a3b
+    m_ExpandedIDs: 00000000ee840000f0840000f2840000f4840000bc8600006c46010000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -3002,8 +3002,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: a0640300
-    m_LastClickedInstanceID: 222368
+    m_SelectedInstanceIDs: f8820000
+    m_LastClickedInstanceID: 33528
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c6230000242e0000daca00002ad40000f22f0000861f0200540a0100940a0100
     m_RenameOverlay:
@@ -3029,7 +3029,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 149.5}
     m_GridSize: 64
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 207
@@ -3085,7 +3085,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 111433
+  controlID: 72030
 --- !u!114 &15
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -3148,7 +3148,7 @@ MonoBehaviour:
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 0
+  m_LastVerticalScrollValue: 440
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:

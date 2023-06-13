@@ -15,7 +15,7 @@ public class Mirror : MonoBehaviour
         foreach (Collider b in boxs)
             b.isTrigger = true;
     }
-   
+
     public void ToggleBoxesRigidCollider(bool value) 
     {
         if (colliderToggleState == value)

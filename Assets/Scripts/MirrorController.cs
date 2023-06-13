@@ -31,6 +31,7 @@ public class MirrorController : MonoBehaviour
         //print(LayerCheck.allMirrorsOnTop);
         if (CanBeActivateAfter == LayerCheck.allMirrorsOnTop) 
         {
+<<<<<<< HEAD
             if (other.gameObject.tag == "Player")
             {
                 Panel.SetActive(true);
@@ -41,5 +42,21 @@ public class MirrorController : MonoBehaviour
         }
        
 
+=======
+                if (LayerCheck.allMirrorOnTop == 4)
+                {
+                    SceneManager.LoadScene("Closing Cut");
+                }
+                else 
+                {
+                    NextItem.SetActive(true);
+                    NewMirror.SetActive(true);
+                    Panel.SetActive(true);
+
+                    gameObject.SetActive(false);
+                }
+        }
+        
+>>>>>>> BeforeJamBuild
     }
 }

@@ -7,10 +7,15 @@ public class Level : MonoBehaviour
      List<GameObject> levelObject = new List<GameObject>();
 
     bool colliderToggleState = false;
+<<<<<<< HEAD
     Transform parent;
     private void Awake()
     {
         parent = transform.Find("Collider");
+=======
+    private void Awake()
+    {
+>>>>>>> BeforeJamBuild
         GetLevelObject();
     }
     public void GetLevelObject() 

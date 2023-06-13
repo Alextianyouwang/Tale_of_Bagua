@@ -6,7 +6,12 @@ public class PanelController : MonoBehaviour
 {
     public GameObject[] Slides;
     int slideIndex = 0;
+<<<<<<< HEAD
     float timeCounter = 4f;
+=======
+    float timeCounter = 0f;
+    public float slideTime = 4f;
+>>>>>>> BeforeJamBuild
 
     private void Start()
     {
@@ -21,8 +26,12 @@ public class PanelController : MonoBehaviour
         {
             Slides[slideIndex].SetActive(false); 
             slideIndex++;
+<<<<<<< HEAD
             timeCounter = 4f;
             Slides[slideIndex].SetActive(true);
+=======
+            timeCounter = slideTime;
+>>>>>>> BeforeJamBuild
         }
 
         if(slideIndex >= Slides.Length-1)

@@ -17,6 +17,15 @@ public class PlayerMove : MonoBehaviour
         playerTransform = transform;
         movePoint = transform.position;
     }
+    private void OnEnable()
+    {
+        MirrorManager.OnToogleCollapingPose += ToggleRbConstrains;
+    }
+    private void OnDisable()
+    {
+        MirrorManager.OnToogleCollapingPose -= ToggleRbConstrains;
+
+    }
     private void FixedUpdate()
     {
         PlayerMoveSnapToGrid();
@@ -27,6 +36,10 @@ public class PlayerMove : MonoBehaviour
       
     }
 
+    private void ToggleRbConstrains(bool value) 
+    {
+       // GetComponent<Rigidbody>().isKinematic = value;
+    }
     private void PlayerMoveSnapToGrid()
     {
         horizontal = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);

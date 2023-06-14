@@ -95,6 +95,7 @@ public class LayerCheck : MonoBehaviour
         }
         return false;
     }
+   
     private void CheckLayers()
     {
         overlapping = Physics.OverlapSphere(transform.position, 0.1f, obstacleMask);

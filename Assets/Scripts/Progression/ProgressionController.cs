@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MirrorController : MonoBehaviour
+public class ProgressionController : MonoBehaviour
 {
     public GameObject NextItem;
     public GameObject NewMirror;

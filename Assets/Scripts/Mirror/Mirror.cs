@@ -12,15 +12,18 @@ public class Mirror : MonoBehaviour
     private Coroutine movingCo;
 
     public Action OnFinishMoving;
+
+    private Rigidbody rb;
+
     void Start()
     {
+        rb = GetComponent<Rigidbody>(); 
         GetBoxs();
     }
 
     public void MoveMirrorTowards(float time, Vector3 targetPos) 
     {
-        if (isMovingTowards)
-            return;
+        AbortMovement();
         movingCo = StartCoroutine(MoveTowards(time, targetPos));
 
     }
@@ -28,8 +31,8 @@ public class Mirror : MonoBehaviour
     public void AbortMovement() 
     {
         isMovingTowards = false;
-        GetComponent<Rigidbody>().isKinematic = false;
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+        rb.isKinematic = false;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
         if (movingCo != null)
             StopCoroutine(movingCo);
     }
@@ -37,8 +40,8 @@ public class Mirror : MonoBehaviour
     {
         float percent = 0;
         Vector3 originalPos = transform.position;
-        GetComponent<Rigidbody>().isKinematic = true;
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        rb.isKinematic = true;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
         isMovingTowards = true;
         while ( percent < 1) 
         {
@@ -47,9 +50,9 @@ public class Mirror : MonoBehaviour
             yield return null;
         }
         isMovingTowards = false;
-        GetComponent<Rigidbody>().isKinematic = false;
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-
+        rb.isKinematic = false;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+            
         OnFinishMoving?.Invoke();
 
     }

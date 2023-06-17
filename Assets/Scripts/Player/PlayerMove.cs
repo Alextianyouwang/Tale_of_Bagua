@@ -17,28 +17,9 @@ public class PlayerMove : MonoBehaviour
         playerTransform = transform;
         movePoint = transform.position;
     }
-    private void OnEnable()
-    {
-        MirrorManager.OnToogleCollapingPose += ToggleRbConstrains;
-    }
-    private void OnDisable()
-    {
-        MirrorManager.OnToogleCollapingPose -= ToggleRbConstrains;
-
-    }
     private void FixedUpdate()
     {
         PlayerMoveSnapToGrid();
-    }
-    private void Update()
-    {
-        
-      
-    }
-
-    private void ToggleRbConstrains(bool value) 
-    {
-       // GetComponent<Rigidbody>().isKinematic = value;
     }
     private void PlayerMoveSnapToGrid()
     {
@@ -46,31 +27,7 @@ public class PlayerMove : MonoBehaviour
         vertical = new Vector3(0f, 0f, Input.GetAxisRaw("Vertical"));
         Vector3 force = (horizontal + vertical).normalized * moveIncrement;
         GetComponent<Rigidbody>().AddForce(  force,ForceMode.Force);
-
-       /* if (Vector3.Distance(transform.position, movePoint + playerCenterOffset) <= 0.05f)
-        {
-            if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1)
-            {
-                Collider[] colliders = Physics.OverlapSphere(movePoint + horizontal * moveIncrement, 0.1f, obstacles);
-                if (colliders.Length == 0 || colliders.Where(x => x.isTrigger == false).ToArray().Length == 0)
-                {
-                    movePoint += horizontal* moveIncrement;
-                }
-            }
-            if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1)
-            {
-                Collider[] colliders = Physics.OverlapSphere(movePoint + vertical * moveIncrement, 0.1f, obstacles);
-                if (colliders.Length == 0 || colliders.Where(x => x.isTrigger == false).ToArray().Length == 0)
-                {
-                    movePoint += vertical * moveIncrement;
-                }
-            }
-
-
-        }*/
     }
-
-   
 
     private void OnDrawGizmos()
     {

@@ -13,11 +13,13 @@ public class LayerCheck : MonoBehaviour
     private Mirror[] hoodMirrors;
     public Mirror[] allMirrors;
     private Collider[] overlapping;
-
+    
     RaycastHit[] allHitsMirrors;
     public static int allMirrorOnTop;
 
     public static Action<Mirror[]> OnShareHoodMirror;
+    public static Action OnFixUpdate;
+
     public static bool isPlayerOnLastLevel;
 
     private void OnEnable()
@@ -40,10 +42,18 @@ public class LayerCheck : MonoBehaviour
                 l.ToggleRigidColliders(false);
         }
     }
-    void Update()
+
+
+    private void FixedUpdate()
     {
         CheckLayers();
+        OnFixUpdate?.Invoke();
+
         isPlayerOnLastLevel = CheckIfPlayerOnLastLevel();
+    }
+    void Update()
+    {
+      
     }
     void ReceiveCurrentMirror(Mirror mirror) 
     {
@@ -103,6 +113,7 @@ public class LayerCheck : MonoBehaviour
         RaycastHit[] mirrorHits = allHitsMirrors.Where(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
         hoodMirrors = new Mirror[mirrorHits.Length];
 
+
         allMirrorOnTop = hoodMirrors.Length;
         currentLevel = levels[allHitsMirrors.Length - 1];
         lastLevel = levels[allHitsMirrors.Length - 2 <= 0 ? 0 : allHitsMirrors.Length - 2];
@@ -112,12 +123,17 @@ public class LayerCheck : MonoBehaviour
 
         for (int i = 0; i < hoodMirrors.Length; i++) 
             hoodMirrors[i] = mirrorHits[i].transform.gameObject.GetComponent<Mirror>();
+
+        OnShareHoodMirror?.Invoke(hoodMirrors);
+
+
         Mirror[] freeMirror = allMirrors.Where(x => !hoodMirrors.Contains(x) && x != currentMirror && x.isActiveAndEnabled).ToArray();
         foreach (Mirror m in freeMirror) 
-            m.ToggleBoxesRigidCollider(CheckFreeMirrorEnterable());
+                m.ToggleBoxesRigidCollider(CheckFreeMirrorEnterable());
         Mirror[] notSelectedHoodMirror = hoodMirrors.Where(x => x != currentMirror).ToArray();
-        OnShareHoodMirror?.Invoke(hoodMirrors);
-        foreach (Mirror m in isPlayerOnLastLevel ? notSelectedHoodMirror : hoodMirrors)
-            m.ToggleBoxesRigidCollider(CheckHoodeMirrorSliable());
+
+
+        foreach (Mirror m in isPlayerOnLastLevel ? notSelectedHoodMirror : hoodMirrors) 
+                m.ToggleBoxesRigidCollider(CheckHoodeMirrorSliable());
     }
 }

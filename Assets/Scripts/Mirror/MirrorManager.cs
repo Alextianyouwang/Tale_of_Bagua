@@ -1,32 +1,34 @@
 using UnityEngine;
 using System;
 using System.Linq;
-using System.Collections.Generic;
-using UnityEngine.UIElements;
-using TMPro.EditorUtilities;
-using System.Collections;
-using System.Net.NetworkInformation;
 
 public class MirrorManager : MonoBehaviour
 {
     private Mirror currentMirror;
     public LayerMask mirrorMask;
     private Vector3 offset, finalWorldPos;
-    private bool hasBeenClicked = false, startDraging = false, isCollapsed = false, isStaticallyCollapsed= false;
+    private bool firstMirrorHasBeenClicked = false, isClicking = false, isCollapsed = false;
     private Mirror[] hoodMirrors;
-    private List<Mirror> closestToCurrent = new List<Mirror>();
     public static Func<bool> OnCheckingSlidable;
     public static Action<Mirror> OnSharingCurrentMirror;
-    private int mirrorCallbackCounter = 0;
 
-    public static Action<bool> OnToogleCollapingPose;
+    public static Action<float,float> OnChargingCollapse;
+    public static Action<float,float> OnChargedCollapse;
+
+    private float collapseTimer = 0,chargeTime = 0.5f;
+    
+
     private void OnEnable()
     {
         LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
+
+        LayerCheck.OnFixUpdate += FollowFixUpdate;
     }
     private void OnDisable()
     {
         LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
+        LayerCheck.OnFixUpdate -= FollowFixUpdate;
+
     }
     void ReceiveHoodMirror(Mirror[] hoodMirror)
     {
@@ -34,7 +36,7 @@ public class MirrorManager : MonoBehaviour
     }
     void UpdateMirrorPhysics()
     {
-        if (!startDraging) return;
+        if (!isClicking) return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] allHits = Physics.RaycastAll(ray, Mathf.Infinity, mirrorMask);
         Mirror[] selecetedMirrors = allHits.Select(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
@@ -45,9 +47,9 @@ public class MirrorManager : MonoBehaviour
 
             if (singleHit.transform.gameObject.tag == "Mirror")
             {
-                if (!hasBeenClicked)
+                if (!firstMirrorHasBeenClicked)
                 {
-                    hasBeenClicked = true;
+                    firstMirrorHasBeenClicked = true;
                     currentMirror = singleHit.transform.gameObject.GetComponent<Mirror>();
                     offset = currentMirror.transform.position - singleHit.point;
                     offset.y = 0;
@@ -65,29 +67,31 @@ public class MirrorManager : MonoBehaviour
         targetMirror.GetComponent<Rigidbody>().AddForce(direction * Mathf.Min(distance * speed, 5), ForceMode.Force);
 
     }
-    private void FixedUpdate()
-    {
 
+    private void FollowFixUpdate() 
+    {
         UpdateMirrorPhysics();
-        if (!currentMirror || !hasBeenClicked)
+
+        if (!currentMirror || !firstMirrorHasBeenClicked)
             return;
 
         float speedinc = 0;
         if (isCollapsed && hoodMirrors.Contains(currentMirror))
         {
-
-            for(int i = 0; i< hoodMirrors.Length; i++)
+           
+            for (int i = 0; i < hoodMirrors.Length; i++)
             {
-                Mirror m = hoodMirrors[i]; 
-                speedinc += 0.3f;
+                Mirror m = hoodMirrors[i];
+                speedinc += 0.4f;
                 m.ToggleBoxesRigidCollider(true);
 
                 UpdateMirrorPosition(m, 2 - speedinc);
             }
         }
-        else 
+        else
         {
-        UpdateMirrorPosition(currentMirror,2-speedinc);
+
+            UpdateMirrorPosition(currentMirror, 2 - speedinc);
 
         }
     }
@@ -98,70 +102,25 @@ public class MirrorManager : MonoBehaviour
             m.AbortMovement();
         }
     }
-    private void StartCollapseBuffer() 
-    {
-        mirrorCallbackCounter = 0;
-        Vector3 averagePos = Vector3.zero;
-        foreach (Mirror m in hoodMirrors) 
-        {
-            averagePos+= m.transform.position; 
-
-        }
-        averagePos /= hoodMirrors.Length;
-            foreach (Mirror m in hoodMirrors)
-        {
-            m.OnFinishMoving += ReceiveCollapseCallback;
-            m.ToggleBoxesRigidCollider(true);
-            m.MoveMirrorTowards(0.5f, averagePos);
-
-        }
-        CollapsingPose(); 
-    }
-
-
-    private void ReceiveCollapseCallback() 
-    {
-        mirrorCallbackCounter++;
-        if (mirrorCallbackCounter == hoodMirrors.Length)
-            isStaticallyCollapsed = true;
-    }
-    private void CollapsingPose() 
-    {
-        OnToogleCollapingPose?.Invoke(true);
-        foreach (Mirror m in hoodMirrors)
-        {
-            m.ToggleBoxesRigidCollider(true);
-            m.GetComponent<Rigidbody>().isKinematic = true;
-            m.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-        }
-    }
-
-    private void ExitCollapsingPose() 
-    {
-        OnToogleCollapingPose?.Invoke(false);
-        isStaticallyCollapsed = false;
-        foreach (Mirror m in hoodMirrors)
-        {
-            m.ToggleBoxesRigidCollider(false);
-            m.GetComponent<Rigidbody>().isKinematic = false;
-            m.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-        }
-    }
 
     public void CollapseHoodMirror()
     {
         if (hoodMirrors.Length <=1)
             return;
         isCollapsed = true;
-        Vector3 playerPos = PlayerMove.playerTransform.position;
-        Vector3 targetPos = new Vector3(playerPos.x, hoodMirrors[0].transform.position.y, playerPos.z);
+        Vector3 averagePos = Vector3.zero;
         foreach (Mirror m in hoodMirrors)
         {
-            m.MoveMirrorTowards(0.7f, targetPos);
+            averagePos += m.transform.position;
 
         }
+        averagePos /= hoodMirrors.Length;
+        foreach (Mirror m in hoodMirrors) 
+        {
+            m.ToggleBoxesRigidCollider(true);
+            m.MoveMirrorTowards(0.4f, averagePos);
 
-
+        }
     }
 
     public Vector2[] RadiusPosition(int numSlices)
@@ -187,97 +146,62 @@ public class MirrorManager : MonoBehaviour
             Vector2 offset = offsets[i];
             Vector3 targetPos = new Vector3(playerPos.x + offset.x, hoodMirrors[0].transform.position.y, playerPos.z+ offset.y);
             hoodMirrors[i].MoveMirrorTowards(0.4f, targetPos);
-
         }
+    }
+
+    void UpdateInput() 
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            isClicking = true;
+            StopCollapseBuffer();
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            isClicking = false;
+            currentMirror = null;
+            firstMirrorHasBeenClicked = false;
+            offset = Vector3.zero;
+            if (isCollapsed)
+                CollapseHoodMirror();
+        }
+
+        if (Input.GetMouseButton(1)) 
+        {
+            collapseTimer += Time.deltaTime;
+            OnChargingCollapse?.Invoke(collapseTimer,chargeTime);
+        }
+        if (Input.GetMouseButtonUp(1)) 
+        {
+           
+            if (collapseTimer >= chargeTime) 
+            {
+                if (!isCollapsed)
+                    CollapseHoodMirror();
+                else
+                    ExpandHoodMirror();
+                OnChargedCollapse?.Invoke(collapseTimer, chargeTime);
+            }
+            collapseTimer = 0;
+        }
+
+      
+
+        if (hoodMirrors.Length == 0 && isCollapsed)
+        {
+            isCollapsed = false;
+        }
+        OnSharingCurrentMirror?.Invoke(currentMirror);
+
+        if (!currentMirror || !firstMirrorHasBeenClicked)
+            return;
+        if (!hoodMirrors.Contains(currentMirror) || LayerCheck.isPlayerOnLastLevel)
+            currentMirror.ToggleBoxesRigidCollider(OnCheckingSlidable.Invoke());
 
     }
     void Update()
     {
-        startDraging = Input.GetMouseButton(0);
-        if (Input.GetMouseButtonDown(0) && !isCollapsed && mirrorCallbackCounter != hoodMirrors.Length) 
-        {
-            //StopCollapseBuffer();
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-           
-            
-            isStaticallyCollapsed = false;
-            startDraging = false;
-            currentMirror = null;
-            hasBeenClicked = false;
-            offset = Vector3.zero;
-            if(isCollapsed)
-                StartCollapseBuffer();
-
-            
-        }
-        if (startDraging && isCollapsed && hoodMirrors.Contains(currentMirror))
-            ExitCollapsingPose();
-        if (isStaticallyCollapsed)
-            CollapsingPose();
-
-        OnSharingCurrentMirror?.Invoke(currentMirror);
-
-        if (!currentMirror || !hasBeenClicked)
-            return;
-        if (!hoodMirrors.Contains(currentMirror) || LayerCheck.isPlayerOnLastLevel)
-            currentMirror.ToggleBoxesRigidCollider(OnCheckingSlidable.Invoke());
-     
-    }
-
-    private void HoodMirrorStick()
-    {
-        if (!currentMirror || !hasBeenClicked) 
-            return;
-
-        //closestToCurrent.Clear();
-        //float closest = float.MaxValue;
-        foreach (Mirror m in hoodMirrors)
-        {
-            m.distanceToCurrentMirror = Vector3.Distance(m.transform.position, currentMirror.transform.position);
-            if (m.distanceToCurrentMirror < 0.5f)
-            {
-               // if (currentMirror != m)
-                    //UpdateMirrorPosition(m);
-            }
-
-        }
-
-        /* float closest = float.MaxValue;
-         Mirror closestMirror = null;
-         foreach (Mirror m in closestToCurrent) 
-         {
-            m.distanceToCurrentMirror = Vector3.Distance(m.transform.position, currentMirror.transform.position);
-             if (m.distanceToCurrentMirror < closest && m != currentMirror)
-             {
-                 closest = m.distanceToCurrentMirror;
-                 closestToCurrent.Remove(closestMirror) ;
-             }
-
-         }
-         if (!closestMirror)
-             return;*/
-        // closestToCurrent.Add(closestMirror);
-
-        /*if (closestToCurrent[0]?.distanceToCurrentMirror < 0.5f)
-        {
-            if (currentMirror != closestToCurrent[0])
-                UpdateMirrorPosition(closestToCurrent[0]);
-        }*/
-        /*foreach (Mirror m in closestToCurrent)
-        {
-            if (!m)
-                continue;
-            if (m.distanceToCurrentMirror < 0.5f)
-            {
-                if (currentMirror != m)
-                    UpdateMirrorPosition(m);
-            }
-        }*/
-
-        // print(closestToCurrent?.distanceToCurrentMirror);
-
+        UpdateInput();
     }
     private void OnDrawGizmos()
     {

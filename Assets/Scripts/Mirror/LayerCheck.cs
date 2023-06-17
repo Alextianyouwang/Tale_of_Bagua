@@ -34,6 +34,10 @@ public class LayerCheck : MonoBehaviour
     private void Start()
     {
         allMirrors = FindObjectsOfType<Mirror>();
+        foreach (var mirror in allMirrors) 
+        {
+            mirror.gameObject.SetActive(false);
+         }
         OnShareAllMirror?.Invoke(allMirrors);
     }
     private void OnDisable()

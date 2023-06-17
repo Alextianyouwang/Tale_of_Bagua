@@ -66,13 +66,13 @@ public class Mirror : MonoBehaviour
     }
     void GetBoxs() 
     {
-        boxs = GetComponentsInChildren<Collider>();
-       /* Collider[] colliders = new Collider[boxs.Length + crossCollider.colliders.Length];
-        for (int i = 0; i < colliders.Length; i++) 
+        boxs = GetComponents<Collider>();
+        Collider[] colliders = new Collider[boxs.Length + crossCollider.colliders.Length];
+        for (int i = 0; i < colliders.Length; i++)
         {
-            colliders[i] = i < boxs.Length ? boxs[i] : crossCollider.colliders[i-boxs.Length];
+            colliders[i] = i < boxs.Length ? boxs[i] : crossCollider.colliders[i - boxs.Length];
         }
-        boxs = colliders;*/
+        boxs = colliders;
         foreach (Collider b in boxs)
             b.isTrigger = true;
     }

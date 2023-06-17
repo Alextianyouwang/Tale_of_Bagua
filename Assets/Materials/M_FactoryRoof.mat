@@ -9,7 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: M_FactoryRoof
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _NORMALMAP
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -22,11 +23,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: d453377f98646384bb8c5fc2adbdd9c2, type: 3}
-        m_Scale: {x: 4.09, y: 3.4}
-        m_Offset: {x: -0.3, y: 0}
-    - _BumpMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 5, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 9b7419397014bb24088382160367f410, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -46,9 +47,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: d453377f98646384bb8c5fc2adbdd9c2, type: 3}
-        m_Scale: {x: 4.09, y: 3.4}
-        m_Offset: {x: -0.3, y: 0}
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 5, y: 2}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -81,7 +82,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _Blend: 0
-    - _BumpScale: 1
+    - _BumpScale: 0.1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -106,8 +107,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.33495015, g: 0.3679245, b: 0.35958588, a: 1}
-    - _Color: {r: 0.33495015, g: 0.3679245, b: 0.35958588, a: 1}
+    - _BaseColor: {r: 0.4811321, g: 0.31619653, b: 0.13843894, a: 1}
+    - _Color: {r: 0.4811321, g: 0.31619653, b: 0.13843894, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []

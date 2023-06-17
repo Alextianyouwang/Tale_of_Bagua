@@ -18,6 +18,7 @@ public class LayerCheck : MonoBehaviour
     public static int allMirrorOnTop;
 
     public static Action<Mirror[]> OnShareHoodMirror;
+    public static Action<Mirror[]> OnShareAllMirror;
     public static Action OnFixUpdate;
 
     public static bool isPlayerOnLastLevel;
@@ -25,9 +26,15 @@ public class LayerCheck : MonoBehaviour
     private void OnEnable()
     {
         allMirrorOnTop = 0;
+       
         MirrorManager.OnCheckingSlidable += CheckSelectedMirrorSlidable;
         MirrorManager.OnSharingCurrentMirror += ReceiveCurrentMirror;
 
+    }
+    private void Start()
+    {
+        allMirrors = FindObjectsOfType<Mirror>();
+        OnShareAllMirror?.Invoke(allMirrors);
     }
     private void OnDisable()
     {

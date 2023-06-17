@@ -8,7 +8,7 @@ public class MirrorManager : MonoBehaviour
     public LayerMask mirrorMask;
     private Vector3 offset, finalWorldPos;
     private bool firstMirrorHasBeenClicked = false, isClicking = false, isCollapsed = false;
-    private Mirror[] hoodMirrors;
+    private Mirror[] hoodMirrors,allMirrors;
     public static Func<bool> OnCheckingSlidable;
     public static Action<Mirror> OnSharingCurrentMirror;
 
@@ -16,24 +16,39 @@ public class MirrorManager : MonoBehaviour
     public static Action<float,float> OnChargedCollapse;
 
     private float collapseTimer = 0,chargeTime = 0.5f;
+
+    [ColorUsage(true,true)]
+    public Color normalCol;
+    [ColorUsage(true, true)]
+    public Color selectedCol;
+    [ColorUsage(true, true)]
+    public Color hoodCol;
     
 
     private void OnEnable()
     {
         LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
-
+        LayerCheck.OnShareAllMirror += ReceiveAllMirror;
         LayerCheck.OnFixUpdate += FollowFixUpdate;
     }
     private void OnDisable()
     {
         LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
         LayerCheck.OnFixUpdate -= FollowFixUpdate;
+        LayerCheck.OnShareAllMirror -= ReceiveAllMirror;
+
 
     }
     void ReceiveHoodMirror(Mirror[] hoodMirror)
     {
         hoodMirrors = hoodMirror;
     }
+
+    void ReceiveAllMirror(Mirror[] allMirror) 
+    {
+        allMirrors = allMirror;
+    }
+
     void UpdateMirrorPhysics()
     {
         if (!isClicking) return;
@@ -82,13 +97,13 @@ public class MirrorManager : MonoBehaviour
             for (int i = 0; i < hoodMirrors.Length; i++)
             {
                 Mirror m = hoodMirrors[i];
-                speedinc += 0.4f;
+                speedinc += 0.3f;
                 m.ToggleBoxesRigidCollider(true);
 
                 UpdateMirrorPosition(m, 2 - speedinc);
             }
         }
-        else
+        else if (!isCollapsed)
         {
 
             UpdateMirrorPosition(currentMirror, 2 - speedinc);
@@ -199,9 +214,30 @@ public class MirrorManager : MonoBehaviour
             currentMirror.ToggleBoxesRigidCollider(OnCheckingSlidable.Invoke());
 
     }
+
+    void SetMirrorColor(Mirror m, Color color) 
+    {
+        //m.material[2].SetColor("_EmissionColor", color);  
+        m.material[2].color = color;  
+
+    }
+    void UpdateMaterial() 
+    {
+        foreach (Mirror m in allMirrors)
+            if (m)
+                SetMirrorColor(m, normalCol);
+
+        foreach (Mirror m in hoodMirrors)
+            if (m)
+                SetMirrorColor(m, hoodCol);
+        if (currentMirror)
+            SetMirrorColor(currentMirror, selectedCol);
+    }
     void Update()
     {
         UpdateInput();
+         UpdateMaterial();
+   
     }
     private void OnDrawGizmos()
     {

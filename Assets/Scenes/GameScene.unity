@@ -681,7 +681,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2147483647
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1001,6 +1001,9 @@ MonoBehaviour:
   mirrorMask:
     serializedVersion: 2
     m_Bits: 2048
+  normalCol: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0}
+  selectedCol: {r: 7.3772106, g: 7.3772106, b: 7.3772106, a: 0}
+  hoodCol: {r: 11.181761, g: 4.7497115, b: 0, a: 0}
 --- !u!114 &134903894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1038,7 +1041,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0c704d5b771fd4ea5ad1dfe129745d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToCurrentMirror: 0
+  material: []
+  crossCollider: {fileID: 0}
+  frameRenderer: {fileID: 0}
 --- !u!1 &157588431
 GameObject:
   m_ObjectHideFlags: 0
@@ -5198,7 +5203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0c704d5b771fd4ea5ad1dfe129745d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToCurrentMirror: 0
+  material: []
+  crossCollider: {fileID: 0}
+  frameRenderer: {fileID: 0}
 --- !u!1 &692205339
 GameObject:
   m_ObjectHideFlags: 0
@@ -6534,7 +6541,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0c704d5b771fd4ea5ad1dfe129745d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToCurrentMirror: 0
+  material: []
+  crossCollider: {fileID: 0}
+  frameRenderer: {fileID: 0}
 --- !u!1 &959453925
 GameObject:
   m_ObjectHideFlags: 0
@@ -7891,7 +7900,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 84
-  m_CollisionDetection: 2
+  m_CollisionDetection: 1
 --- !u!1 &1269281450
 GameObject:
   m_ObjectHideFlags: 0
@@ -12550,8 +12559,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 21.035507, y: 10.517054, z: 5.227228}
-  m_Center: {x: 0.2336998, y: 4.758527, z: 13.021216}
+  m_Size: {x: 21.035507, y: 10.517054, z: 5.9303427}
+  m_Center: {x: 0.2336998, y: 4.758527, z: 12.669659}
 --- !u!65 &1701643850
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12563,8 +12572,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 32.0503, y: 27.284733, z: 5.540909}
-  m_Center: {x: 0.14915085, y: 1.3873272, z: -11.613071}
+  m_Size: {x: 32.0503, y: 27.284733, z: 4.315832}
+  m_Center: {x: 0.14915085, y: 1.46, z: -12.22561}
 --- !u!65 &1701643851
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12576,8 +12585,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.0427666, y: 30.941193, z: 38.02486}
-  m_Center: {x: -15.199827, y: -0.01389122, z: 3.1399632}
+  m_Size: {x: 3.690836, y: 30.941193, z: 38.02486}
+  m_Center: {x: -14.8757925, y: -0.01389122, z: 3.1399632}
 --- !u!54 &1701643852
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13436,7 +13445,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0c704d5b771fd4ea5ad1dfe129745d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceToCurrentMirror: 0
+  material: []
+  crossCollider: {fileID: 0}
+  frameRenderer: {fileID: 0}
 --- !u!1 &1871108419
 GameObject:
   m_ObjectHideFlags: 0
@@ -17379,10 +17390,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 276800076}
     m_Modifications:
-    - target: {fileID: 1345058783432048938, guid: 48889dfba7115524c8a277aaf0f85e66, type: 3}
-      propertyPath: m_Convex
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2667609010969218707, guid: 48889dfba7115524c8a277aaf0f85e66, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -17434,6 +17441,10 @@ PrefabInstance:
     - target: {fileID: 3336763732528452649, guid: 48889dfba7115524c8a277aaf0f85e66, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6053864251673688049, guid: 48889dfba7115524c8a277aaf0f85e66, type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48889dfba7115524c8a277aaf0f85e66, type: 3}

@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor.Purchasing;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 using static UnityEngine.UI.GridLayoutGroup;
 
 public class UIController : MonoBehaviour
@@ -26,8 +27,11 @@ public class UIController : MonoBehaviour
 
     public GameObject arrowObj;
     private GameObject[] arrows = new GameObject[4];
+    private Material[] arrowMaterial = new Material[4];
 
     private Vector3[] corners;
+
+    private Coroutine easeInCo;
 
 
     private void OnEnable()
@@ -63,6 +67,55 @@ public class UIController : MonoBehaviour
     void ReceiveHoodMirror(Mirror[] hoodMirror)
     {
         hoodMirrors = hoodMirror;
+    }
+
+    private void StartUIEaseInOut(float time, bool easein) 
+    {
+        easeInCo = StartCoroutine(UI_EaseInOut(time,easein));
+    }
+
+    private IEnumerator UI_EaseInOut(float time,bool easein)
+    {
+        float percent = 0;
+
+        float originalMargin = easein ? 1 : 0;
+        float targetMargin = easein ? 0 : 1;
+
+  
+
+        while (percent < 1)
+        {
+            percent += Time.deltaTime / time;
+
+
+            mirrorMargin = Mathf.Lerp(originalMargin, targetMargin, percent);
+            Vector3[] corners = GetHoodMirrorCorner(transform.position.y + 3f, mirrorMargin);
+
+
+            for (int i = 0; i < 4; i++)
+            {
+                arrows[i].transform.position = ClampToScreenBound(corners[i],screenMargin);
+            }
+            if (!easein)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    arrowMaterial[i].color = Color.Lerp(Color.white, Color.red, 1- percent);
+                }
+            }
+
+
+            yield return null;
+        }
+
+;       if (!easein) 
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                arrows[i].SetActive(false);
+            }
+        }
+
     }
 
     private Vector3[] GetHoodMirrorCorner(float yValue,float margin)
@@ -129,6 +182,8 @@ public class UIController : MonoBehaviour
             arrows[i].gameObject.SetActive(true);
             arrows[ i].transform.position = ClampToScreenBound(corners[i],screenMargin);
 
+            arrowMaterial[i].color = Color.Lerp(Color.white, Color.red, timer / target);
+
         }
 
 
@@ -149,6 +204,11 @@ public class UIController : MonoBehaviour
 
             arrows[i].gameObject.SetActive(true);
             arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin) ;
+
+
+            arrowMaterial[i].color = Color.Lerp(Color.white, Color.red, timer / target);
+
+            StartUIEaseInOut(0.5f, true);
 
         }
         slider.value = 0;
@@ -183,6 +243,9 @@ public class UIController : MonoBehaviour
             arrows[i].gameObject.SetActive(true);
             arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin);
 
+
+            arrowMaterial[i].color = Color.Lerp(Color.white, Color.red,1);
+
         }
     }
 
@@ -191,11 +254,9 @@ public class UIController : MonoBehaviour
         if (hoodMirrors.Length <= 1)
             return;
 
-        print("Expand");
         for (int i = 0; i < 4; i++)
         {
-
-            arrows[i].SetActive(false);
+            StartUIEaseInOut(0.5f, false);
         }
 
     }
@@ -205,7 +266,8 @@ public class UIController : MonoBehaviour
         for (int i = 0; i < 4; i++) 
         {
             arrows[i] = Instantiate(arrowObj,Vector3.zero,Quaternion.identity);
-            arrows[i].gameObject.SetActive(false); 
+            arrows[i].gameObject.SetActive(false);
+            arrowMaterial[i] = arrows[i].GetComponent<MeshRenderer>().material;
         }
     }
 

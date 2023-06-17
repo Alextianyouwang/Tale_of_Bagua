@@ -193,7 +193,8 @@ public class MirrorManager : MonoBehaviour
         if (Input.GetMouseButton(1)) 
         {
             collapseTimer += Time.deltaTime;
-            OnChargingCollapse?.Invoke(collapseTimer,chargeTime);
+            if (!isCollapsed)
+                OnChargingCollapse?.Invoke(collapseTimer,chargeTime);
         }
         if (Input.GetMouseButtonUp(1)) 
         {

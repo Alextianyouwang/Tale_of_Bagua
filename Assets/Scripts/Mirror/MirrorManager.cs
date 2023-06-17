@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Linq;
+using UnityEngine.Experimental.AI;
 
 public class MirrorManager : MonoBehaviour
 {
@@ -14,8 +15,13 @@ public class MirrorManager : MonoBehaviour
 
     public static Action<float,float> OnChargingCollapse;
     public static Action<float,float> OnChargedCollapse;
+    public static Action<float,float> OnAbortCollapse;
+    public static Action OnCollapsing;
+    public static Action OnExpand;
 
     private float collapseTimer = 0,chargeTime = 0.5f;
+
+    public AnimationCurve mirrorMoveCurve;
 
     [ColorUsage(true,true)]
     public Color normalCol;
@@ -133,7 +139,7 @@ public class MirrorManager : MonoBehaviour
         foreach (Mirror m in hoodMirrors) 
         {
             m.ToggleBoxesRigidCollider(true);
-            m.MoveMirrorTowards(0.4f, averagePos);
+            m.MoveMirrorTowards(0.4f, averagePos,mirrorMoveCurve);
 
         }
     }
@@ -160,12 +166,15 @@ public class MirrorManager : MonoBehaviour
         {
             Vector2 offset = offsets[i];
             Vector3 targetPos = new Vector3(playerPos.x + offset.x, hoodMirrors[0].transform.position.y, playerPos.z+ offset.y);
-            hoodMirrors[i].MoveMirrorTowards(0.4f, targetPos);
+            hoodMirrors[i].MoveMirrorTowards(0.4f, targetPos, mirrorMoveCurve);
         }
     }
 
     void UpdateInput() 
     {
+        if (isCollapsed)
+            OnCollapsing?.Invoke();
+
         if (Input.GetMouseButtonDown(0))
         {
             isClicking = true;
@@ -188,20 +197,28 @@ public class MirrorManager : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(1)) 
         {
-           
-            if (collapseTimer >= chargeTime) 
+
+            if (collapseTimer >= chargeTime)
             {
+                OnChargedCollapse?.Invoke(collapseTimer, chargeTime);
                 if (!isCollapsed)
                     CollapseHoodMirror();
-                else
+                else 
+                {
                     ExpandHoodMirror();
-                OnChargedCollapse?.Invoke(collapseTimer, chargeTime);
+                    OnExpand?.Invoke();
+                }
+                
+            }
+            else 
+            {
+                if (!isCollapsed)
+                    OnAbortCollapse?.Invoke(collapseTimer,chargeTime);
             }
             collapseTimer = 0;
         }
 
       
-
         if (hoodMirrors.Length == 0 && isCollapsed)
         {
             isCollapsed = false;
@@ -217,10 +234,10 @@ public class MirrorManager : MonoBehaviour
 
     void SetMirrorColor(Mirror m, Color color) 
     {
-        //m.material[2].SetColor("_EmissionColor", color);  
         m.material[2].color = color;  
-
     }
+
+  
     void UpdateMaterial() 
     {
         foreach (Mirror m in allMirrors)

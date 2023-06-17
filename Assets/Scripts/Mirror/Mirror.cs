@@ -14,25 +14,29 @@ public class Mirror : MonoBehaviour
 
     private Rigidbody rb;
 
+    [HideInInspector]
     public Material[] material;
+    [HideInInspector]
 
     public GetCollider crossCollider;
-   //public Material[] GetEmissiveMaterial() { return material; }
+    [HideInInspector]
     public MeshRenderer frameRenderer;
 
     void Start()
     {
-        material= transform.GetChild(0).GetComponent<MeshRenderer>() .materials;
+        frameRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
+        material = frameRenderer .materials;
+        
         if (material == null)
             Debug.LogWarning("Emissive Material for Mirror not found");
         rb = GetComponent<Rigidbody>(); 
         GetBoxs();
     }
 
-    public void MoveMirrorTowards(float time, Vector3 targetPos) 
+    public void MoveMirrorTowards(float time, Vector3 targetPos, AnimationCurve curve) 
     {
         AbortMovement();
-        movingCo = StartCoroutine(MoveTowards(time, targetPos));
+        movingCo = StartCoroutine(MoveTowards(time, targetPos, curve));
 
     }
 
@@ -44,7 +48,7 @@ public class Mirror : MonoBehaviour
         if (movingCo != null)
             StopCoroutine(movingCo);
     }
-    private IEnumerator MoveTowards(float time,Vector3 targetPos) 
+    private IEnumerator MoveTowards(float time,Vector3 targetPos, AnimationCurve curve) 
     {
         float percent = 0;
         Vector3 originalPos = transform.position;
@@ -54,7 +58,8 @@ public class Mirror : MonoBehaviour
         while ( percent < 1) 
         {
             percent += Time.deltaTime/time;
-            transform.position = Vector3.Lerp(originalPos, targetPos, percent);
+            float interpolate = curve.Evaluate(percent);
+            transform.position = Vector3.Lerp(originalPos, targetPos, interpolate);
             yield return null;
         }
 

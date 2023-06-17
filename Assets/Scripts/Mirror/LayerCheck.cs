@@ -119,11 +119,11 @@ public class LayerCheck : MonoBehaviour
         lastLevel = levels[allHitsMirrors.Length - 2 <= 0 ? 0 : allHitsMirrors.Length - 2];
         nextLevel = levels[allHitsMirrors.Length >= levels.Count - 1 ? levels.Count - 1 : allHitsMirrors.Length];
         currentLevel.ToggleRigidColliders(true);
+
         DisableOtherLevels(currentLevel);
 
         for (int i = 0; i < hoodMirrors.Length; i++) 
             hoodMirrors[i] = mirrorHits[i].transform.gameObject.GetComponent<Mirror>();
-
         OnShareHoodMirror?.Invoke(hoodMirrors);
 
 

@@ -78,18 +78,19 @@ public class UIController : MonoBehaviour
     {
         float percent = 0;
 
-        float originalMargin = easein ? 1 : 0;
-        float targetMargin = easein ? 0 : 1;
+        float originalMargin = easein ? 1.2f : 0.2f;
+        float targetMargin = easein ? 0.2f  : 1.2f;
 
-  
+        float originalAlpha = easein ? 0f : 0.8f;
+        float targetAlpha = easein ? 0.8f : 0f;
 
         while (percent < 1)
         {
             percent += Time.deltaTime / time;
 
 
-            mirrorMargin = Mathf.Lerp(originalMargin, targetMargin, percent);
-            Vector3[] corners = GetHoodMirrorCorner(transform.position.y + 3f, mirrorMargin);
+            mirrorMargin = Mathf.Lerp(originalMargin+0.2f, targetMargin + 0.2f, percent);
+            Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
 
 
             for (int i = 0; i < 4; i++)
@@ -100,7 +101,9 @@ public class UIController : MonoBehaviour
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    arrowMaterial[i].color = Color.Lerp(Color.white, Color.red, 1- percent);
+                    float alpha = Mathf.Lerp(originalAlpha, targetAlpha, percent);
+                    Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, alpha);
+                    arrowMaterial[i].color = matCol;
                 }
             }
 
@@ -135,11 +138,12 @@ public class UIController : MonoBehaviour
             boundsRegion.z = Mathf.Min(boundsRegion.z, botValue);
             boundsRegion.w = Mathf.Min(boundsRegion.w, leftValue);
         }
-        // topRight
-        corners[0] = new Vector3(boundsRegion.y,yValue, boundsRegion.x);
-     
         // topLeft
-        corners[1] = new Vector3(boundsRegion.w, yValue, boundsRegion.x);
+        corners[0] = new Vector3(boundsRegion.w, yValue, boundsRegion.x);
+        // topRight
+        corners[1] = new Vector3(boundsRegion.y,yValue, boundsRegion.x);
+     
+      
         // botRight
         corners[2] = new Vector3(boundsRegion.y, yValue, boundsRegion.z);
         // botLeft
@@ -174,15 +178,16 @@ public class UIController : MonoBehaviour
 
         slider.value = timer / target;
 
-        corners = GetHoodMirrorCorner(transform.position.y + 3f, mirrorMargin);
+        corners = GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
 
             arrows[i].gameObject.SetActive(true);
             arrows[ i].transform.position = ClampToScreenBound(corners[i],screenMargin);
-
-            arrowMaterial[i].color = Color.Lerp(Color.white, Color.red, timer / target);
+            float alpha = Mathf.Lerp(0, 1, timer / target) * 0.8f;
+            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, alpha);
+            arrowMaterial[i].color = matCol;
 
         }
 
@@ -197,7 +202,7 @@ public class UIController : MonoBehaviour
         if (hoodMirrors.Length <= 1)
             return;
 
-        corners = GetHoodMirrorCorner(transform.position.y + 3f, mirrorMargin);
+        corners = GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
@@ -205,8 +210,6 @@ public class UIController : MonoBehaviour
             arrows[i].gameObject.SetActive(true);
             arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin) ;
 
-
-            arrowMaterial[i].color = Color.Lerp(Color.white, Color.red, timer / target);
 
             StartUIEaseInOut(0.5f, true);
 
@@ -235,16 +238,13 @@ public class UIController : MonoBehaviour
             return;
 
 
-        corners = GetHoodMirrorCorner(transform.position.y + 3f, mirrorMargin);
+        corners = GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
 
             arrows[i].gameObject.SetActive(true);
             arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin);
-
-
-            arrowMaterial[i].color = Color.Lerp(Color.white, Color.red,1);
 
         }
     }
@@ -265,7 +265,8 @@ public class UIController : MonoBehaviour
     {
         for (int i = 0; i < 4; i++) 
         {
-            arrows[i] = Instantiate(arrowObj,Vector3.zero,Quaternion.identity);
+            arrows[i] = Instantiate(arrowObj,Vector3.zero,Quaternion.Euler(new Vector3(90f,i*90f,0)));
+            
             arrows[i].gameObject.SetActive(false);
             arrowMaterial[i] = arrows[i].GetComponent<MeshRenderer>().material;
         }
@@ -276,7 +277,7 @@ public class UIController : MonoBehaviour
         if (!cam)
             return;
         Gizmos.color = Color.yellow;
-        Vector3[] corners = GetHoodMirrorCorner(transform.position.y + 3f,mirrorMargin); 
+        Vector3[] corners = GetHoodMirrorCorner(2,mirrorMargin); 
 
         foreach (Vector3 corner in corners) 
         {

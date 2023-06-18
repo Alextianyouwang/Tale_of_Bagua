@@ -173,7 +173,7 @@ MonoBehaviour:
     passTag: RenderOnTopSelfSortSort
     Event: 500
     filterSettings:
-      RenderQueueType: 0
+      RenderQueueType: 1
       LayerMask:
         serializedVersion: 2
         m_Bits: 65536
@@ -485,7 +485,7 @@ MonoBehaviour:
     passTag: RenderOnTopSelfSort
     Event: 500
     filterSettings:
-      RenderQueueType: 0
+      RenderQueueType: 1
       LayerMask:
         serializedVersion: 2
         m_Bits: 65536

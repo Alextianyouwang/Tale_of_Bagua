@@ -29,9 +29,12 @@ public class UIController : MonoBehaviour
     private GameObject[] arrows = new GameObject[4];
     private Material[] arrowMaterial = new Material[4];
 
-    private Vector3[] corners;
 
     private Coroutine easeInCo;
+
+    private float focusedMargin = 0.2f;
+    private float transitionMargin = 0.5f;
+    private float expandedMargin = 1.2f;
 
 
     private void OnEnable()
@@ -42,6 +45,7 @@ public class UIController : MonoBehaviour
         MirrorManager.OnAbortCollapse += UpdateUIAbortCharge;
         MirrorManager.OnCollapsing += UpdateUIOnCollapsing;
         MirrorManager.OnExpand += UpdateUIOnExpand;
+        MirrorManager.OnChargingRelease += UpdateUIChargeRelease;
         LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
 
         
@@ -54,6 +58,7 @@ public class UIController : MonoBehaviour
         MirrorManager.OnAbortCollapse -= UpdateUIAbortCharge;
         MirrorManager.OnCollapsing -= UpdateUIOnCollapsing;
         MirrorManager.OnExpand -= UpdateUIOnExpand;
+        MirrorManager.OnChargingRelease -= UpdateUIChargeRelease;
 
         LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
 
@@ -78,8 +83,8 @@ public class UIController : MonoBehaviour
     {
         float percent = 0;
 
-        float originalMargin = easein ? 1.2f : 0.2f;
-        float targetMargin = easein ? 0.2f  : 1.2f;
+        float originalMargin = easein ? expandedMargin : focusedMargin;
+        float targetMargin = easein ? focusedMargin : expandedMargin + 0.4f;
 
         float originalAlpha = easein ? 0f : 0.8f;
         float targetAlpha = easein ? 0.8f : 0f;
@@ -178,7 +183,8 @@ public class UIController : MonoBehaviour
 
         slider.value = timer / target;
 
-        corners = GetHoodMirrorCorner(2, mirrorMargin);
+        mirrorMargin = expandedMargin;
+       Vector3[]  corners = GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
@@ -193,7 +199,16 @@ public class UIController : MonoBehaviour
 
 
     }
+    private void UpdateUIChargeRelease(float timer, float target) 
+    {
+        mirrorMargin = Mathf.Lerp(focusedMargin, transitionMargin, timer / target);
+        Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
+        for (int i = 0; i < 4; i++)
+        {
+            arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin);
+        }
 
+    }
     private void UpdateUIFinishedCharge(float timer, float target)
     {
         if (!slider)
@@ -202,7 +217,7 @@ public class UIController : MonoBehaviour
         if (hoodMirrors.Length <= 1)
             return;
 
-        corners = GetHoodMirrorCorner(2, mirrorMargin);
+        Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
@@ -217,19 +232,34 @@ public class UIController : MonoBehaviour
         slider.value = 0;
     }
 
-    private void UpdateUIAbortCharge(float timer, float target) 
+    private void UpdateUIAbortCharge(float timer, float target, bool isCollapsed) 
     {
         if (!slider)
             return;
         if (hoodMirrors.Length <= 1)
             return;
 
-        for (int i = 0; i < 4; i++)
-        {
-           
-            arrows[i].gameObject.SetActive(false);
-        }
+        if (!isCollapsed)
+            for (int i = 0; i < 4; i++)
+            {
 
+                arrows[i].gameObject.SetActive(false);
+            }
+        else 
+        {
+            mirrorMargin = focusedMargin;
+
+            Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
+
+            for (int i = 0; i < 4; i++)
+            {
+
+                arrows[i].gameObject.SetActive(true);
+                arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin);
+
+            }
+        }
+           
     }
 
     private void UpdateUIOnCollapsing() 
@@ -238,7 +268,7 @@ public class UIController : MonoBehaviour
             return;
 
 
-        corners = GetHoodMirrorCorner(2, mirrorMargin);
+        Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
@@ -265,7 +295,7 @@ public class UIController : MonoBehaviour
     {
         for (int i = 0; i < 4; i++) 
         {
-            arrows[i] = Instantiate(arrowObj,Vector3.zero,Quaternion.Euler(new Vector3(90f,i*90f,0)));
+            arrows[i] = Instantiate(arrowObj,Vector3.zero,Quaternion.Euler(new Vector3(0,i*90f,0)));
             
             arrows[i].gameObject.SetActive(false);
             arrowMaterial[i] = arrows[i].GetComponent<MeshRenderer>().material;

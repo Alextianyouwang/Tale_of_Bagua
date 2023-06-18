@@ -14,8 +14,9 @@ public class MirrorManager : MonoBehaviour
     public static Action<Mirror> OnSharingCurrentMirror;
 
     public static Action<float,float> OnChargingCollapse;
+    public static Action<float,float> OnChargingRelease;
     public static Action<float,float> OnChargedCollapse;
-    public static Action<float,float> OnAbortCollapse;
+    public static Action<float,float,bool> OnAbortCollapse;
     public static Action OnCollapsing;
     public static Action OnExpand;
 
@@ -172,7 +173,7 @@ public class MirrorManager : MonoBehaviour
 
     void UpdateInput() 
     {
-        if (isCollapsed)
+        if (isCollapsed&& !Input.GetMouseButton(1))
             OnCollapsing?.Invoke();
 
         if (Input.GetMouseButtonDown(0))
@@ -194,7 +195,10 @@ public class MirrorManager : MonoBehaviour
         {
             collapseTimer += Time.deltaTime;
             if (!isCollapsed)
-                OnChargingCollapse?.Invoke(collapseTimer,chargeTime);
+                OnChargingCollapse?.Invoke(collapseTimer, chargeTime);
+            else
+                OnChargingRelease?.Invoke(collapseTimer, chargeTime);
+
         }
         if (Input.GetMouseButtonUp(1)) 
         {
@@ -213,8 +217,9 @@ public class MirrorManager : MonoBehaviour
             }
             else 
             {
-                if (!isCollapsed)
-                    OnAbortCollapse?.Invoke(collapseTimer,chargeTime);
+                OnAbortCollapse?.Invoke(collapseTimer, chargeTime,isCollapsed);
+              
+                   
             }
             collapseTimer = 0;
         }

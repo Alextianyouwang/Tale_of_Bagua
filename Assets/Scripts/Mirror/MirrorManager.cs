@@ -104,7 +104,7 @@ public class MirrorManager : MonoBehaviour
             for (int i = 0; i < hoodMirrors.Length; i++)
             {
                 Mirror m = hoodMirrors[i];
-                speedinc += 0.3f;
+                //speedinc += 0.3f;
                 m.ToggleBoxesRigidCollider(true);
 
                 UpdateMirrorPosition(m, 2 - speedinc);
@@ -224,7 +224,7 @@ public class MirrorManager : MonoBehaviour
             collapseTimer = 0;
         }
 
-      
+        
         if (hoodMirrors.Length == 0 && isCollapsed)
         {
             isCollapsed = false;

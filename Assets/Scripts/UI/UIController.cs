@@ -11,8 +11,6 @@ using static UnityEngine.UI.GridLayoutGroup;
 public class UIController : MonoBehaviour
 {
 
-    public Slider slider;
-
     private Mirror[] hoodMirrors;
 
 
@@ -36,6 +34,7 @@ public class UIController : MonoBehaviour
     private float transitionMargin = 0.5f;
     private float expandedMargin = 1.2f;
 
+    private float fullMirrorAlpha = 0.15f;
 
     private void OnEnable()
     {
@@ -86,8 +85,8 @@ public class UIController : MonoBehaviour
         float originalMargin = easein ? expandedMargin : focusedMargin;
         float targetMargin = easein ? focusedMargin : expandedMargin + 0.4f;
 
-        float originalAlpha = easein ? 0f : 0.8f;
-        float targetAlpha = easein ? 0.8f : 0f;
+        float originalAlpha = easein ? 0f : fullMirrorAlpha;
+        float targetAlpha = easein ? fullMirrorAlpha: 0f;
 
         while (percent < 1)
         {
@@ -176,12 +175,8 @@ public class UIController : MonoBehaviour
     }
     private void UpdateUICharge(float timer, float target) 
     {
-        if (!slider)
-            return;
         if (hoodMirrors.Length <= 1)
             return;
-
-        slider.value = timer / target;
 
         mirrorMargin = expandedMargin;
        Vector3[]  corners = GetHoodMirrorCorner(2, mirrorMargin);
@@ -191,7 +186,7 @@ public class UIController : MonoBehaviour
 
             arrows[i].gameObject.SetActive(true);
             arrows[ i].transform.position = ClampToScreenBound(corners[i],screenMargin);
-            float alpha = Mathf.Lerp(0, 1, timer / target) * 0.8f;
+            float alpha = Mathf.Lerp(0, 1, timer / target) * fullMirrorAlpha;
             Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, alpha);
             arrowMaterial[i].color = matCol;
 
@@ -211,8 +206,6 @@ public class UIController : MonoBehaviour
     }
     private void UpdateUIFinishedCharge(float timer, float target)
     {
-        if (!slider)
-            return;
 
         if (hoodMirrors.Length <= 1)
             return;
@@ -229,13 +222,10 @@ public class UIController : MonoBehaviour
             StartUIEaseInOut(0.5f, true);
 
         }
-        slider.value = 0;
     }
 
     private void UpdateUIAbortCharge(float timer, float target, bool isCollapsed) 
     {
-        if (!slider)
-            return;
         if (hoodMirrors.Length <= 1)
             return;
 

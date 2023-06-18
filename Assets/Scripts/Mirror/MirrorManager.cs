@@ -24,6 +24,8 @@ public class MirrorManager : MonoBehaviour
 
     public AnimationCurve mirrorMoveCurve;
 
+    private float mirrorWorldY = 2.1f;
+
     [ColorUsage(true,true)]
     public Color normalCol;
     [ColorUsage(true, true)]
@@ -67,6 +69,8 @@ public class MirrorManager : MonoBehaviour
             if (singleHit.transform.gameObject.tag == "MirrorPlane")
                 finalWorldPos = singleHit.point;
 
+            finalWorldPos.y = mirrorWorldY;
+
             if (singleHit.transform.gameObject.tag == "Mirror")
             {
                 if (!firstMirrorHasBeenClicked)
@@ -83,7 +87,7 @@ public class MirrorManager : MonoBehaviour
     }
     public void UpdateMirrorPosition(Mirror targetMirror,float speed)
     {
-        Vector3 posXZ = new Vector3(targetMirror.transform.position.x, finalWorldPos.y, targetMirror.transform.position.z);
+        Vector3 posXZ = new Vector3(targetMirror.transform.position.x, mirrorWorldY, targetMirror.transform.position.z);
         Vector3 direction = Vector3.Normalize(finalWorldPos - (posXZ - offset));
         float distance = (finalWorldPos - (posXZ - offset)).magnitude;
         targetMirror.GetComponent<Rigidbody>().AddForce(direction * Mathf.Min(distance * speed, 5), ForceMode.Force);
@@ -93,6 +97,11 @@ public class MirrorManager : MonoBehaviour
     private void FollowFixUpdate() 
     {
         UpdateMirrorPhysics();
+
+        foreach (Mirror m in allMirrors) 
+        {
+            m.rb.position = new Vector3(m.rb.position.x, mirrorWorldY, m.rb.position.z);
+        }
 
         if (!currentMirror || !firstMirrorHasBeenClicked)
             return;

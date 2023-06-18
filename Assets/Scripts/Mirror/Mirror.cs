@@ -11,8 +11,8 @@ public class Mirror : MonoBehaviour
     private Coroutine movingCo;
 
     public Action OnFinishMoving;
-
-    private Rigidbody rb;
+    [HideInInspector]
+    public Rigidbody rb;
 
     [HideInInspector]
     public Material[] material;

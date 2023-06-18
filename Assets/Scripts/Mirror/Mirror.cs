@@ -22,15 +22,20 @@ public class Mirror : MonoBehaviour
     [HideInInspector]
     public MeshRenderer frameRenderer;
 
-    void Start()
+    private void Awake()
     {
         frameRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
-        material = frameRenderer .materials;
-        
+        material = frameRenderer.materials;
+
         if (material == null)
             Debug.LogWarning("Emissive Material for Mirror not found");
-        rb = GetComponent<Rigidbody>(); 
+        rb = GetComponent<Rigidbody>();
         GetBoxs();
+    }
+
+    void Start()
+    {
+     
     }
 
     public void MoveMirrorTowards(float time, Vector3 targetPos, AnimationCurve curve) 

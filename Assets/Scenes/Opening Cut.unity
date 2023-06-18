@@ -149,7 +149,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 43968059}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -158,8 +158,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 537, y: 52}
-  m_SizeDelta: {x: 797.1467, y: 303.3307}
+  m_AnchoredPosition: {x: 513.1267, y: 62}
+  m_SizeDelta: {x: 885.1789, y: 303.3307}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &43968061
 MonoBehaviour:
@@ -194,7 +194,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.47
-  m_Text: "Let me do it for you, Gramps. \n\n\u8BA9\u6211\u6765\u5427\u7237\u7237\u3002"
+  m_Text: "Let me do it for you, Gramps. \n\u6211\u5E74\u8F7B\uFF0C\u6211\u6765\u6211\u6765\u3002"
 --- !u!222 &43968062
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -238,8 +238,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 537, y: 52}
-  m_SizeDelta: {x: 797.1467, y: 303.3307}
+  m_AnchoredPosition: {x: 513.1267, y: 62}
+  m_SizeDelta: {x: 885.1789, y: 303.3307}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &197715401
 MonoBehaviour:
@@ -274,7 +274,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.47
-  m_Text: "Gramps, where did we come from?\n\u7237\u7237\u554A\uFF0C\u6211\u4EEC\u4ECE\u54EA\u91CC\u6765?"
+  m_Text: "Gramps, where did we come from?\n\u7237\u7237\u554A\uFF0C\u54B1\u4EEC\u7684\u7956\u5148\u662F\u8C01\u5462?"
 --- !u!222 &197715402
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -283,6 +283,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 197715399}
   m_CullTransparentMesh: 1
+--- !u!1 &230644335 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2525821825750340973, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+  m_PrefabInstance: {fileID: 2129335173}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &230644336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230644335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a25e8d5084380bb48819865b76d8df9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &334585760
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,7 +371,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.47
-  m_Text: "Find the four Ba Gua mirrors, our family heirloom. They will guide you
+  m_Text: "Find the four Ba Gua mirrors, our family heirloom. \nThey will guide you
     to our full family tree.\n\n\u63A2\u5F97\u543E\u5BB6\u4F20\u4E4B\u56DB\u9762\u516B\u5366\u955C\u3002\u65CF\u8C31\u81EA\u5728\u5176\u4E2D\u3002"
 --- !u!222 &334585763
 CanvasRenderer:
@@ -667,7 +684,7 @@ MonoBehaviour:
     m_LineSpacing: 1.47
   m_Text: "The Yao family of ours has a long, long history, but we lost our genealogy
     eight years ago in a fire.\nThe Yaos' decendents will forget where they came
-    from...\n\n\r\u543E\u5BB6\u59DA\u65CF\uFF0C\u6E90\u8FDC\u6D41\u957F\uFF0C\u5176\u65CF\u8C31\u4E8E\u516B\u5E74\u524D\u7684\u5927\u706B\u4E2D\u4E3A\u711A\u3002\u59DA\u5BB6\u540E\u88D4\u9042\u9057\u5FD8\u5DF1\u8EAB\u4E16\u77E3\u3002"
+    from...\n\n\r\u543E\u5BB6\u59DA\u65CF\uFF0C\u6E90\u8FDC\u6D41\u957F\uFF0C\u7136\u5176\u65CF\u8C31\u4E8E\u516B\u5E74\u524D\u706B\u4E2D\u4E3A\u711A\u3002\u59DA\u5BB6\u540E\u88D4\u9042\u9057\u5FD8\u5DF1\u8EAB\u4E16\u77E3\u2026\u2026"
 --- !u!222 &655670413
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -717,6 +734,7 @@ MonoBehaviour:
   - {fileID: 1217953181}
   - {fileID: 1790443944}
   Ending: 0
+  bagua: {fileID: 230644336}
 --- !u!4 &665164761
 Transform:
   m_ObjectHideFlags: 0
@@ -730,7 +748,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &729023725
 GameObject:
@@ -848,7 +866,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.47
-  m_Text: "It was a disaster. I was busy saving you and other kids from fire. Now
+  m_Text: "It was a disaster.\nI was busy saving you and other kids from fire. Now
     I'm too old to go back and search.\n\n\u7136\uFF0C\u6B64\u756A\u4E3A\u4E00\u52AB\u96BE\uFF0C\u521D\u53EA\u987E\u6551\u6C5D\u4E0E\u4ED6\u6570\u7AE5\uFF0C\u543E\u5E74\u5C06\u8FC8\uFF0C\u4E0D\u590D\u6709\u529B\u89C5\u4E4B\u2026\u2026"
 --- !u!222 &736169175
 CanvasRenderer:
@@ -892,7 +910,7 @@ RectTransform:
   - {fileID: 729023726}
   - {fileID: 519738767}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -995,8 +1013,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 537, y: 52}
-  m_SizeDelta: {x: 797.1467, y: 303.3307}
+  m_AnchoredPosition: {x: 513.1267, y: 62}
+  m_SizeDelta: {x: 885.1789, y: 303.3307}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1217953183
 MonoBehaviour:
@@ -1031,8 +1049,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.47
-  m_Text: "I will find the Ba Gua mirrors and bring back our history. I promise.\n\u4EA4\u7ED9\u6211\u5427\u7237\u7237\u3002
-    \u6211\u53BB\u4E86\uFF01"
+  m_Text: "I will find them and bring back our history. Deal!\n\u627E\u516B\u5366\u955C\u5C31\u5305\u5728\u6211\u8EAB\u4E0A\u4E86\u3002
+    \u6211\u53BB\u54AF\uFF01"
 --- !u!222 &1217953184
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1124,7 +1142,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 14.93, y: 0, z: 0}
 --- !u!114 &1435742670
 MonoBehaviour:
@@ -1263,8 +1281,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 537, y: 52}
-  m_SizeDelta: {x: 797.1467, y: 303.3307}
+  m_AnchoredPosition: {x: 513.1267, y: 62}
+  m_SizeDelta: {x: 885.1789, y: 303.3307}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1606593595
 MonoBehaviour:
@@ -1299,7 +1317,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.47
-  m_Text: "Was it in our old house that got burned down...?\n\n\u4E0D\u662F\u5728\u90A3\u680B\u70E7\u6BC1\u7684\u8001\u623F\u5B50\u91CC\u4E48\uFF1F"
+  m_Text: "Was it in our old house that got burned down...?\n\u4E0D\u662F\u5728\u90A3\u4E2A\u88AB\u70E7\u6CA1\u7684\u8001\u623F\u5B50\u91CC\u4E48\uFF1F"
 --- !u!222 &1606593596
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1375,7 +1393,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1639271151
 AudioSource:
@@ -1544,7 +1562,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.47
-  m_Text: "Then you will know everything about our origin...\n\n\u53CA\u81F3\uFF0C\u5BB6\u65CF\u4E07\u8C61\u65B9\u53EF\u5F97\u4EE5\u89E3\u7B54\u3002"
+  m_Text: "Then you will know everything about our origin...\n\n\u53CA\u81F3\u5F7C\u65F6\uFF0C\u5BB6\u65CF\u4E07\u8C61\u65B9\u53EF\u5F97\u4EE5\u89E3\u7B54\u3002"
 --- !u!222 &1662134627
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1781,7 +1799,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &1889093033
 MonoBehaviour:
@@ -1803,6 +1821,67 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!1001 &2129335173
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2525821825750340973, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_Name
+      value: Bagua
+      objectReference: {fileID: 0}
+    - target: {fileID: 2525821825750340973, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.164
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.949
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5381285
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.84286284
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 114.88699
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952286503104532233, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 88ff1ebaa09c7f74b8e695843db8bd10, type: 3}
 --- !u!33 &3905595746503691667
 MeshFilter:
   m_ObjectHideFlags: 0

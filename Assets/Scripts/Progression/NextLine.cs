@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using System;
 public class NextLine : MonoBehaviour
 {
     public int dialogueIndex = 0;
     public GameObject[] Dialogues;
     public bool Ending;
 
+    public static Action<bool> OnToggleBagua;
+
+    public BaguaShow bagua;
     public void NextDialogue()
     {
         for (int i = 0; i < Dialogues.Length; i++)
@@ -20,6 +23,15 @@ public class NextLine : MonoBehaviour
             {
                 Dialogues[i].SetActive(false);
             }
+
+            if (!bagua)
+                continue;
+            if (dialogueIndex == 5) 
+            {
+                bagua.SetActive(true);
+            }
+            if (dialogueIndex == 6)
+                bagua.SetActive(false);
         }
 
 

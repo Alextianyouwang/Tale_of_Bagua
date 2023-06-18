@@ -1,5 +1,27 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6509922249136655234
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70afe9e12c7a7ed47911bb608a23a8ff, type: 3}
+  m_Name: SplitToning
+  m_EditorClassIdentifier: 
+  active: 1
+  shadows:
+    m_OverrideState: 1
+    m_Value: {r: 0.23354127, g: 0.19446424, b: 0.4339623, a: 1}
+  highlights:
+    m_OverrideState: 1
+    m_Value: {r: 0.4339623, g: 0.42691523, b: 0.39916342, a: 1}
+  balance:
+    m_OverrideState: 1
+    m_Value: 70.8
 --- !u!114 &-3256723987544456667
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -15,13 +37,13 @@ MonoBehaviour:
   active: 1
   type:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.438
+    m_Value: 0.503
   response:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.132
   texture:
     m_OverrideState: 0
     m_Value: {fileID: 0}
@@ -42,6 +64,9 @@ MonoBehaviour:
   - {fileID: 1363051968197230784}
   - {fileID: -3256723987544456667}
   - {fileID: 6555931550076129709}
+  - {fileID: 1527319305733668975}
+  - {fileID: 5266671579005421121}
+  - {fileID: -6509922249136655234}
 --- !u!114 &1363051968197230784
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -60,10 +85,10 @@ MonoBehaviour:
     m_Value: 0.94
   intensity:
     m_OverrideState: 1
-    m_Value: 1.5
+    m_Value: 1.66
   scatter:
     m_OverrideState: 1
-    m_Value: 0.484
+    m_Value: 0.313
   clamp:
     m_OverrideState: 0
     m_Value: 65472
@@ -82,6 +107,41 @@ MonoBehaviour:
   dirtIntensity:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &1527319305733668975
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 221518ef91623a7438a71fef23660601, type: 3}
+  m_Name: WhiteBalance
+  m_EditorClassIdentifier: 
+  active: 1
+  temperature:
+    m_OverrideState: 1
+    m_Value: -4.2
+  tint:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &5266671579005421121
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81180773991d8724ab7f2d216912b564, type: 3}
+  m_Name: ChromaticAberration
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.038
 --- !u!114 &6555931550076129709
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -100,7 +160,7 @@ MonoBehaviour:
     m_Value: 0
   contrast:
     m_OverrideState: 1
-    m_Value: 17.4
+    m_Value: 5
   colorFilter:
     m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -131,10 +191,10 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.288
+    m_Value: 0.306
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.352
+    m_Value: 0.321
   rounded:
     m_OverrideState: 1
     m_Value: 0

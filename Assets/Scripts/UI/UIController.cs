@@ -1,12 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using Unity.VisualScripting;
-using UnityEditor.Purchasing;
+
 using UnityEngine;
-using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
-using static UnityEngine.UI.GridLayoutGroup;
+
 
 public class UIController : MonoBehaviour
 {

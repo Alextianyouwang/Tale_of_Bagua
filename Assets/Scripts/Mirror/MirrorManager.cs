@@ -98,11 +98,7 @@ public class MirrorManager : MonoBehaviour
     {
         UpdateMirrorPhysics();
 
-        foreach (Mirror m in allMirrors) 
-        {
-            m.rb.position = new Vector3(m.rb.position.x, mirrorWorldY, m.rb.position.z);
-        }
-
+       
         if (!currentMirror || !firstMirrorHasBeenClicked)
             return;
 
@@ -124,6 +120,11 @@ public class MirrorManager : MonoBehaviour
             UpdateMirrorPosition(currentMirror,2);
 
         }
+        foreach (Mirror m in allMirrors)
+        {
+            m.rb.position = new Vector3(m.rb.position.x, mirrorWorldY, m.rb.position.z);
+        }
+
     }
     private void StopCollapseBuffer() 
     {
@@ -273,11 +274,12 @@ public class MirrorManager : MonoBehaviour
   
     void UpdateMaterial() 
     {
+        if (allMirrors != null)
         foreach (Mirror m in allMirrors)
             if (m)
                 SetMirrorColor(m, normalCol);
-
-        foreach (Mirror m in hoodMirrors)
+        if (hoodMirrors != null)
+            foreach (Mirror m in hoodMirrors)
             if (m)
                 SetMirrorColor(m, hoodCol);
         if (currentMirror)

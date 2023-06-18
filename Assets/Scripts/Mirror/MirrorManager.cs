@@ -8,7 +8,7 @@ public class MirrorManager : MonoBehaviour
     private Mirror currentMirror;
     public LayerMask mirrorMask;
     private Vector3 offset, finalWorldPos;
-    private bool firstMirrorHasBeenClicked = false, isClicking = false, isCollapsed = false;
+    private bool firstMirrorHasBeenClicked = false, isClicking = false, isCollapsed = false, isCharged = false, canChargeAgain = true;
     private Mirror[] hoodMirrors,allMirrors;
     public static Func<bool> OnCheckingSlidable;
     public static Action<Mirror> OnSharingCurrentMirror;
@@ -18,7 +18,7 @@ public class MirrorManager : MonoBehaviour
     public static Action<float,float> OnChargedCollapse;
     public static Action<float,float,bool> OnAbortCollapse;
     public static Action OnCollapsing;
-    public static Action OnExpand;
+    public static Action<bool> OnExpand;
 
     private float collapseTimer = 0,chargeTime = 0.5f;
 
@@ -97,23 +97,22 @@ public class MirrorManager : MonoBehaviour
         if (!currentMirror || !firstMirrorHasBeenClicked)
             return;
 
-        float speedinc = 0;
         if (isCollapsed && hoodMirrors.Contains(currentMirror))
         {
            
             for (int i = 0; i < hoodMirrors.Length; i++)
             {
                 Mirror m = hoodMirrors[i];
-                //speedinc += 0.3f;
                 m.ToggleBoxesRigidCollider(true);
 
-                UpdateMirrorPosition(m, 2 - speedinc);
+                UpdateMirrorPosition(m,2);
             }
         }
-        else if (!isCollapsed)
+       // else if (!isCollapsed)
+        else 
         {
 
-            UpdateMirrorPosition(currentMirror, 2 - speedinc);
+            UpdateMirrorPosition(currentMirror,2);
 
         }
     }
@@ -190,45 +189,64 @@ public class MirrorManager : MonoBehaviour
             if (isCollapsed)
                 CollapseHoodMirror();
         }
+        if (Input.GetMouseButtonDown(1))
+        {
+       
+            if (isCollapsed)
+            {
+                canChargeAgain = false;
+                OnExpand?.Invoke(false);
+                ExpandHoodMirror();
 
+            }
+
+        }
         if (Input.GetMouseButton(1)) 
         {
+            if (!canChargeAgain)
+                return;
             collapseTimer += Time.deltaTime;
             if (!isCollapsed)
                 OnChargingCollapse?.Invoke(collapseTimer, chargeTime);
-            else
-                OnChargingRelease?.Invoke(collapseTimer, chargeTime);
+
 
         }
         if (Input.GetMouseButtonUp(1)) 
         {
-
+            if (!canChargeAgain) 
+            {
+                isCharged = false;
+                canChargeAgain = true;
+                return;
+            }
             if (collapseTimer >= chargeTime)
             {
+
                 OnChargedCollapse?.Invoke(collapseTimer, chargeTime);
-                if (!isCollapsed)
-                    CollapseHoodMirror();
-                else 
+                if (!isCollapsed) 
                 {
-                    ExpandHoodMirror();
-                    OnExpand?.Invoke();
+                    CollapseHoodMirror();
+                    isCharged = true;
                 }
-                
             }
             else 
             {
-                OnAbortCollapse?.Invoke(collapseTimer, chargeTime,isCollapsed);
-              
-                   
+                if (!isCharged)
+                    OnAbortCollapse?.Invoke(collapseTimer, chargeTime,false);
             }
             collapseTimer = 0;
         }
 
-        
         if (hoodMirrors.Length == 0 && isCollapsed)
         {
+            OnAbortCollapse?.Invoke(collapseTimer, chargeTime,true);
+            isCharged = false;
+            canChargeAgain = true;
             isCollapsed = false;
+            
         }
+
+    
         OnSharingCurrentMirror?.Invoke(currentMirror);
 
         if (!currentMirror || !firstMirrorHasBeenClicked)

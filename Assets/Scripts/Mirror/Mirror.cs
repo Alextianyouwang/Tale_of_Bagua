@@ -6,7 +6,7 @@ using System.Linq;
 public class Mirror : MonoBehaviour
 {
     private Collider[] boxs;
-    private bool colliderToggleState = false;
+   //private bool colliderToggleState = false;
 
     private Coroutine movingCo;
 
@@ -84,9 +84,9 @@ public class Mirror : MonoBehaviour
    
     public void ToggleBoxesRigidCollider(bool value) 
     {
-        if (colliderToggleState == value)
+        /*if (colliderToggleState == value)
             return;
-        colliderToggleState = value;
+        colliderToggleState = value;*/
         foreach (Collider b in boxs)
             b.isTrigger = !value;
     }

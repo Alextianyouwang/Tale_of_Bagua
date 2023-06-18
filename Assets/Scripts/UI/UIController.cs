@@ -16,8 +16,6 @@ public class UIController : MonoBehaviour
 
     private Camera cam;
 
-    [Range(0,1)]
-    public float mirrorMargin;
 
     [Range(0,50)]
     public float screenMargin;
@@ -29,6 +27,7 @@ public class UIController : MonoBehaviour
 
 
     private Coroutine easeInCo;
+    private float mirrorMargin;
 
     private float focusedMargin = 0.2f;
     private float transitionMargin = 0.5f;
@@ -44,7 +43,7 @@ public class UIController : MonoBehaviour
         MirrorManager.OnAbortCollapse += UpdateUIAbortCharge;
         MirrorManager.OnCollapsing += UpdateUIOnCollapsing;
         MirrorManager.OnExpand += UpdateUIOnExpand;
-        MirrorManager.OnChargingRelease += UpdateUIChargeRelease;
+        //MirrorManager.OnChargingRelease += UpdateUIChargeRelease;
         LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
 
         
@@ -57,7 +56,7 @@ public class UIController : MonoBehaviour
         MirrorManager.OnAbortCollapse -= UpdateUIAbortCharge;
         MirrorManager.OnCollapsing -= UpdateUIOnCollapsing;
         MirrorManager.OnExpand -= UpdateUIOnExpand;
-        MirrorManager.OnChargingRelease -= UpdateUIChargeRelease;
+        //MirrorManager.OnChargingRelease -= UpdateUIChargeRelease;
 
         LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
 
@@ -73,16 +72,18 @@ public class UIController : MonoBehaviour
         hoodMirrors = hoodMirror;
     }
 
-    private void StartUIEaseInOut(float time, bool easein) 
+    private void StartUIEaseInOut(float time, bool easein,bool onlyEaseInMaterial)
     {
-        easeInCo = StartCoroutine(UI_EaseInOut(time,easein));
+        if (easeInCo != null)
+            StopCoroutine(easeInCo);
+        easeInCo = StartCoroutine(UI_EaseInOut(time,easein, onlyEaseInMaterial));
     }
 
-    private IEnumerator UI_EaseInOut(float time,bool easein)
+    private IEnumerator UI_EaseInOut(float time,bool easein, bool onlyAnimateMaterial )
     {
         float percent = 0;
 
-        float originalMargin = easein ? expandedMargin : focusedMargin;
+        float originalMargin = easein ? transitionMargin : focusedMargin;
         float targetMargin = easein ? focusedMargin : expandedMargin + 0.4f;
 
         float originalAlpha = easein ? 0f : fullMirrorAlpha;
@@ -92,14 +93,14 @@ public class UIController : MonoBehaviour
         {
             percent += Time.deltaTime / time;
 
+        
 
-            mirrorMargin = Mathf.Lerp(originalMargin+0.2f, targetMargin + 0.2f, percent);
-            Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
-
-
+            if (!onlyAnimateMaterial)
             for (int i = 0; i < 4; i++)
             {
-                arrows[i].transform.position = ClampToScreenBound(corners[i],screenMargin);
+                    mirrorMargin = Mathf.Lerp(originalMargin, targetMargin, percent);
+                    Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
+                    arrows[i].transform.position = ClampToScreenBound(corners[i],screenMargin);
             }
             if (!easein)
             {
@@ -178,7 +179,7 @@ public class UIController : MonoBehaviour
         if (hoodMirrors.Length <= 1)
             return;
 
-        mirrorMargin = expandedMargin;
+        mirrorMargin = Mathf.Lerp(expandedMargin, transitionMargin, timer / target) ;
        Vector3[]  corners = GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
@@ -192,16 +193,6 @@ public class UIController : MonoBehaviour
 
         }
 
-
-    }
-    private void UpdateUIChargeRelease(float timer, float target) 
-    {
-        mirrorMargin = Mathf.Lerp(focusedMargin, transitionMargin, timer / target);
-        Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
-        for (int i = 0; i < 4; i++)
-        {
-            arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin);
-        }
 
     }
     private void UpdateUIFinishedCharge(float timer, float target)
@@ -218,37 +209,23 @@ public class UIController : MonoBehaviour
             arrows[i].gameObject.SetActive(true);
             arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin) ;
 
-
-            StartUIEaseInOut(0.5f, true);
+           
+            StartUIEaseInOut(1f, true,false);
 
         }
     }
 
-    private void UpdateUIAbortCharge(float timer, float target, bool isCollapsed) 
+    private void UpdateUIAbortCharge(float timer, float target, bool disableOverrite) 
     {
-        if (hoodMirrors.Length <= 1)
+        if (hoodMirrors.Length <= 1 && !disableOverrite)
             return;
 
-        if (!isCollapsed)
             for (int i = 0; i < 4; i++)
             {
 
                 arrows[i].gameObject.SetActive(false);
             }
-        else 
-        {
-            mirrorMargin = focusedMargin;
 
-            Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
-
-            for (int i = 0; i < 4; i++)
-            {
-
-                arrows[i].gameObject.SetActive(true);
-                arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin);
-
-            }
-        }
            
     }
 
@@ -269,14 +246,14 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void UpdateUIOnExpand() 
+    private void UpdateUIOnExpand(bool onlyUpdateMaterial) 
     {
         if (hoodMirrors.Length <= 1)
             return;
 
         for (int i = 0; i < 4; i++)
         {
-            StartUIEaseInOut(0.5f, false);
+            StartUIEaseInOut(1f, false,onlyUpdateMaterial);
         }
 
     }

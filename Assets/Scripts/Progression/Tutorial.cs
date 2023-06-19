@@ -50,10 +50,16 @@ public class Tutorial : MonoBehaviour
     {
         CheckCondition();
 
-        if (Input.GetMouseButtonUp(1)) 
+        if (Input.GetMouseButtonDown(1)) 
         {
-            canExitTutorial = true;
+            if (!canExitTutorial && havePlayedTutorial) 
+            {
+                MirrorManager.canUseRightClick = true;
+                canExitTutorial = true;
+            }
+          
         }
+      
     }
 
 
@@ -115,7 +121,9 @@ public class Tutorial : MonoBehaviour
     {
         MirrorManager.canUseRightClick = false;
 
-        yield return StartCoroutine(master.ControlledUI_EaseInOut(1f, 2f, 0.2f, 0f, 1f, true,null));
+        Coroutine co;
+        co = StartCoroutine(master.ControlledUI_EaseInOut(1f, 2f, 0.2f, 0f, 1f, true, null)); 
+        yield return co;
 
         while (!canExitTutorial) 
         {
@@ -126,15 +134,11 @@ public class Tutorial : MonoBehaviour
                 master.arrows[i].gameObject.SetActive(hoodMirrors.Length >= 2);
             }
 
+           
             yield return null;
         }
-
-        master.StartControlledUIEaseInOut(0.1f, 0.2f, 0.4f, 1f, 0f, false,EnableRightClick);
-    }
-
-    void EnableRightClick() 
-    {
-        MirrorManager.canUseRightClick = true;
+        if (canExitTutorial)
+        { StopCoroutine(co); }
     }
 
 }

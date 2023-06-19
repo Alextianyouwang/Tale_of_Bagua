@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 
 public class UIController : MonoBehaviour
@@ -17,7 +19,8 @@ public class UIController : MonoBehaviour
 
 
     public GameObject arrowObj;
-    private GameObject[] arrows = new GameObject[4];
+    [HideInInspector]
+    public GameObject[] arrows = new GameObject[4];
     private Material[] arrowMaterial = new Material[4];
 
 
@@ -30,6 +33,8 @@ public class UIController : MonoBehaviour
 
     private float fullMirrorAlpha = 0.15f;
 
+    public static bool canDoUIAnime = true;
+
     private void OnEnable()
     {
         cam = Camera.main;
@@ -40,6 +45,7 @@ public class UIController : MonoBehaviour
         MirrorManager.OnExpand += UpdateUIOnExpand;
         //MirrorManager.OnChargingRelease += UpdateUIChargeRelease;
         LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
+        Tutorial.OnRequestTutorialMasterSupport += GetSelf;
 
         
     }
@@ -54,6 +60,7 @@ public class UIController : MonoBehaviour
         //MirrorManager.OnChargingRelease -= UpdateUIChargeRelease;
 
         LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
+        Tutorial.OnRequestTutorialMasterSupport -= GetSelf;
 
 
     }
@@ -62,6 +69,11 @@ public class UIController : MonoBehaviour
     {
         InitializeArrow();
     }
+
+    UIController GetSelf() 
+    {
+        return this;
+    }
     void ReceiveHoodMirror(Mirror[] hoodMirror)
     {
         hoodMirrors = hoodMirror;
@@ -69,6 +81,8 @@ public class UIController : MonoBehaviour
 
     private void StartUIEaseInOut(float time, bool easein,bool onlyEaseInMaterial)
     {
+        if (!canDoUIAnime)
+            return;
         if (easeInCo != null)
             StopCoroutine(easeInCo);
         easeInCo = StartCoroutine(UI_EaseInOut(time,easein, onlyEaseInMaterial));
@@ -88,15 +102,13 @@ public class UIController : MonoBehaviour
         {
             percent += Time.deltaTime / time;
 
-        
+
+            Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
+            mirrorMargin = Mathf.Lerp(originalMargin, targetMargin, percent);
 
             if (!onlyAnimateMaterial)
             for (int i = 0; i < 4; i++)
-            {
-                    mirrorMargin = Mathf.Lerp(originalMargin, targetMargin, percent);
-                    Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
                     arrows[i].transform.position = ClampToScreenBound(corners[i],screenMargin);
-            }
             if (!easein)
             {
                 for (int i = 0; i < 4; i++)
@@ -121,7 +133,44 @@ public class UIController : MonoBehaviour
 
     }
 
-    private Vector3[] GetHoodMirrorCorner(float yValue,float margin)
+    public void StartControlledUIEaseInOut(float time, float startMargin, float targetMargin, float startAlpha, float finishAlpha, bool remainActive, Action next)  
+    {
+        StartCoroutine(ControlledUI_EaseInOut(time, startMargin, targetMargin, startAlpha, finishAlpha,remainActive, next));
+     }
+    public IEnumerator ControlledUI_EaseInOut(float time, float startMargin, float targetMargin, float startAlpha, float finishAlpha,bool remainActive, Action next)
+    {
+        float percent = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            arrows[i].SetActive(true);
+        }
+        while (percent < 1)
+        {
+            percent += Time.deltaTime / time;
+            mirrorMargin = Mathf.Lerp(startMargin, targetMargin, percent);
+            Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
+            for (int i = 0; i < 4; i++)
+            {
+            
+                arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin);
+
+                float alpha = Mathf.Lerp(startAlpha, finishAlpha, percent);
+                Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, alpha);
+                arrowMaterial[i].color = matCol;
+
+            }
+            yield return null;
+
+        }
+
+        for (int i = 0; i < 4; i++)
+            {
+                arrows[i].SetActive(remainActive);
+            }
+
+        next?.Invoke();
+    }
+        public Vector3[] GetHoodMirrorCorner(float yValue,float margin)
     {
         Vector3[] corners = new Vector3[4];
         // x:top, y:right, z: bottom , w: left 
@@ -152,7 +201,7 @@ public class UIController : MonoBehaviour
         return corners;
     }
 
-    Vector3 ClampToScreenBound(Vector3 target,float margin) 
+    public Vector3 ClampToScreenBound(Vector3 target,float margin) 
     { 
         Vector3 screenpPoint = cam.WorldToScreenPoint(target);
 
@@ -171,6 +220,8 @@ public class UIController : MonoBehaviour
     }
     private void UpdateUICharge(float timer, float target) 
     {
+        if (!canDoUIAnime)
+            return;
         if (hoodMirrors.Length <= 1)
             return;
 
@@ -192,7 +243,8 @@ public class UIController : MonoBehaviour
     }
     private void UpdateUIFinishedCharge(float timer, float target)
     {
-
+        if (!canDoUIAnime)
+            return;
         if (hoodMirrors.Length <= 1)
             return;
 
@@ -212,6 +264,8 @@ public class UIController : MonoBehaviour
 
     private void UpdateUIAbortCharge(float timer, float target, bool disableOverrite) 
     {
+        if (!canDoUIAnime)
+            return;
         if (hoodMirrors.Length <= 1 && !disableOverrite)
             return;
 
@@ -226,10 +280,17 @@ public class UIController : MonoBehaviour
 
     private void UpdateUIOnCollapsing() 
     {
+        if (!canDoUIAnime)
+            return;
         if (hoodMirrors.Length <= 1)
             return;
 
 
+        ConstantlyUpdatingUIPos(mirrorMargin,screenMargin);
+    }
+
+    public void ConstantlyUpdatingUIPos(float mirrorMargin, float screenMargin) 
+    {
         Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
@@ -243,12 +304,14 @@ public class UIController : MonoBehaviour
 
     private void UpdateUIOnExpand(bool onlyUpdateMaterial) 
     {
+        if (!canDoUIAnime)
+            return;
         if (hoodMirrors.Length <= 1)
             return;
 
         for (int i = 0; i < 4; i++)
         {
-            StartUIEaseInOut(1f, false,onlyUpdateMaterial);
+            StartUIEaseInOut(0.2f, false,onlyUpdateMaterial);
         }
 
     }

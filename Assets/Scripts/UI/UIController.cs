@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
-
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
+using static UnityEngine.GraphicsBuffer;
 
 
 public class UIController : MonoBehaviour
@@ -46,6 +48,7 @@ public class UIController : MonoBehaviour
         //MirrorManager.OnChargingRelease += UpdateUIChargeRelease;
         LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
         Tutorial.OnRequestTutorialMasterSupport += GetSelf;
+        Tutorial.OnRequestMovementTutorial += GetSelf;
 
         
     }
@@ -61,6 +64,8 @@ public class UIController : MonoBehaviour
 
         LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
         Tutorial.OnRequestTutorialMasterSupport -= GetSelf;
+        Tutorial.OnRequestMovementTutorial -= GetSelf;
+
 
 
     }
@@ -68,8 +73,9 @@ public class UIController : MonoBehaviour
     private void Start()
     {
         InitializeArrow();
+        
     }
-
+    
     UIController GetSelf() 
     {
         return this;
@@ -326,6 +332,89 @@ public class UIController : MonoBehaviour
             arrowMaterial[i] = arrows[i].GetComponent<MeshRenderer>().material;
         }
     }
+
+    public class ArrowData 
+    {
+        public float radiusOffset = 0;
+        public float alphaOffset = 0;
+
+        public async void RadiusOffsetIncreaseTo(float value, float speed) 
+        {
+            while (radiusOffset < value) 
+            {
+                radiusOffset += Time.deltaTime * speed;
+                await Task.Yield();
+            }
+        }
+
+        public async void AlphaOffsetDecreaseTo(float value, float speed)
+        {
+            while (alphaOffset > value)
+            {
+                alphaOffset -= Time.deltaTime * speed;
+                await Task.Yield();
+            }
+        }
+    }
+
+
+
+    public void GroupControlArrows(Vector3 centerPosition, float radius, float offsetDegree,float materialAlpha, bool setActive, ArrowData[] arrowDatas)
+    {
+        float initialOffset = offsetDegree;
+        for (int i = 0; i < 4; i++) 
+        {
+            float sin = Mathf.Sin(Mathf.Deg2Rad* initialOffset);
+            float cos = Mathf.Cos(Mathf.Deg2Rad* initialOffset);
+            Vector3 targetPos = centerPosition +  new Vector3 (sin, 0, cos);
+            Vector3 outwardDir = (centerPosition - targetPos).normalized;
+            arrows[i].transform.position = centerPosition + new Vector3(sin, 0, cos) * (radius + arrowDatas[i].radiusOffset);
+            arrows[i].transform.forward = outwardDir;
+            arrows[i].transform.Rotate(new Vector3(0, setActive? 45f:0f, 0));
+            arrows[i].SetActive(setActive);
+
+            initialOffset += 90f;
+
+            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, materialAlpha + arrowDatas[i].alphaOffset);
+            arrowMaterial[i].color = matCol;
+        }
+    }
+
+    
+
+    public IEnumerator MoveArrowsAsGroup(Vector3 privousCenterPosition, Transform targetTransform, float previousRadius, float targetRadius, float offsetDegree, float previousMaterialAlpha, float targetMaterialAlpha, float timeToComplete, ArrowData[] arrowDatas, AnimationCurve curve, Action<UIController> next) 
+    {
+        float time = 0;
+        while (time < timeToComplete) 
+        {
+            time += Time.deltaTime;
+            float percentage = time / timeToComplete;
+            float interpolate = curve.Evaluate(percentage);
+            float alpha = Mathf.Lerp(previousMaterialAlpha, targetMaterialAlpha,interpolate) * fullMirrorAlpha;
+            Vector3 centerPosition = Vector3.Lerp(privousCenterPosition, targetTransform.position,interpolate);
+            float radius = Mathf.Lerp(previousRadius, targetRadius, interpolate);
+            GroupControlArrows(centerPosition, radius, offsetDegree,alpha,true,arrowDatas);
+
+            yield return null;
+
+        }
+        next?.Invoke(this);
+    }
+
+    public IEnumerator ArrowsFollowObject(Transform targetTransform , float targetRadius, float offsetDegree, float targetMaterialAlpha, ArrowData[] arrowDatas, Func<bool> condition, Action<UIController> next)
+    {
+ 
+        while (condition.Invoke())
+        {
+            GroupControlArrows(targetTransform.position, targetRadius, offsetDegree, targetMaterialAlpha, true, arrowDatas);
+
+            yield return null;
+
+        }
+        next?.Invoke(this);
+
+    }
+
 
     private void OnDrawGizmos()
     {

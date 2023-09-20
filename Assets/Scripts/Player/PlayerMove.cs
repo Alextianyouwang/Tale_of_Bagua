@@ -11,14 +11,23 @@ public class PlayerMove : MonoBehaviour
     private Vector3 horizontal, vertical, movePoint;
     public LayerMask obstacles;
     public static Transform playerTransform;
- 
-    private void Start()
+    public static Vector3 playerPosition;
+
+    private void Awake()
     {
         playerTransform = transform;
+        playerPosition = transform.position;
+
+    }
+    private void Start()
+    {
+       
         movePoint = transform.position;
     }
     private void FixedUpdate()
     {
+        playerPosition = transform.position;
+
         PlayerMoveSnapToGrid();
     }
     private void PlayerMoveSnapToGrid()

@@ -69,6 +69,10 @@ public class Tutorial : MonoBehaviour
         ArrowData[] arrows = new ArrowData[4];
         for (int i = 0; i < 4; i++)
             arrows[i] = new ArrowData();
+
+        foreach (ArrowData a in arrows)
+            a.mpb = new MaterialPropertyBlock();
+
         tutorialArrowData = arrows;
     }
     void MovementTutorial() 
@@ -99,8 +103,8 @@ public class Tutorial : MonoBehaviour
 
     void MovementTutorial_TurnOff(UIController uc) 
     {
-        uc.GroupControlArrows(Vector3.zero, 0, 0, 0, false, tutorialArrowData);
-        InitialArrowData();
+        uc.GroupControlArrows(Vector3.zero, 0, 0, 0, false, tutorialArrowData,null);
+        uc.ResetArrowDatas(tutorialArrowData);
     }
 
     void CheckMovementTutorialExitCondition() 
@@ -109,29 +113,26 @@ public class Tutorial : MonoBehaviour
         {
             hasPressedW = true;
             keyPressCounter++;
-            tutorialArrowData[0].RadiusOffsetIncreaseTo(1f, 4f);
-            //tutorialArrowData[0].AlphaOffsetDecreaseTo(-0.15f, 4f);
+            tutorialArrowData[0].RadiusOffsetIncreaseTo(1f, 2f);
+      
         }
         if (Input.GetAxis("Horizontal") > 0 && !hasPressedD)
         {
             hasPressedD = true;
             keyPressCounter++;
-            tutorialArrowData[1].RadiusOffsetIncreaseTo(1f, 4f);
-            //tutorialArrowData[1].AlphaOffsetDecreaseTo(-0.15f, 4f);
+            tutorialArrowData[1].RadiusOffsetIncreaseTo(1f, 2f);
         }
         if (Input.GetAxis("Vertical") < 0 && !hasPressedS)
         {
             hasPressedS = true;
             keyPressCounter++;
-            tutorialArrowData[2].RadiusOffsetIncreaseTo(1f, 4f);
-            //tutorialArrowData[2].AlphaOffsetDecreaseTo(-0.15f, 4f);
+            tutorialArrowData[2].RadiusOffsetIncreaseTo(1f, 2f);
         }
         if (Input.GetAxis("Horizontal") < 0 && !hasPressedA)
         {
             hasPressedA = true;
             keyPressCounter++;
-            tutorialArrowData[3].RadiusOffsetIncreaseTo(1f, 4f);
-            //tutorialArrowData[3].AlphaOffsetDecreaseTo(-0.15f, 4f);
+            tutorialArrowData[3].RadiusOffsetIncreaseTo(1f, 2f);
         }
     }
 

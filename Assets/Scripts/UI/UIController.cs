@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Experimental.AI;
 using UnityEngine.UIElements.Experimental;
 using static UnityEngine.GraphicsBuffer;
 
@@ -16,7 +18,7 @@ public class UIController : MonoBehaviour
     private Camera cam;
 
 
-    [Range(0,50)]
+    [Range(0,60)]
     public float screenMargin;
 
 
@@ -24,6 +26,11 @@ public class UIController : MonoBehaviour
     [HideInInspector]
     public GameObject[] arrows = new GameObject[4];
     private Material[] arrowMaterial = new Material[4];
+    private MeshRenderer[] arrowRenders = new MeshRenderer[4];
+
+    private GameObject[] wasd = new GameObject[4];
+    private MeshRenderer[] wasdRenderers = new MeshRenderer[4];
+    private MaterialPropertyBlock[] wasdMPB = new MaterialPropertyBlock[4];
 
 
     private Coroutine easeInCo;
@@ -73,9 +80,29 @@ public class UIController : MonoBehaviour
     private void Start()
     {
         InitializeArrow();
+        InitializeWASD();
         
     }
-    
+    private void InitializeWASD() 
+    {
+        wasd[0] = Instantiate(Resources.Load<GameObject>("UI/P_W"));
+        wasd[1] = Instantiate(Resources.Load<GameObject>("UI/P_D"));
+        wasd[2] = Instantiate(Resources.Load<GameObject>("UI/P_S"));
+        wasd[3] = Instantiate(Resources.Load<GameObject>("UI/P_A"));
+
+        wasd[0].SetActive(false);
+        wasd[1].SetActive(false);
+        wasd[2].SetActive(false);
+        wasd[3].SetActive(false);
+
+        for (int i = 0; i < 4; i++) 
+        {
+            wasdRenderers[i] = wasd[i].GetComponent<MeshRenderer>();
+            wasdMPB[i] = new MaterialPropertyBlock();
+        }
+          
+
+    }
     UIController GetSelf() 
     {
         return this;
@@ -330,6 +357,7 @@ public class UIController : MonoBehaviour
             
             arrows[i].gameObject.SetActive(false);
             arrowMaterial[i] = arrows[i].GetComponent<MeshRenderer>().material;
+            arrowRenders[i] = arrows[i].GetComponent<MeshRenderer>();
         }
     }
 
@@ -337,7 +365,9 @@ public class UIController : MonoBehaviour
     {
         public float radiusOffset = 0;
         public float alphaOffset = 0;
+        public MaterialPropertyBlock mpb;
 
+   
         public async void RadiusOffsetIncreaseTo(float value, float speed) 
         {
             while (radiusOffset < value) 
@@ -346,39 +376,58 @@ public class UIController : MonoBehaviour
                 await Task.Yield();
             }
         }
+        
 
-        public async void AlphaOffsetDecreaseTo(float value, float speed)
+    }
+
+    public void SyncOtherStuffWithArrow(Vector3[] arrowPosition, float[] arrowAlpha, Vector3 center) 
+    {
+        for (int i = 0; i < 4; i++) 
         {
-            while (alphaOffset > value)
-            {
-                alphaOffset -= Time.deltaTime * speed;
-                await Task.Yield();
-            }
+            wasd[i].SetActive(true);
+            wasd[i].transform.position = arrowPosition[i] + (center - arrowPosition[i]).normalized * 0.35f;
+            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, arrowAlpha[i]);
+            wasdMPB[i].SetColor("_BaseColor", matCol);
+            wasdRenderers[i].SetPropertyBlock(wasdMPB[i]);
         }
     }
 
+    public void DisableWASD()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            wasd[i].SetActive(false);
+            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, 1);
+            wasdMPB[i].SetColor("_BaseColor", matCol);
+            wasdRenderers[i].SetPropertyBlock(wasdMPB[i]);
+        }
+    }
 
-
-    public void GroupControlArrows(Vector3 centerPosition, float radius, float offsetDegree,float materialAlpha, bool setActive, ArrowData[] arrowDatas)
+    public void GroupControlArrows(Vector3 centerPosition, float radius, float offsetDegree,float materialAlpha, bool setActive, ArrowData[] arrowDatas, Action<Vector3[],float[], Vector3> MoveOtherStuff)
     {
         float initialOffset = offsetDegree;
+        float[] alphas = new float[4];
         for (int i = 0; i < 4; i++) 
         {
             float sin = Mathf.Sin(Mathf.Deg2Rad* initialOffset);
             float cos = Mathf.Cos(Mathf.Deg2Rad* initialOffset);
             Vector3 targetPos = centerPosition +  new Vector3 (sin, 0, cos);
             Vector3 outwardDir = (centerPosition - targetPos).normalized;
-            arrows[i].transform.position = centerPosition + new Vector3(sin, 0, cos) * (radius + arrowDatas[i].radiusOffset);
+            
+            arrows[i].transform.position = ClampToScreenBound(centerPosition + new Vector3(sin, 0, cos) * (radius + arrowDatas[i].radiusOffset),screenMargin) ;
             arrows[i].transform.forward = outwardDir;
             arrows[i].transform.Rotate(new Vector3(0, setActive? 45f:0f, 0));
             arrows[i].SetActive(setActive);
 
             initialOffset += 90f;
-
-            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, materialAlpha + arrowDatas[i].alphaOffset);
-            arrowMaterial[i].color = matCol;
+            alphas[i] = Mathf.Max(0f, materialAlpha - Mathf.Min(arrowDatas[i].radiusOffset, 1f)) * fullMirrorAlpha;
+            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, alphas[i]);
+            arrowDatas[i].mpb.SetColor("_BaseColor", matCol);
+            arrowRenders[i].SetPropertyBlock(arrowDatas[i].mpb);
         }
+        MoveOtherStuff?.Invoke(arrows.Select(x => x.transform.position).ToArray(),alphas, centerPosition);
     }
+
 
     
 
@@ -390,10 +439,10 @@ public class UIController : MonoBehaviour
             time += Time.deltaTime;
             float percentage = time / timeToComplete;
             float interpolate = curve.Evaluate(percentage);
-            float alpha = Mathf.Lerp(previousMaterialAlpha, targetMaterialAlpha,interpolate) * fullMirrorAlpha;
+            float alpha = Mathf.Lerp(previousMaterialAlpha, targetMaterialAlpha,interpolate) ;
             Vector3 centerPosition = Vector3.Lerp(privousCenterPosition, targetTransform.position,interpolate);
             float radius = Mathf.Lerp(previousRadius, targetRadius, interpolate);
-            GroupControlArrows(centerPosition, radius, offsetDegree,alpha,true,arrowDatas);
+            GroupControlArrows(centerPosition, radius, offsetDegree,alpha,true,arrowDatas,SyncOtherStuffWithArrow);
 
             yield return null;
 
@@ -406,13 +455,25 @@ public class UIController : MonoBehaviour
  
         while (condition.Invoke())
         {
-            GroupControlArrows(targetTransform.position, targetRadius, offsetDegree, targetMaterialAlpha, true, arrowDatas);
+            GroupControlArrows(targetTransform.position, targetRadius, offsetDegree, targetMaterialAlpha, true, arrowDatas, SyncOtherStuffWithArrow);
 
             yield return null;
 
         }
         next?.Invoke(this);
 
+    }
+    public void ResetArrowDatas(ArrowData[] arrowDatas )
+    {
+        for (int i = 0; i < 4; i++) 
+        {
+            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, 1);
+            arrowDatas[i].mpb.SetColor("_BaseColor", matCol);
+            arrowRenders[i].SetPropertyBlock(arrowDatas[i].mpb);
+
+            arrowDatas[i].radiusOffset = 0;
+        }
+           
     }
 
 

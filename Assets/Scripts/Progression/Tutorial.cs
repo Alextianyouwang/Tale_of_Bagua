@@ -81,7 +81,7 @@ public class Tutorial : MonoBehaviour
         Ray centerRay =  Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
         RaycastHit hit;
         if (Physics.Raycast(centerRay, out hit, 1000, LayerMask.GetMask("MirrorPlane")))
-            StartCoroutine(uc.MoveArrowsAsGroup(hit.point, PlayerMove.playerTransform, 3f, 1f, 0f, 0f, 1f, 1f, tutorialArrowData, movementTutorialAnimationCurve, MovementTutorial_FollowArrowWithPlayer));
+            StartCoroutine(uc.MoveArrowsAsGroup(hit.point, PlayerMove.playerTransform, 3f, 1f, 0f, 0f, 1f, 1.5f, tutorialArrowData, movementTutorialAnimationCurve, MovementTutorial_FollowArrowWithPlayer));
            
     }
     void MovementTutorial_FollowArrowWithPlayer(UIController uc) 

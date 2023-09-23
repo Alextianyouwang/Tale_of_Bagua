@@ -17,7 +17,8 @@ public class Tutorial : MonoBehaviour
     private GameObject clickUI;
 
     private Mirror[] hoodMirrors;
-    private bool havePlayedTutorial = false, conditionMet = false, canExitTutorial = false;
+    private bool havePlayedMirrorCollapseTutorial = false, mirrorCollapseConditionMet = false, canExitMirrorCollapseTutorial = false;
+    private bool havePlayedDragMirrorTutorial = false, dragMirrorConditionMet = false, canExitDragMirrorTutorial = false;
     public static Func<UIController> OnRequestTutorialMasterSupport;
     public static Func<UIController> OnRequestMovementTutorial;
 
@@ -37,10 +38,13 @@ public class Tutorial : MonoBehaviour
     {
         Prepareation();
         LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
+        ProgressionController.OnBaguaCollected += ReceiveBaguaCollected;
     }
     private void OnDisable()
     {
         LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
+        ProgressionController.OnBaguaCollected -= ReceiveBaguaCollected;
+
 
     }
     void ReceiveHoodMirror(Mirror[] hoodMirror)
@@ -50,12 +54,21 @@ public class Tutorial : MonoBehaviour
 
     void CheckMirrorCollapseTutorialCondition() 
     {
-        if (hoodMirrors.Length == 2 && !conditionMet) 
+        if (hoodMirrors.Length == 2 && !mirrorCollapseConditionMet) 
         {
-            conditionMet = true;
+            mirrorCollapseConditionMet = true;
             InitiateTutorial(OnRequestTutorialMasterSupport?.Invoke());
         }
-        
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (!canExitMirrorCollapseTutorial && havePlayedMirrorCollapseTutorial)
+            {
+                MirrorManager.canUseRightClick = true;
+                canExitMirrorCollapseTutorial = true;
+            }
+
+        }
+
     }
 
     private void Start()
@@ -141,19 +154,21 @@ public class Tutorial : MonoBehaviour
     {
         CheckMirrorCollapseTutorialCondition();
         CheckMovementTutorialExitCondition();
+       
 
-        if (Input.GetMouseButtonDown(1)) 
-        {
-            if (!canExitTutorial && havePlayedTutorial) 
-            {
-                MirrorManager.canUseRightClick = true;
-                canExitTutorial = true;
-            }
-          
-        }
+    
       
     }
 
+    void ReceiveBaguaCollected(GameObject b) 
+    {
+        if (b.name == "BaguaLV0")
+            MirrorCollapseTutorial();
+    }
+    void MirrorCollapseTutorial() 
+    {
+      
+    }
 
     void Prepareation() 
     {
@@ -162,9 +177,9 @@ public class Tutorial : MonoBehaviour
     }
     void InitiateTutorial(UIController master) 
     {
-        if (havePlayedTutorial)
+        if (havePlayedMirrorCollapseTutorial)
             return;
-        havePlayedTutorial = true;
+        havePlayedMirrorCollapseTutorial = true;
         StartCoroutine(QueueTutorialActions(master));
         StartCoroutine(ClickButtonShow(master));
     }
@@ -176,7 +191,7 @@ public class Tutorial : MonoBehaviour
         float timeBetweenFlash = 0.7f;
         bool ping = false, pong = true;
         clickUI.transform.GetChild(0).GetComponent<MeshRenderer>().material.color = normalCol;
-        while (!canExitTutorial)
+        while (!canExitMirrorCollapseTutorial)
         {
             Vector3[] corners = master.GetHoodMirrorCorner(2f, 0f);
             Vector3 pos = Vector3.zero;
@@ -217,7 +232,7 @@ public class Tutorial : MonoBehaviour
         co = StartCoroutine(master.ControlledUI_EaseInOut(1f, 2f, 0.2f, 0f, 1f, true, null)); 
         yield return co;
 
-        while (!canExitTutorial) 
+        while (!canExitMirrorCollapseTutorial) 
         {
             master.ConstantlyUpdatingUIPos(0.2f, 50f);
             for (int i = 0; i < 4; i++)
@@ -229,7 +244,7 @@ public class Tutorial : MonoBehaviour
            
             yield return null;
         }
-        if (canExitTutorial)
+        if (canExitMirrorCollapseTutorial)
         { StopCoroutine(co); }
     }
 

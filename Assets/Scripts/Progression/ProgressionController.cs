@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class ProgressionController : MonoBehaviour
 {
     public GameObject NextItem;
     public GameObject NewMirror;
     public GameObject Panel;
+    public static Action<GameObject> OnBaguaCollected;
     public int CanBeEnableWhenMirroEqual;
 
     public void OnCollisionEnter(Collision other)
@@ -15,6 +17,7 @@ public class ProgressionController : MonoBehaviour
         if (CanBeEnableWhenMirroEqual == LayerCheck.allMirrorOnTop)
         if (other.gameObject.tag =="Player")
         {
+                OnBaguaCollected?.Invoke(gameObject);
                 if (LayerCheck.allMirrorOnTop == 4)
                 {
                     SceneManager.LoadScene("Closing Cut");

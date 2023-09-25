@@ -2,31 +2,22 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.AI;
-using UnityEngine.UIElements.Experimental;
-using static UnityEngine.GraphicsBuffer;
-
-
 public class UIController : MonoBehaviour
 {
 
     private Mirror[] hoodMirrors;
-
-
     private Camera cam;
 
 
     [Range(0,60)]
     public float screenMargin;
 
+    public Color UIColor = new Color(1f, 0.83f, 0.61f, 1f);
 
-    public GameObject arrowObj;
-    [HideInInspector]
     public GameObject[] arrows = new GameObject[4];
-    private Material[] arrowMaterial = new Material[4];
     private MeshRenderer[] arrowRenders = new MeshRenderer[4];
+    private MaterialPropertyBlock[] arrowMaterialPropertyBlock  = new MaterialPropertyBlock[4];
 
     private GameObject[] wasd = new GameObject[4];
     private MeshRenderer[] wasdRenderers = new MeshRenderer[4];
@@ -47,36 +38,37 @@ public class UIController : MonoBehaviour
     private void OnEnable()
     {
         cam = Camera.main;
-        MirrorManager.OnChargingCollapse += UpdateUICharge;
-        MirrorManager.OnChargedCollapse += UpdateUIFinishedCharge;
-        MirrorManager.OnAbortCollapse += UpdateUIAbortCharge;
-        MirrorManager.OnCollapsing += UpdateUIOnCollapsing;
-        MirrorManager.OnExpand += UpdateUIOnExpand;
-        //MirrorManager.OnChargingRelease += UpdateUIChargeRelease;
+        MirrorManager.OnChargingCollapse += UI_Behavior_Lerp;
+        MirrorManager.OnChargedCollapse += UI_Behavior_InitiateEaseIn;
+        MirrorManager.OnAbortCollapse += UI_Behavior_Deactivate;
+        MirrorManager.OnCollapsing += UI_Behavior_ConstantlyUpdatePosition;
+        MirrorManager.OnExpand += UI_Behavior_InitiateEaseOut;
+
         LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
         Tutorial.OnRequestTutorialMasterSupport += GetSelf;
-        Tutorial.OnRequestMovementTutorial += GetSelf;
 
         
     }
 
     private void OnDisable()
     {
-        MirrorManager.OnChargingCollapse -= UpdateUICharge;
-        MirrorManager.OnChargedCollapse -= UpdateUIFinishedCharge;
-        MirrorManager.OnAbortCollapse -= UpdateUIAbortCharge;
-        MirrorManager.OnCollapsing -= UpdateUIOnCollapsing;
-        MirrorManager.OnExpand -= UpdateUIOnExpand;
-        //MirrorManager.OnChargingRelease -= UpdateUIChargeRelease;
+        MirrorManager.OnChargingCollapse -= UI_Behavior_Lerp;
+        MirrorManager.OnChargedCollapse -= UI_Behavior_InitiateEaseIn;
+        MirrorManager.OnAbortCollapse -= UI_Behavior_Deactivate;
+        MirrorManager.OnCollapsing -= UI_Behavior_ConstantlyUpdatePosition;
+        MirrorManager.OnExpand -= UI_Behavior_InitiateEaseOut;
 
         LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
         Tutorial.OnRequestTutorialMasterSupport -= GetSelf;
-        Tutorial.OnRequestMovementTutorial -= GetSelf;
+
 
 
 
     }
-
+    UIController GetSelf()
+    {
+        return this;
+    }
     private void Start()
     {
         InitializeArrow();
@@ -90,65 +82,69 @@ public class UIController : MonoBehaviour
         wasd[2] = Instantiate(Resources.Load<GameObject>("UI/P_S"));
         wasd[3] = Instantiate(Resources.Load<GameObject>("UI/P_A"));
 
-        wasd[0].SetActive(false);
-        wasd[1].SetActive(false);
-        wasd[2].SetActive(false);
-        wasd[3].SetActive(false);
+     
 
         for (int i = 0; i < 4; i++) 
         {
             wasdRenderers[i] = wasd[i].GetComponent<MeshRenderer>();
+            wasd[i].SetActive(false);
             wasdMPB[i] = new MaterialPropertyBlock();
         }
           
 
     }
-    UIController GetSelf() 
+
+    private void InitializeArrow()
     {
-        return this;
+        GameObject arrowObj = Resources.Load<GameObject>("UI/P_CornerUI");
+        for (int i = 0; i < 4; i++)
+        {
+            arrows[i] = Instantiate(arrowObj, Vector3.zero, Quaternion.Euler(new Vector3(0, i * 90f, 0)));
+
+            arrows[i].gameObject.SetActive(false);
+            arrowRenders[i] = arrows[i].GetComponent<MeshRenderer>();
+            arrowMaterialPropertyBlock[i] = new MaterialPropertyBlock();
+        }
     }
+
     void ReceiveHoodMirror(Mirror[] hoodMirror)
     {
         hoodMirrors = hoodMirror;
     }
 
-    private void StartUIEaseInOut(float time, bool easein,bool onlyEaseInMaterial)
-    {
-        if (!canDoUIAnime)
-            return;
-        if (easeInCo != null)
-            StopCoroutine(easeInCo);
-        easeInCo = StartCoroutine(UI_EaseInOut(time,easein, onlyEaseInMaterial));
-    }
 
-    private IEnumerator UI_EaseInOut(float time,bool easein, bool onlyAnimateMaterial )
+    public IEnumerator UI_EaseInOut(float time,bool easein, bool onlyAnimateMaterial )
     {
         float percent = 0;
 
         float originalMargin = easein ? transitionMargin : focusedMargin;
-        float targetMargin = easein ? focusedMargin : expandedMargin + 0.4f;
+        float targetMargin = easein ? focusedMargin : expandedMargin;
 
         float originalAlpha = easein ? 0f : fullMirrorAlpha;
         float targetAlpha = easein ? fullMirrorAlpha: 0f;
+        if (easein)
+            for (int i = 0; i < 4; i++)
+                arrows[i].SetActive(true);
+
 
         while (percent < 1)
         {
             percent += Time.deltaTime / time;
 
 
-            Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
             mirrorMargin = Mathf.Lerp(originalMargin, targetMargin, percent);
+            Vector3[] corners = Util_GetHoodMirrorCorner(2, mirrorMargin);
 
             if (!onlyAnimateMaterial)
             for (int i = 0; i < 4; i++)
-                    arrows[i].transform.position = ClampToScreenBound(corners[i],screenMargin);
+                    arrows[i].transform.position = Util_ClampToScreenBound(corners[i],screenMargin);
             if (!easein)
             {
                 for (int i = 0; i < 4; i++)
                 {
                     float alpha = Mathf.Lerp(originalAlpha, targetAlpha, percent);
-                    Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, alpha);
-                    arrowMaterial[i].color = matCol;
+                    arrowMaterialPropertyBlock[i].SetColor("_BaseColor", new Color(UIColor.r, UIColor.g, UIColor.b, alpha));
+                    arrowRenders[i].SetPropertyBlock(arrowMaterialPropertyBlock[i]);
                 }
             }
 
@@ -157,53 +153,11 @@ public class UIController : MonoBehaviour
         }
 
 ;       if (!easein) 
-        {
             for (int i = 0; i < 4; i++)
-            {
                 arrows[i].SetActive(false);
-            }
-        }
 
     }
-
-    public void StartControlledUIEaseInOut(float time, float startMargin, float targetMargin, float startAlpha, float finishAlpha, bool remainActive, Action next)  
-    {
-        StartCoroutine(ControlledUI_EaseInOut(time, startMargin, targetMargin, startAlpha, finishAlpha,remainActive, next));
-     }
-    public IEnumerator ControlledUI_EaseInOut(float time, float startMargin, float targetMargin, float startAlpha, float finishAlpha,bool remainActive, Action next)
-    {
-        float percent = 0;
-        for (int i = 0; i < 4; i++)
-        {
-            arrows[i].SetActive(true);
-        }
-        while (percent < 1)
-        {
-            percent += Time.deltaTime / time;
-            mirrorMargin = Mathf.Lerp(startMargin, targetMargin, percent);
-            Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
-            for (int i = 0; i < 4; i++)
-            {
-            
-                arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin);
-
-                float alpha = Mathf.Lerp(startAlpha, finishAlpha, percent);
-                Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, alpha);
-                arrowMaterial[i].color = matCol;
-
-            }
-            yield return null;
-
-        }
-
-        for (int i = 0; i < 4; i++)
-            {
-                arrows[i].SetActive(remainActive);
-            }
-
-        next?.Invoke();
-    }
-        public Vector3[] GetHoodMirrorCorner(float yValue,float margin)
+    public Vector3[] Util_GetHoodMirrorCorner(float yValue,float margin)
     {
         Vector3[] corners = new Vector3[4];
         // x:top, y:right, z: bottom , w: left 
@@ -233,8 +187,7 @@ public class UIController : MonoBehaviour
 
         return corners;
     }
-
-    public Vector3 ClampToScreenBound(Vector3 target,float margin) 
+    public Vector3 Util_ClampToScreenBound(Vector3 target,float margin) 
     { 
         Vector3 screenpPoint = cam.WorldToScreenPoint(target);
 
@@ -251,7 +204,7 @@ public class UIController : MonoBehaviour
         return cam.ScreenToWorldPoint(screenpPoint);
 
     }
-    private void UpdateUICharge(float timer, float target) 
+    private void UI_Behavior_Lerp(float timer, float target) 
     {
         if (!canDoUIAnime)
             return;
@@ -259,35 +212,33 @@ public class UIController : MonoBehaviour
             return;
 
         mirrorMargin = Mathf.Lerp(expandedMargin, transitionMargin, timer / target) ;
-       Vector3[]  corners = GetHoodMirrorCorner(2, mirrorMargin);
+       Vector3[]  corners = Util_GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
 
             arrows[i].gameObject.SetActive(true);
-            arrows[ i].transform.position = ClampToScreenBound(corners[i],screenMargin);
+            arrows[ i].transform.position = Util_ClampToScreenBound(corners[i],screenMargin);
             float alpha = Mathf.Lerp(0, 1, timer / target) * fullMirrorAlpha;
-            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, alpha);
-            arrowMaterial[i].color = matCol;
+            arrowMaterialPropertyBlock[i].SetColor("_BaseColor", new Color(UIColor.r, UIColor.g, UIColor.b, alpha));
+            arrowRenders[i].SetPropertyBlock(arrowMaterialPropertyBlock[i]);
 
         }
-
-
     }
-    private void UpdateUIFinishedCharge(float timer, float target)
+    private void UI_Behavior_InitiateEaseIn(float timer, float target)
     {
         if (!canDoUIAnime)
             return;
         if (hoodMirrors.Length <= 1)
             return;
 
-        Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
+        Vector3[] corners = Util_GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
 
             arrows[i].gameObject.SetActive(true);
-            arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin) ;
+            arrows[i].transform.position = Util_ClampToScreenBound(corners[i], screenMargin) ;
 
            
             StartUIEaseInOut(1f, true,false);
@@ -295,84 +246,72 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void UpdateUIAbortCharge(float timer, float target, bool disableOverrite) 
+    private void UI_Behavior_Deactivate(float timer, float target, bool disableOverrite) 
     {
         if (!canDoUIAnime)
             return;
         if (hoodMirrors.Length <= 1 && !disableOverrite)
             return;
-
             for (int i = 0; i < 4; i++)
-            {
-
                 arrows[i].gameObject.SetActive(false);
-            }
 
-           
     }
-
-    private void UpdateUIOnCollapsing() 
+    private void UI_Behavior_ConstantlyUpdatePosition() 
+    {
+        if (!canDoUIAnime)
+            return;
+        if (hoodMirrors.Length <= 1)
+            return;
+        ConstantlyUpdatingUIPos(mirrorMargin,screenMargin);
+    }
+    private void UI_Behavior_InitiateEaseOut(bool onlyUpdateMaterial)
     {
         if (!canDoUIAnime)
             return;
         if (hoodMirrors.Length <= 1)
             return;
 
+        for (int i = 0; i < 4; i++)
+        {
+            StartUIEaseInOut(0.2f, false, onlyUpdateMaterial);
+        }
 
-        ConstantlyUpdatingUIPos(mirrorMargin,screenMargin);
+    }
+    private void StartUIEaseInOut(float time, bool easein, bool onlyEaseInMaterial)
+    {
+        if (!canDoUIAnime)
+            return;
+        if (easeInCo != null)
+            StopCoroutine(easeInCo);
+        easeInCo = StartCoroutine(UI_EaseInOut(time, easein, onlyEaseInMaterial));
     }
 
     public void ConstantlyUpdatingUIPos(float mirrorMargin, float screenMargin) 
     {
-        Vector3[] corners = GetHoodMirrorCorner(2, mirrorMargin);
+        Vector3[] corners = Util_GetHoodMirrorCorner(2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
 
             arrows[i].gameObject.SetActive(true);
-            arrows[i].transform.position = ClampToScreenBound(corners[i], screenMargin);
+            arrows[i].transform.position = Util_ClampToScreenBound(corners[i], screenMargin);
 
         }
     }
 
-    private void UpdateUIOnExpand(bool onlyUpdateMaterial) 
-    {
-        if (!canDoUIAnime)
-            return;
-        if (hoodMirrors.Length <= 1)
-            return;
 
-        for (int i = 0; i < 4; i++)
-        {
-            StartUIEaseInOut(0.2f, false,onlyUpdateMaterial);
-        }
-
-    }
-
-    private void InitializeArrow() 
-    {
-        for (int i = 0; i < 4; i++) 
-        {
-            arrows[i] = Instantiate(arrowObj,Vector3.zero,Quaternion.Euler(new Vector3(0,i*90f,0)));
-            
-            arrows[i].gameObject.SetActive(false);
-            arrowMaterial[i] = arrows[i].GetComponent<MeshRenderer>().material;
-            arrowRenders[i] = arrows[i].GetComponent<MeshRenderer>();
-        }
-    }
 
     public class ArrowData 
     {
-        public float radiusOffset = 0;
-        public float alphaOffset = 0;
+        public float lerpValue = 0;
         public MaterialPropertyBlock mpb;
 
    
         public async void RadiusOffsetIncreaseTo(float value, float speed) 
         {
-            while (radiusOffset < value) 
+            while (lerpValue < value) 
             {
-                radiusOffset += Time.deltaTime * speed;
+                lerpValue += Time.deltaTime * speed;
                 await Task.Yield();
             }
         }
@@ -386,19 +325,32 @@ public class UIController : MonoBehaviour
         {
             wasd[i].SetActive(true);
             wasd[i].transform.position = arrowPosition[i] + (center - arrowPosition[i]).normalized * 0.35f;
-            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, arrowAlpha[i]);
-            wasdMPB[i].SetColor("_BaseColor", matCol);
+
+            wasdMPB[i].SetColor("_BaseColor", new Color(UIColor.r, UIColor.g, UIColor.b, arrowAlpha[i]));
             wasdRenderers[i].SetPropertyBlock(wasdMPB[i]);
         }
     }
+    public void ResetArrowDatas(ArrowData[] arrowDatas)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            
+            arrowDatas[i].mpb.SetColor("_BaseColor", UIColor);
+            arrowRenders[i].SetPropertyBlock(arrowDatas[i].mpb);
+            arrowDatas[i].lerpValue = 0;
+            arrows[i].SetActive(false);
 
-    public void DisableWASD()
+        }
+
+    }
+
+    public void ResetWASD()
     {
         for (int i = 0; i < 4; i++)
         {
             wasd[i].SetActive(false);
-            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, 1);
-            wasdMPB[i].SetColor("_BaseColor", matCol);
+           
+            wasdMPB[i].SetColor("_BaseColor", UIColor);
             wasdRenderers[i].SetPropertyBlock(wasdMPB[i]);
         }
     }
@@ -414,14 +366,14 @@ public class UIController : MonoBehaviour
             Vector3 targetPos = centerPosition +  new Vector3 (sin, 0, cos);
             Vector3 outwardDir = (centerPosition - targetPos).normalized;
             
-            arrows[i].transform.position = ClampToScreenBound(centerPosition + new Vector3(sin, 0, cos) * (radius + arrowDatas[i].radiusOffset),screenMargin) ;
+            arrows[i].transform.position = Util_ClampToScreenBound(centerPosition + new Vector3(sin, 0, cos) * (radius + arrowDatas[i].lerpValue),screenMargin) ;
             arrows[i].transform.forward = outwardDir;
             arrows[i].transform.Rotate(new Vector3(0, setActive? 45f:0f, 0));
             arrows[i].SetActive(setActive);
 
             initialOffset += 90f;
-            alphas[i] = Mathf.Max(0f, materialAlpha - Mathf.Min(arrowDatas[i].radiusOffset, 1f)) * fullMirrorAlpha;
-            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, alphas[i]);
+            alphas[i] = Mathf.Max(0f, materialAlpha - Mathf.Min(arrowDatas[i].lerpValue, 1f)) * fullMirrorAlpha;
+            Color matCol = new Color(UIColor.r, UIColor.g, UIColor.b, alphas[i]);
             arrowDatas[i].mpb.SetColor("_BaseColor", matCol);
             arrowRenders[i].SetPropertyBlock(arrowDatas[i].mpb);
         }
@@ -431,7 +383,8 @@ public class UIController : MonoBehaviour
 
     
 
-    public IEnumerator MoveArrowsAsGroup(Vector3 privousCenterPosition, Transform targetTransform, float previousRadius, float targetRadius, float offsetDegree, float previousMaterialAlpha, float targetMaterialAlpha, float timeToComplete, ArrowData[] arrowDatas, AnimationCurve curve, Action<UIController> next) 
+    public IEnumerator MoveArrowsAsGroup(Vector3 privousCenterPosition, Transform targetTransform, float previousRadius, float targetRadius, float offsetDegree, float previousMaterialAlpha, float targetMaterialAlpha, float timeToComplete, 
+        ArrowData[] arrowDatas, AnimationCurve curve, Action<Vector3[], float[], Vector3> MoveOtherStuff, Action<UIController> next) 
     {
         float time = 0;
         while (time < timeToComplete) 
@@ -442,7 +395,7 @@ public class UIController : MonoBehaviour
             float alpha = Mathf.Lerp(previousMaterialAlpha, targetMaterialAlpha,interpolate) ;
             Vector3 centerPosition = Vector3.Lerp(privousCenterPosition, targetTransform.position,interpolate);
             float radius = Mathf.Lerp(previousRadius, targetRadius, interpolate);
-            GroupControlArrows(centerPosition, radius, offsetDegree,alpha,true,arrowDatas,SyncOtherStuffWithArrow);
+            GroupControlArrows(centerPosition, radius, offsetDegree,alpha,true,arrowDatas,MoveOtherStuff);
 
             yield return null;
 
@@ -463,18 +416,6 @@ public class UIController : MonoBehaviour
         next?.Invoke(this);
 
     }
-    public void ResetArrowDatas(ArrowData[] arrowDatas )
-    {
-        for (int i = 0; i < 4; i++) 
-        {
-            Color matCol = new Color(arrowMaterial[i].color.r, arrowMaterial[i].color.g, arrowMaterial[i].color.b, 1);
-            arrowDatas[i].mpb.SetColor("_BaseColor", matCol);
-            arrowRenders[i].SetPropertyBlock(arrowDatas[i].mpb);
-
-            arrowDatas[i].radiusOffset = 0;
-        }
-           
-    }
 
 
     private void OnDrawGizmos()
@@ -482,11 +423,11 @@ public class UIController : MonoBehaviour
         if (!cam)
             return;
         Gizmos.color = Color.yellow;
-        Vector3[] corners = GetHoodMirrorCorner(2,mirrorMargin); 
+        Vector3[] corners = Util_GetHoodMirrorCorner(2,mirrorMargin); 
 
         foreach (Vector3 corner in corners) 
         {
-            Gizmos.DrawSphere( ClampToScreenBound(corner, screenMargin) , 0.1f);
+            Gizmos.DrawSphere( Util_ClampToScreenBound(corner, screenMargin) , 0.1f);
         }
     }
 }

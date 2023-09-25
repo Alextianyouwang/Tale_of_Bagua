@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using Unity.Burst.CompilerServices;
 using static UIController;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements.Experimental;
 
 public class Tutorial : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class Tutorial : MonoBehaviour
     private bool havePlayedMirrorCollapseTutorial = false, mirrorCollapseConditionMet = false, canExitMirrorCollapseTutorial = false;
     private bool havePlayedDragMirrorTutorial = false, dragMirrorConditionMet = false, canExitDragMirrorTutorial = false;
     public static Func<UIController> OnRequestTutorialMasterSupport;
-    public static Func<UIController> OnRequestMovementTutorial;
+    private UIController uc;
 
     public AnimationCurve movementTutorialAnimationCurve;
     private Vector3 playerStartPosition;
@@ -36,7 +37,6 @@ public class Tutorial : MonoBehaviour
 
     private void OnEnable()
     {
-        Prepareation();
         LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
         ProgressionController.OnBaguaCollected += ReceiveBaguaCollected;
     }
@@ -57,7 +57,7 @@ public class Tutorial : MonoBehaviour
         if (hoodMirrors.Length == 2 && !mirrorCollapseConditionMet) 
         {
             mirrorCollapseConditionMet = true;
-            InitiateTutorial(OnRequestTutorialMasterSupport?.Invoke());
+            InitiateMirrorCollapseTutorial();
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -70,12 +70,50 @@ public class Tutorial : MonoBehaviour
         }
 
     }
+    void InitiateMirrorCollapseTutorial()
+    {
+        if (havePlayedMirrorCollapseTutorial)
+            return;
+        havePlayedMirrorCollapseTutorial = true;
+        StartCoroutine(QueueTutorialActions(uc));
+        StartCoroutine(ClickButtonShow(uc));
+    }
+    IEnumerator QueueTutorialActions(UIController master)
+    {
+        MirrorManager.canUseRightClick = false;
+
+        Coroutine co;
+        co = StartCoroutine(master.UI_EaseInOut(1f,true,false));
+        yield return co;
+
+        while (!canExitMirrorCollapseTutorial)
+        {
+            master.ConstantlyUpdatingUIPos(0.2f, 60f);
+            for (int i = 0; i < 4; i++)
+                master.arrows[i].gameObject.SetActive(hoodMirrors.Length >= 2);
+            yield return null;
+        }
+        if (canExitMirrorCollapseTutorial)
+        { StopCoroutine(co); }
+    }
+
 
     private void Start()
     {
+        uc = OnRequestTutorialMasterSupport.Invoke();
+        InitiateUIMouse();
+
         InitialArrowData();
 
         MovementTutorial();
+    }
+
+    private void Update()
+    {
+        CheckMirrorCollapseTutorialCondition();
+        CheckMovementTutorialExitCondition();
+
+
     }
     void InitialArrowData()
     {
@@ -90,11 +128,11 @@ public class Tutorial : MonoBehaviour
     }
     void MovementTutorial() 
     {
-        UIController uc = OnRequestMovementTutorial.Invoke();
+       
         Ray centerRay =  Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
         RaycastHit hit;
         if (Physics.Raycast(centerRay, out hit, 1000, LayerMask.GetMask("MirrorPlane")))
-            StartCoroutine(uc.MoveArrowsAsGroup(hit.point, PlayerMove.playerTransform, 3f, 1f, 0f, 0f, 1f, 1.5f, tutorialArrowData, movementTutorialAnimationCurve, MovementTutorial_FollowArrowWithPlayer));
+            StartCoroutine(uc.MoveArrowsAsGroup(hit.point, PlayerMove.playerTransform, 3f, 1f, 0f, 0f, 1f, 1.5f, tutorialArrowData, movementTutorialAnimationCurve,uc.SyncOtherStuffWithArrow, MovementTutorial_FollowArrowWithPlayer));
            
     }
     void MovementTutorial_FollowArrowWithPlayer(UIController uc) 
@@ -105,19 +143,25 @@ public class Tutorial : MonoBehaviour
 
     bool MovementTutorial_FollowArrowWithPlayer_Condition() 
     {
-        return Vector3.Distance(playerStartPosition,PlayerMove.playerTransform.position) < 4f && keyPressCounter < 4;
+        if (Vector3.Distance(playerStartPosition, PlayerMove.playerTransform.position) >= 4f) 
+        {
+            hasPressedW = true;hasPressedD = true;hasPressedS = true;hasPressedA = true;
+        }
+
+        return Vector3.Distance(playerStartPosition, PlayerMove.playerTransform.position) < 4f && keyPressCounter < 4;
     }
 
     void MovementTutorial_ArrowFade(UIController uc) 
     {
-        StartCoroutine(uc.MoveArrowsAsGroup(PlayerMove.playerTransform.position, PlayerMove.playerTransform, 1f, 3f, 0f, 1f, 0f, 1f, tutorialArrowData, movementTutorialAnimationCurve, MovementTutorial_TurnOff));
+        StartCoroutine(uc.MoveArrowsAsGroup(PlayerMove.playerTransform.position, PlayerMove.playerTransform, 1f, 3f, 0f, 1f, 0f, 1f, tutorialArrowData, movementTutorialAnimationCurve, uc.SyncOtherStuffWithArrow,MovementTutorial_TurnOff));
 
     }
 
     void MovementTutorial_TurnOff(UIController uc) 
     {
-        uc.GroupControlArrows(Vector3.zero, 0, 0, 0, false, tutorialArrowData,null);
         uc.ResetArrowDatas(tutorialArrowData);
+        
+        uc.ResetWASD();
     }
 
     void CheckMovementTutorialExitCondition() 
@@ -149,40 +193,33 @@ public class Tutorial : MonoBehaviour
         }
     }
 
-   
-    private void Update()
-    {
-        CheckMirrorCollapseTutorialCondition();
-        CheckMovementTutorialExitCondition();
-       
 
-    
-      
-    }
 
     void ReceiveBaguaCollected(GameObject b) 
     {
         if (b.name == "BaguaLV0")
-            MirrorCollapseTutorial();
+            MirrorDragTutorial();
     }
-    void MirrorCollapseTutorial() 
+    Transform NewTransformFromPositon (Vector3 target) 
     {
-      
+        Transform t = new GameObject().transform;
+        t.transform.position = target;
+        return t;
+    }
+    void MirrorDragTutorial() 
+    {
+        Ray centerRay = Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
+        RaycastHit hit;
+        if (Physics.Raycast(centerRay, out hit, 1000, LayerMask.GetMask("MirrorPlane")))
+            StartCoroutine(uc.MoveArrowsAsGroup(hit.point,NewTransformFromPositon(hit.point), 4f, 1f, 0f, 0f, 1f, 1.5f, tutorialArrowData, movementTutorialAnimationCurve,null, null));
     }
 
-    void Prepareation() 
+    void InitiateUIMouse() 
     {
         clickUI = Instantiate(clickUIPrefab);
         clickUI.SetActive(false);
     }
-    void InitiateTutorial(UIController master) 
-    {
-        if (havePlayedMirrorCollapseTutorial)
-            return;
-        havePlayedMirrorCollapseTutorial = true;
-        StartCoroutine(QueueTutorialActions(master));
-        StartCoroutine(ClickButtonShow(master));
-    }
+ 
 
     IEnumerator ClickButtonShow(UIController master) 
     {
@@ -193,7 +230,7 @@ public class Tutorial : MonoBehaviour
         clickUI.transform.GetChild(0).GetComponent<MeshRenderer>().material.color = normalCol;
         while (!canExitMirrorCollapseTutorial)
         {
-            Vector3[] corners = master.GetHoodMirrorCorner(2f, 0f);
+            Vector3[] corners = master.Util_GetHoodMirrorCorner(2f, 0f);
             Vector3 pos = Vector3.zero;
             foreach (Vector3 v in corners)
                 pos += v;
@@ -224,28 +261,5 @@ public class Tutorial : MonoBehaviour
         }
         clickUI.SetActive(false);
     }
-    IEnumerator QueueTutorialActions(UIController master)
-    {
-        MirrorManager.canUseRightClick = false;
-
-        Coroutine co;
-        co = StartCoroutine(master.ControlledUI_EaseInOut(1f, 2f, 0.2f, 0f, 1f, true, null)); 
-        yield return co;
-
-        while (!canExitMirrorCollapseTutorial) 
-        {
-            master.ConstantlyUpdatingUIPos(0.2f, 50f);
-            for (int i = 0; i < 4; i++)
-            {
-
-                master.arrows[i].gameObject.SetActive(hoodMirrors.Length >= 2);
-            }
-
-           
-            yield return null;
-        }
-        if (canExitMirrorCollapseTutorial)
-        { StopCoroutine(co); }
-    }
-
+  
 }

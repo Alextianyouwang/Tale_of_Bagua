@@ -304,6 +304,7 @@ public class UIController : MonoBehaviour
     public class ArrowData 
     {
         public float lerpValue = 0;
+        public float alphaMultiplier = 1;
         public MaterialPropertyBlock mpb;
 
    
@@ -338,6 +339,7 @@ public class UIController : MonoBehaviour
             arrowDatas[i].mpb.SetColor("_BaseColor", UIColor);
             arrowRenders[i].SetPropertyBlock(arrowDatas[i].mpb);
             arrowDatas[i].lerpValue = 0;
+            arrowDatas[i].alphaMultiplier = 1;
             arrows[i].SetActive(false);
 
         }
@@ -372,7 +374,7 @@ public class UIController : MonoBehaviour
             arrows[i].SetActive(setActive);
 
             initialOffset += 90f;
-            alphas[i] = Mathf.Max(0f, materialAlpha - Mathf.Min(arrowDatas[i].lerpValue, 1f)) * fullMirrorAlpha;
+            alphas[i] = Mathf.Max(0f, materialAlpha - Mathf.Max( Mathf.Min(arrowDatas[i].lerpValue * arrowDatas[i].alphaMultiplier, 1f)),0) * fullMirrorAlpha;
             Color matCol = new Color(UIColor.r, UIColor.g, UIColor.b, alphas[i]);
             arrowDatas[i].mpb.SetColor("_BaseColor", matCol);
             arrowRenders[i].SetPropertyBlock(arrowDatas[i].mpb);

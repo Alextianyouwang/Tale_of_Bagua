@@ -12,12 +12,17 @@ public class PlayerMove : MonoBehaviour
     public LayerMask obstacles;
     public static Transform playerTransform;
     public static Vector3 playerPosition;
+    public static bool canUseWASD = true;
 
     private void Awake()
     {
         playerTransform = transform;
         playerPosition = transform.position;
 
+    }
+    private void OnDisable()
+    {
+        canUseWASD = true;
     }
     private void Start()
     {
@@ -28,9 +33,10 @@ public class PlayerMove : MonoBehaviour
     {
         playerPosition = transform.position;
 
-        PlayerMoveSnapToGrid();
+        if(canUseWASD)
+            Movement();
     }
-    private void PlayerMoveSnapToGrid()
+    private void Movement()
     {
         horizontal = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
         vertical = new Vector3(0f, 0f, Input.GetAxisRaw("Vertical"));
@@ -38,9 +44,4 @@ public class PlayerMove : MonoBehaviour
         GetComponent<Rigidbody>().AddForce(  force,ForceMode.Force);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawSphere(movePoint + horizontal, 0.1f);
-        Gizmos.DrawSphere(movePoint + vertical, 0.1f);
-    }
 }

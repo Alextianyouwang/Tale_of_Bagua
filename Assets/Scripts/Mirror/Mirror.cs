@@ -74,6 +74,19 @@ public class Mirror : MonoBehaviour
         OnFinishMoving?.Invoke();
 
     }
+    public void ToggleFreezeMirror(bool value) 
+    {
+        if (value)
+        {
+            rb.isKinematic = true;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+        }
+        else 
+        {
+            rb.isKinematic = false;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+        }
+    }
     void GetBoxs() 
     {
         boxs = GetComponents<Collider>();

@@ -68,7 +68,7 @@ public class Tutorial : MonoBehaviour
             return;
         havePlayedMirrorCollapseTutorial = true;
         StartCoroutine(QueueTutorialActions(uc));
-        StartCoroutine(ClickButtonShow(uc, uc.hoodMirrors, false,-1, MirrorCollapseTutorial_ExitCondition));
+        StartCoroutine(ClickButtonShow(uc, uc.hoodMirrors, 0.7f, false,-1, MirrorCollapseTutorial_ExitCondition));
     }
     IEnumerator QueueTutorialActions(UIController master)
     {
@@ -130,7 +130,7 @@ public class Tutorial : MonoBehaviour
                 finalHit = hit;
         }
 
-        return finalHit.transform.position;
+        return finalHit.point;
     }
     void MovementTutorial() 
     {
@@ -204,16 +204,17 @@ public class Tutorial : MonoBehaviour
     Transform NewTransformFromPositon (Vector3 target) 
     {
         Transform t = new GameObject().transform;
-        t.transform.position = target;
+        t.transform.localPosition = target;
         return t;
     }
     void MirrorDragTutorial() 
     {
-
-            StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(), NewTransformFromPositon(GetScreenCenterPosition()), 4f, 1f, 0f, 0f, 1f, 6f, tutorialArrowData, movementTutorialAnimationCurve, null, MirrorDragTutorial_LockMirror));
+        MirrorManager.canUseLeftClick = false;
+        StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(), NewTransformFromPositon(GetScreenCenterPosition()), 4f, 1f, 0f, 0f, 1f, 6f, tutorialArrowData, movementTutorialAnimationCurve, null, MirrorDragTutorial_LockMirror));
     }
     void MirrorDragTutorial_LockMirror(UIController uc) 
     {
+        MirrorManager.canUseLeftClick = true;
         Mirror currentMirror = FindObjectOfType<Mirror>();
         StartCoroutine(MirrorDragTutorial_QueueAction(currentMirror,MirrorDragTutorial_ExitCondition));
 
@@ -222,6 +223,12 @@ public class Tutorial : MonoBehaviour
     void MirrorDragTutorial_FreeArrow(UIController uc) 
     {
         Mirror cm = FindObjectOfType<Mirror>();
+        foreach (ArrowData d in tutorialArrowData) 
+        {
+            d.lerpValue = Mathf.Max(d.lerpValue, 0);
+            d.alphaMultiplier = 0;
+        }
+
         StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(),cm.transform, 1, 5f, 0f, 1f, 0f, 2f, tutorialArrowData, movementTutorialAnimationCurve, null, Tutorial_TurnOff));
 
     }
@@ -231,39 +238,45 @@ public class Tutorial : MonoBehaviour
         return Vector3.Distance(initialPos,cm.transform.position) >= 2.5f;
     }
 
-    void MirrorDragTutorial_UpdateArrow(Vector3 initialPos, Mirror cm) 
+    void MirrorDragTutorial_UpdateArrow(float currnentTime,Vector3 initialPos, Mirror cm) 
     {
         float dist = Vector3.Distance(initialPos, cm.transform.position);
-        float wavingValue = (Mathf.Sin(Time.time * 2f)) * 0.25f;
+        
+        float wavingValue = Mathf.Sin((Time.time - currnentTime) * 3f) * 0.25f + 0.25f;
 
         tutorialArrowData[0].lerpValue = (cm.transform.position.z - initialPos.z >= 0 ? cm.transform.position.z - initialPos.z : 0) + wavingValue;
         tutorialArrowData[1].lerpValue = (cm.transform.position.x - initialPos.x >= 0 ? cm.transform.position.x - initialPos.x : 0) + wavingValue;
         tutorialArrowData[2].lerpValue = (cm.transform.position.z - initialPos.z < 0 ? -cm.transform.position.z + initialPos.z : 0) + wavingValue;
         tutorialArrowData[3].lerpValue = (cm.transform.position.x - initialPos.x < 0 ? -cm.transform.position.x + initialPos.x : 0) + wavingValue;
+        foreach (ArrowData d in tutorialArrowData)
+            d.alphaMultiplier = -1.5f;
     }
 
     IEnumerator MirrorDragTutorial_QueueAction(Mirror cm,Func<Vector3,Mirror,bool> exitCondition) 
     {
 
-        Coroutine clickUI_Co = StartCoroutine(ClickButtonShow(uc, new Mirror[] { cm }, true, 3, () => false));
-        Coroutine arrowFollowCo = StartCoroutine(uc.ArrowsFollowObject(NewTransformFromPositon(GetScreenCenterPosition()), 1f, 0f, 1f, tutorialArrowData, () => true,null,null)); 
+        Coroutine clickUI_Co = StartCoroutine(ClickButtonShow(uc, new Mirror[] { cm },0.2f, true, 5, () => false));
+        Coroutine arrowFollowCo = StartCoroutine(uc.ArrowsFollowObject(NewTransformFromPositon(GetScreenCenterPosition()), 1f, 0f, 0f, tutorialArrowData, () => true,null,null)); 
         Vector3 initialPos = cm.transform.position;
+        float currentTime = Time.time;
         while (!exitCondition.Invoke(initialPos,cm)) {
-            MirrorDragTutorial_UpdateArrow(initialPos, cm);
-
-            if (Input.GetMouseButtonDown(0) && IsCursorOnMirror()) 
+            MirrorDragTutorial_UpdateArrow(currentTime,initialPos, cm);
+            PlayerMove.canUseWASD = false;
+            if (Input.GetMouseButtonDown(0) && IsCursorOnMirror())
                 cm.AbortMovement();
-            if (Input.GetMouseButtonUp(0) ) 
+            if (Input.GetMouseButtonUp(0)) 
                 cm.MoveMirrorTowards(1f, GetScreenCenterPosition(), movementTutorialAnimationCurve);
+
             yield return null;
 
         }
+        PlayerMove.canUseWASD = true;
         if (!exitCondition.Invoke(cm.transform.position, cm)) 
         {
             StopCoroutine(clickUI_Co);
             StopCoroutine(arrowFollowCo);
             MirrorDragTutorial_FreeArrow(uc);
-            StartCoroutine(ClickButtonShow(uc, new Mirror[] { cm }, true, 1, () => true));
+            StartCoroutine(ClickButtonShow(uc, new Mirror[] { cm },0.2f, true, 1, () => true));
         }
     }
     bool IsCursorOnMirror() 
@@ -284,11 +297,11 @@ public class Tutorial : MonoBehaviour
     }
  
 
-    IEnumerator ClickButtonShow(UIController master, Mirror[] mirrors, bool isLeft, int flashTime, Func<bool> exitCondition) 
+    IEnumerator ClickButtonShow(UIController master, Mirror[] mirrors, float timeBetweenFlash, bool isLeft, int flashTime, Func<bool> exitCondition) 
     {
         clickUI.SetActive(true);
         float timer = 0;
-        float timeBetweenFlash = 0.7f;
+
         bool ping = false, pong = true;
         MaterialPropertyBlock mbp = new MaterialPropertyBlock();
         int counter = 0;

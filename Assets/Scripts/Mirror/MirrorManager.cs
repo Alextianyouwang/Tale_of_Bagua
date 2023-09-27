@@ -26,7 +26,7 @@ public class MirrorManager : MonoBehaviour
 
     private float mirrorWorldY = 2.1f;
 
-    public static bool canUseRightClick = true;
+    public static bool canUseRightClick = true, canUseLeftClick = true;
 
     [ColorUsage(true,true)]
     public Color normalCol;
@@ -48,7 +48,8 @@ public class MirrorManager : MonoBehaviour
         LayerCheck.OnFixUpdate -= FollowFixUpdate;
         LayerCheck.OnShareAllMirror -= ReceiveAllMirror;
 
-
+        canUseRightClick = true;
+        canUseLeftClick= true;
     }
     void ReceiveHoodMirror(Mirror[] hoodMirror)
     {
@@ -184,22 +185,25 @@ public class MirrorManager : MonoBehaviour
 
     void UpdateInput() 
     {
-  
 
-        if (Input.GetMouseButtonDown(0))
+        if (canUseLeftClick) 
         {
-            isClicking = true;
-            StopCollapseBuffer();
+            if (Input.GetMouseButtonDown(0))
+            {
+                isClicking = true;
+                StopCollapseBuffer();
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                isClicking = false;
+                currentMirror = null;
+                firstMirrorHasBeenClicked = false;
+                offset = Vector3.zero;
+                if (isCollapsed)
+                    CollapseHoodMirror();
+            }
         }
-        if (Input.GetMouseButtonUp(0))
-        {
-            isClicking = false;
-            currentMirror = null;
-            firstMirrorHasBeenClicked = false;
-            offset = Vector3.zero;
-            if (isCollapsed)
-                CollapseHoodMirror();
-        }
+       
 
 
         if (canUseRightClick) 
@@ -281,8 +285,11 @@ public class MirrorManager : MonoBehaviour
     }
     void Update()
     {
+        foreach (Mirror m in allMirrors)
+            m.ToggleFreezeMirror(!canUseLeftClick);
+ 
         UpdateInput();
-         UpdateMaterial();
+        UpdateMaterial();
 
         if (hoodMirrors.Length == 0 && isCollapsed)
         {

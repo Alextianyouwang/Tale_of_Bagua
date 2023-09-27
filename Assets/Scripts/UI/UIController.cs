@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 public class UIController : MonoBehaviour
 {
-
-    private Mirror[] hoodMirrors;
+    [HideInInspector]
+    public Mirror[] hoodMirrors;
     private Camera cam;
 
 
@@ -133,7 +133,7 @@ public class UIController : MonoBehaviour
 
 
             mirrorMargin = Mathf.Lerp(originalMargin, targetMargin, percent);
-            Vector3[] corners = Util_GetHoodMirrorCorner(2, mirrorMargin);
+            Vector3[] corners = Util_GetMirrorCorner(hoodMirrors, 2, mirrorMargin);
 
             if (!onlyAnimateMaterial)
             for (int i = 0; i < 4; i++)
@@ -157,12 +157,12 @@ public class UIController : MonoBehaviour
                 arrows[i].SetActive(false);
 
     }
-    public Vector3[] Util_GetHoodMirrorCorner(float yValue,float margin)
+    public Vector3[] Util_GetMirrorCorner(Mirror[]mirrors, float yValue,float margin)
     {
         Vector3[] corners = new Vector3[4];
         // x:top, y:right, z: bottom , w: left 
         Vector4 boundsRegion = new Vector4(float.MinValue, float.MinValue, float.MaxValue, float.MaxValue);
-        foreach (Mirror m in hoodMirrors)
+        foreach (Mirror m in  mirrors)
         {
             Bounds frameBounds = m.frameRenderer.bounds;
             float topValue = frameBounds.center.z + frameBounds.extents.z + margin;
@@ -212,7 +212,7 @@ public class UIController : MonoBehaviour
             return;
 
         mirrorMargin = Mathf.Lerp(expandedMargin, transitionMargin, timer / target) ;
-       Vector3[]  corners = Util_GetHoodMirrorCorner(2, mirrorMargin);
+       Vector3[]  corners = Util_GetMirrorCorner(hoodMirrors, 2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
@@ -232,7 +232,7 @@ public class UIController : MonoBehaviour
         if (hoodMirrors.Length <= 1)
             return;
 
-        Vector3[] corners = Util_GetHoodMirrorCorner(2, mirrorMargin);
+        Vector3[] corners = Util_GetMirrorCorner(hoodMirrors, 2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
@@ -288,7 +288,7 @@ public class UIController : MonoBehaviour
 
     public void ConstantlyUpdatingUIPos(float mirrorMargin, float screenMargin) 
     {
-        Vector3[] corners = Util_GetHoodMirrorCorner(2, mirrorMargin);
+        Vector3[] corners = Util_GetMirrorCorner(hoodMirrors, 2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
@@ -311,7 +311,7 @@ public class UIController : MonoBehaviour
         {
             while (lerpValue < value) 
             {
-                lerpValue += Time.deltaTime * speed;
+                 lerpValue += Time.deltaTime * speed;
                 await Task.Yield();
             }
         }
@@ -355,7 +355,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void GroupControlArrows(Vector3 centerPosition, float radius, float offsetDegree,float materialAlpha, bool setActive, ArrowData[] arrowDatas, Action<Vector3[],float[], Vector3> MoveOtherStuff)
+    public void GroupControlArrows(Vector3 centerPosition, float radius, float offsetDegree,float materialAlpha, bool setActive, ArrowData[] arrowDatas, Action<Vector3[],float[], Vector3> moveOtherStuff)
     {
         float initialOffset = offsetDegree;
         float[] alphas = new float[4];
@@ -377,7 +377,7 @@ public class UIController : MonoBehaviour
             arrowDatas[i].mpb.SetColor("_BaseColor", matCol);
             arrowRenders[i].SetPropertyBlock(arrowDatas[i].mpb);
         }
-        MoveOtherStuff?.Invoke(arrows.Select(x => x.transform.position).ToArray(),alphas, centerPosition);
+        moveOtherStuff?.Invoke(arrows.Select(x => x.transform.position).ToArray(),alphas, centerPosition);
     }
 
 
@@ -403,12 +403,12 @@ public class UIController : MonoBehaviour
         next?.Invoke(this);
     }
 
-    public IEnumerator ArrowsFollowObject(Transform targetTransform , float targetRadius, float offsetDegree, float targetMaterialAlpha, ArrowData[] arrowDatas, Func<bool> condition, Action<UIController> next)
+    public IEnumerator ArrowsFollowObject(Transform targetTransform , float targetRadius, float offsetDegree, float targetMaterialAlpha, ArrowData[] arrowDatas, Func<bool> condition, Action<Vector3[], float[], Vector3> moveOtherStuff, Action<UIController> next)
     {
  
         while (condition.Invoke())
         {
-            GroupControlArrows(targetTransform.position, targetRadius, offsetDegree, targetMaterialAlpha, true, arrowDatas, SyncOtherStuffWithArrow);
+            GroupControlArrows(targetTransform.position, targetRadius, offsetDegree, targetMaterialAlpha, true, arrowDatas,moveOtherStuff);
 
             yield return null;
 
@@ -423,7 +423,7 @@ public class UIController : MonoBehaviour
         if (!cam)
             return;
         Gizmos.color = Color.yellow;
-        Vector3[] corners = Util_GetHoodMirrorCorner(2,mirrorMargin); 
+        Vector3[] corners = Util_GetMirrorCorner(hoodMirrors, 2,mirrorMargin); 
 
         foreach (Vector3 corner in corners) 
         {

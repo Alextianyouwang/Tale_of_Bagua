@@ -13,6 +13,7 @@ public class Tutorial : MonoBehaviour
 
     private Mirror[] hoodMirrors;
     private bool havePlayedMirrorCollapseTutorial = false, mirrorCollapseConditionMet = false, canExitMirrorCollapseTutorial = false;
+    private int mirrorCollapseClickTime = 0;
     public static Func<UIController> OnRequestTutorialMasterSupport;
     private UIController uc;
 
@@ -45,7 +46,7 @@ public class Tutorial : MonoBehaviour
         hoodMirrors = hoodMirror;
     }
 
-    void CheckMirrorCollapseTutorialCondition() 
+    void MirrorCollapseTutorial_Condition() 
     {
         if (hoodMirrors.Length == 2 && !mirrorCollapseConditionMet) 
         {
@@ -55,6 +56,11 @@ public class Tutorial : MonoBehaviour
         if (MirrorCollapseTutorial_ExitCondition())
             MirrorManager.canUseRightClick = true;
 
+        if (havePlayedMirrorCollapseTutorial) 
+        {
+            if (Input.GetMouseButtonDown(1))
+                mirrorCollapseClickTime++;
+        }
 
     }
     bool MirrorCollapseTutorial_ExitCondition() 
@@ -62,15 +68,21 @@ public class Tutorial : MonoBehaviour
         return (Input.GetMouseButtonDown(1) && havePlayedMirrorCollapseTutorial);
       
     }
+
+    bool MirrorCollapseTutorial_UI_ExitCondition()
+    {
+        return mirrorCollapseClickTime == 2;
+
+    }
     void InitiateMirrorCollapseTutorial()
     {
         if (havePlayedMirrorCollapseTutorial)
             return;
         havePlayedMirrorCollapseTutorial = true;
-        StartCoroutine(QueueTutorialActions(uc));
-        StartCoroutine(ClickButtonShow(uc, uc.hoodMirrors, 0.7f, false,-1, MirrorCollapseTutorial_ExitCondition));
+        StartCoroutine(QueueTutorialActions(uc, MirrorCollapseTutorial_ExitCondition));
+        StartCoroutine(ClickButtonShow(uc, uc.hoodMirrors, 0.7f, false,-1, MirrorCollapseTutorial_UI_ExitCondition));
     }
-    IEnumerator QueueTutorialActions(UIController master)
+    IEnumerator QueueTutorialActions(UIController master,Func<bool> exitCondition)
     {
         MirrorManager.canUseRightClick = false;
 
@@ -78,15 +90,14 @@ public class Tutorial : MonoBehaviour
         co = StartCoroutine(master.UI_EaseInOut(1f,true,false));
         yield return co;
 
-        while (!canExitMirrorCollapseTutorial)
+        while (!exitCondition.Invoke())
         {
             master.ConstantlyUpdatingUIPos(0.2f, 60f);
             for (int i = 0; i < 4; i++)
                 master.arrows[i].gameObject.SetActive(hoodMirrors.Length >= 2);
             yield return null;
         }
-        if (canExitMirrorCollapseTutorial)
-        { StopCoroutine(co); }
+       
     }
 
 
@@ -102,7 +113,7 @@ public class Tutorial : MonoBehaviour
 
     private void Update()
     {
-        CheckMirrorCollapseTutorialCondition();
+        MirrorCollapseTutorial_Condition();
         CheckMovementTutorialExitCondition();
 
 
@@ -209,6 +220,7 @@ public class Tutorial : MonoBehaviour
     }
     void MirrorDragTutorial() 
     {
+        PlayerMove.canUseWASD = false;
         MirrorManager.canUseLeftClick = false;
         StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(), NewTransformFromPositon(GetScreenCenterPosition()), 4f, 1f, 0f, 0f, 1f, 6f, tutorialArrowData, movementTutorialAnimationCurve, null, MirrorDragTutorial_LockMirror));
     }
@@ -261,7 +273,7 @@ public class Tutorial : MonoBehaviour
         float currentTime = Time.time;
         while (!exitCondition.Invoke(initialPos,cm)) {
             MirrorDragTutorial_UpdateArrow(currentTime,initialPos, cm);
-            PlayerMove.canUseWASD = false;
+            
             if (Input.GetMouseButtonDown(0) && IsCursorOnMirror())
                 cm.AbortMovement();
             if (Input.GetMouseButtonUp(0)) 

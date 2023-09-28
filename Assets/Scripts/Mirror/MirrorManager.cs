@@ -100,11 +100,14 @@ public class MirrorManager : MonoBehaviour
     private void FollowFixUpdate() 
     {
         UpdateMirrorPhysics();
+        if (isCollapsed)
+        foreach (Mirror mr in hoodMirrors)
+            mr.ToggleBoxesRigidCollider(true);
 
-       
         if (!currentMirror || !firstMirrorHasBeenClicked)
             return;
 
+       
         if (isCollapsed && hoodMirrors.Contains(currentMirror))
         {
            
@@ -191,7 +194,8 @@ public class MirrorManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 isClicking = true;
-                StopCollapseBuffer();
+                //if (hoodMirrors.Contains(currentMirror))
+                //currentMirror.AbortMovement();
             }
             if (Input.GetMouseButtonUp(0))
             {
@@ -199,8 +203,8 @@ public class MirrorManager : MonoBehaviour
                 currentMirror = null;
                 firstMirrorHasBeenClicked = false;
                 offset = Vector3.zero;
-                if (isCollapsed)
-                    CollapseHoodMirror();
+                /*if (isCollapsed)
+                    CollapseHoodMirror();*/
             }
         }
        
@@ -274,14 +278,24 @@ public class MirrorManager : MonoBehaviour
     {
         if (allMirrors != null)
         foreach (Mirror m in allMirrors)
-            if (m)
-                SetMirrorColor(m, normalCol);
+                    if (m && m == currentMirror)
+                        SetMirrorColor(m, selectedCol);
+                    else if (m && m != currentMirror)
+                        SetMirrorColor(m, normalCol);
         if (hoodMirrors != null)
-            foreach (Mirror m in hoodMirrors)
-            if (m)
-                SetMirrorColor(m, hoodCol);
-        if (currentMirror)
-            SetMirrorColor(currentMirror, selectedCol);
+            foreach (Mirror mr in hoodMirrors)
+                if (mr)
+                    SetMirrorColor(mr, hoodCol);
+                foreach (Mirror m in hoodMirrors)
+                    if (m && m == currentMirror)
+                        SetMirrorColor(m, selectedCol);
+                    else if (m && m != currentMirror)
+                        SetMirrorColor(m, hoodCol);
+                if (isCollapsed && currentMirror)
+                    foreach (Mirror m in hoodMirrors)
+                        if (m)
+                            SetMirrorColor(m, selectedCol);
+   
     }
     void Update()
     {

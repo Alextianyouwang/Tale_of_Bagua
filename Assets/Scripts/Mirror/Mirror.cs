@@ -65,6 +65,7 @@ public class Mirror : MonoBehaviour
             percent += Time.deltaTime/time;
             float interpolate = curve.Evaluate(percent);
             transform.position = Vector3.Lerp(originalPos, targetPos, interpolate);
+      
             yield return null;
         }
 

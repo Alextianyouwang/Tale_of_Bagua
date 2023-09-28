@@ -270,7 +270,7 @@ public class Tutorial : MonoBehaviour
     IEnumerator MirrorDragTutorial_QueueAction(Mirror cm,Func<Vector3,Mirror,bool> exitCondition) 
     {
 
-        Coroutine clickUI_Co = StartCoroutine(ClickButtonShow(uc, new Mirror[] { cm },0.2f, true, 5, () => false));
+        Coroutine clickUI_Co = StartCoroutine(ClickButtonShow(uc, new Mirror[] { cm },0.7f, true, -1, () => false));
         Coroutine arrowFollowCo = StartCoroutine(uc.ArrowsFollowObject(NewTransformFromPositon(GetScreenCenterPosition()), 1f, 0f, 0f, tutorialArrowData, () => true,null,null)); 
         Vector3 initialPos = cm.transform.position;
         float currentTime = Time.time;

@@ -15,6 +15,8 @@ public class Tutorial : MonoBehaviour
     private bool havePlayedMirrorCollapseTutorial = false, mirrorCollapseConditionMet = false, canExitMirrorCollapseTutorial = false;
     private int mirrorCollapseClickTime = 0;
     public static Func<UIController> OnRequestTutorialMasterSupport;
+    public static Action<bool> OnToggleDarkenScreen;
+    
     private UIController uc;
 
     public AnimationCurve movementTutorialAnimationCurve;
@@ -222,6 +224,7 @@ public class Tutorial : MonoBehaviour
     {
         PlayerMove.canUseWASD = false;
         MirrorManager.canUseLeftClick = false;
+        OnToggleDarkenScreen?.Invoke(true);
         StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(), NewTransformFromPositon(GetScreenCenterPosition()), 4f, 1f, 0f, 0f, 1f, 6f, tutorialArrowData, movementTutorialAnimationCurve, null, MirrorDragTutorial_LockMirror));
     }
     void MirrorDragTutorial_LockMirror(UIController uc) 
@@ -288,6 +291,7 @@ public class Tutorial : MonoBehaviour
             StopCoroutine(clickUI_Co);
             StopCoroutine(arrowFollowCo);
             MirrorDragTutorial_FreeArrow(uc);
+            OnToggleDarkenScreen?.Invoke(false);
             StartCoroutine(ClickButtonShow(uc, new Mirror[] { cm },0.2f, true, 1, () => true));
         }
     }

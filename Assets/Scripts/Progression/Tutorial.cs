@@ -92,7 +92,7 @@ public class Tutorial : MonoBehaviour
 
         while (!exitCondition.Invoke())
         {
-            master.ConstantlyUpdatingUIPos(0.2f, 60f);
+            master.ConstantlyUpdatingUIPos(0.2f, master.screenMargin);
             for (int i = 0; i < 4; i++)
                 master.arrows[i].gameObject.SetActive(hoodMirrors.Length >= 2);
             yield return null;

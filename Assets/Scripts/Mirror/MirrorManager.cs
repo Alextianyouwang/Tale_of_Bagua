@@ -25,6 +25,7 @@ public class MirrorManager : MonoBehaviour
     public AnimationCurve mirrorMoveCurve;
 
     private float mirrorWorldY = 2.1f;
+    private int previousHoodMirrorCount = 0,currentHoodMirrorCount = 0; 
 
     public static bool canUseRightClick = true, canUseLeftClick = true;
 
@@ -97,55 +98,38 @@ public class MirrorManager : MonoBehaviour
         float distance = (finalWorldPos - (posXZ - offset)).magnitude;
       m.GetComponent<Rigidbody>().AddForce(direction * Mathf.Min(distance * speed, 5), ForceMode.Force);
     }
+
+
     private void FollowFixUpdate() 
     {
         UpdateMirrorPhysics();
-        Vector3 avg = Vector3.zero;
         if (isCollapsed) 
-        {
             for (int i = 0; i < hoodMirrors.Length; i++)
-            {
                 hoodMirrors[i].ToggleBoxesRigidCollider(true);
-            }
-         
-        }
-            
 
 
         if (!currentMirror || !firstMirrorHasBeenClicked)
             return;
 
-       
+
         if (isCollapsed && hoodMirrors.Contains(currentMirror))
         {
-           
+
             for (int i = 0; i < hoodMirrors.Length; i++)
             {
                 Mirror m = hoodMirrors[i];
                 m.ToggleBoxesRigidCollider(true);
-
-                MoveMirrorTo(m,finalWorldPos,2);
+                MoveMirrorTo(m, finalWorldPos, 2);
             }
         }
-       // else if (!isCollapsed)
-        else 
-        {
-
-            MoveMirrorTo(currentMirror, finalWorldPos, 2);
-
-        }
+        
+        else
+             MoveMirrorTo(currentMirror, finalWorldPos, 2);
         foreach (Mirror m in allMirrors)
         {
             m.rb.position = new Vector3(m.rb.position.x, mirrorWorldY, m.rb.position.z);
         }
 
-    }
-    private void StopCollapseBuffer() 
-    {
-        foreach (Mirror m in hoodMirrors)
-        {
-            m.AbortMovement();
-        }
     }
 
     public void CollapseHoodMirror()
@@ -194,6 +178,15 @@ public class MirrorManager : MonoBehaviour
         }
     }
 
+    void CheckIfNewHoodMirrorAdded() 
+    {
+        currentHoodMirrorCount = hoodMirrors.Length;
+        if (previousHoodMirrorCount != currentHoodMirrorCount && isCollapsed) 
+        {
+            CollapseHoodMirror();
+        }
+        previousHoodMirrorCount = currentHoodMirrorCount;
+    }
     void UpdateInput() 
     {
 
@@ -202,8 +195,6 @@ public class MirrorManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 isClicking = true;
-                //if (hoodMirrors.Contains(currentMirror))
-                //currentMirror.AbortMovement();
             }
             if (Input.GetMouseButtonUp(0))
             {
@@ -211,8 +202,6 @@ public class MirrorManager : MonoBehaviour
                 currentMirror = null;
                 firstMirrorHasBeenClicked = false;
                 offset = Vector3.zero;
-                /*if (isCollapsed)
-                    CollapseHoodMirror();*/
             }
         }
        
@@ -312,6 +301,7 @@ public class MirrorManager : MonoBehaviour
  
         UpdateInput();
         UpdateMaterial();
+        CheckIfNewHoodMirrorAdded();
 
         if (hoodMirrors.Length == 0 && isCollapsed)
         {

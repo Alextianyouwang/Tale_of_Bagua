@@ -88,21 +88,29 @@ public class MirrorManager : MonoBehaviour
             }
         }
     }
-    public void UpdateMirrorPosition(Mirror targetMirror,float speed)
+ 
+
+    public void MoveMirrorTo(Mirror m, Vector3 target, float speed ) 
     {
-        Vector3 posXZ = new Vector3(targetMirror.transform.position.x, mirrorWorldY, targetMirror.transform.position.z);
-        Vector3 direction = Vector3.Normalize(finalWorldPos - (posXZ - offset));
+        Vector3 posXZ = new Vector3(m.transform.position.x, mirrorWorldY, m.transform.position.z);
+        Vector3 direction = Vector3.Normalize(target - (posXZ - offset));
         float distance = (finalWorldPos - (posXZ - offset)).magnitude;
-        targetMirror.GetComponent<Rigidbody>().AddForce(direction * Mathf.Min(distance * speed, 5), ForceMode.Force);
-
+      m.GetComponent<Rigidbody>().AddForce(direction * Mathf.Min(distance * speed, 5), ForceMode.Force);
     }
-
     private void FollowFixUpdate() 
     {
         UpdateMirrorPhysics();
-        if (isCollapsed)
-        foreach (Mirror mr in hoodMirrors)
-            mr.ToggleBoxesRigidCollider(true);
+        Vector3 avg = Vector3.zero;
+        if (isCollapsed) 
+        {
+            for (int i = 0; i < hoodMirrors.Length; i++)
+            {
+                hoodMirrors[i].ToggleBoxesRigidCollider(true);
+            }
+         
+        }
+            
+
 
         if (!currentMirror || !firstMirrorHasBeenClicked)
             return;
@@ -116,14 +124,14 @@ public class MirrorManager : MonoBehaviour
                 Mirror m = hoodMirrors[i];
                 m.ToggleBoxesRigidCollider(true);
 
-                UpdateMirrorPosition(m,2);
+                MoveMirrorTo(m,finalWorldPos,2);
             }
         }
        // else if (!isCollapsed)
         else 
         {
 
-            UpdateMirrorPosition(currentMirror,2);
+            MoveMirrorTo(currentMirror, finalWorldPos, 2);
 
         }
         foreach (Mirror m in allMirrors)

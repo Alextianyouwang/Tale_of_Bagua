@@ -96,7 +96,7 @@ public class LayerCheck : MonoBehaviour
             if (c.gameObject.GetComponentInParent<Level>()) 
             {
                 Level localLevel = c.gameObject.GetComponentInParent<Level>();
-                if (currentLevel == nextLevel ? localLevel == lastLevel : localLevel == nextLevel)
+                if (currentLevel == nextLevel ? localLevel == lastLevel || localLevel ==nextLevel : localLevel == nextLevel)
                     return true;
             }
         }
@@ -110,7 +110,7 @@ public class LayerCheck : MonoBehaviour
             if (c.gameObject.GetComponentInParent<Level>())
             {
                 Level localLevel = c.gameObject.GetComponentInParent<Level>();
-                if (localLevel == lastLevel && currentLevel != nextLevel)
+                if (currentLevel != nextLevel ? localLevel == lastLevel || localLevel == nextLevel: localLevel == lastLevel)
                     return true;
             }
         }

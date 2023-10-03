@@ -31,6 +31,7 @@ public class PlayerMove : MonoBehaviour
        
         movePoint = transform.position;
     }
+
     private void FixedUpdate()
     {
         playerPosition = transform.position;

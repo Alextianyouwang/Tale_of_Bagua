@@ -76,6 +76,7 @@ public class CaptureLevel
 
         m.vertices = new Vector3[] { corners[0], corners[1], corners[2], corners[3] };
         m.triangles = new int[] { 0, 3, 2, 2, 1, 0 };
+        m.uv = new Vector2[] { Vector2.zero,Vector2.right,Vector2.one,Vector2.up };
 
         m.RecalculateNormals();
         m.RecalculateBounds();

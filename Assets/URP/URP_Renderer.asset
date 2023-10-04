@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: RenderOnTopSelfSortSort
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: RenderOnTopSelfSortSort
     Event: 550
@@ -327,7 +327,7 @@ MonoBehaviour:
     m_Bits: 3127
   m_DefaultStencilState:
     overrideStencilState: 0
-    stencilReference: 4
+    stencilReference: 1
     stencilCompareFunction: 8
     passOperation: 2
     failOperation: 0

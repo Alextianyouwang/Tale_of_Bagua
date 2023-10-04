@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 7326154252680105982}
   - component: {fileID: 7326154252680105981}
   m_Layer: 0
-  m_Name: PixelFireField
+  m_Name: PixelFireField_Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4769,7 +4769,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_RenderMode: 2
+  m_RenderMode: 5
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -14266,7 +14266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7326154253313261434
 Transform:
   m_ObjectHideFlags: 0

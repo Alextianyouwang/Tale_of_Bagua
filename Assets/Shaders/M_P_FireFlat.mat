@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_P_Fire
+  m_Name: M_P_FireFlat
   m_Shader: {fileID: -6465566751694194690, guid: 58e502bea1642fa49a1da40e0c3e1088, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -43,7 +43,7 @@ Material:
     - _Trancparency: 0.541
     m_Colors:
     - _Emission: {r: 0.066037714, g: 0.030267285, b: 0, a: 1}
-    - _Tint: {r: 0.42352942, g: 0.18656898, b: 0.039215688, a: 0.7529412}
+    - _Tint: {r: 1, g: 0.4609508, b: 0.24056602, a: 0.7529412}
   m_BuildTextureStacks: []
 --- !u!114 &8315376429054242712
 MonoBehaviour:

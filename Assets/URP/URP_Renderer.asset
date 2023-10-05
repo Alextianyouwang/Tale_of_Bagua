@@ -170,7 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 0
   settings:
-    Event: 240
+    Event: 500
     blitMaterial: {fileID: 2100000, guid: a9290c1e003e1e348be96c98fbd4b18a, type: 2}
     blitMaterialPassIndex: 0
     setInverseViewMatrix: 0
@@ -242,7 +242,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 8192
+        m_Bits: 0
       PassNames: []
     overrideMaterial: {fileID: 2100000, guid: 0f842ce72373de443bd47da7d588eae4, type: 2}
     overrideMaterialPassIndex: 0

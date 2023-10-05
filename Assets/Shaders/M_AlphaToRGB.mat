@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_AlphaToRGB
-  m_Shader: {fileID: -6465566751694194690, guid: 727f392063d51004d87ef2eecff1314a, type: 3}
+  m_Shader: {fileID: 4800000, guid: e36b8d01e964c7748ac445313eac9767, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -34,7 +34,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 33998b9ab6661ec49af27cf95acf19e9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:

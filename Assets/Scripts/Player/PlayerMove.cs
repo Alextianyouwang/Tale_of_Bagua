@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+
 using UnityEngine;
-using System.Linq;
+
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField] private Vector3 playerCenterOffset = Vector3.zero;
     [SerializeField] private float moveSpeed,moveIncrement =1;
-    private Vector3 horizontal, vertical, movePoint;
-    public LayerMask obstacles;
+    private Vector3 horizontal, vertical;
+
     public static Transform playerTransform;
     public static Vector3 playerPosition;
     public static bool canUseWASD = true;
@@ -26,11 +23,7 @@ public class PlayerMove : MonoBehaviour
     {
         canUseWASD = true;
     }
-    private void Start()
-    {
-       
-        movePoint = transform.position;
-    }
+
 
     private void FixedUpdate()
     {

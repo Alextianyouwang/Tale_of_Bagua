@@ -87,6 +87,13 @@ public class SceneCaptureWindow : EditorWindow
         AssetDatabase.Refresh();
     }
 
+    public void SaveMesh(Mesh mesh, string path, string name)
+    {
+        AssetDatabase.CreateAsset(mesh, Path.Combine("Assets",path, name + ".asset"));
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+
     private void OnGUI()
     {
         EditorGUILayout.LabelField("Scene Capture", EditorStyles.boldLabel);
@@ -158,7 +165,8 @@ public class SceneCaptureWindow : EditorWindow
             if (_levelObj)
                 DestroyImmediate(_levelObj);
             _levelMesh = _master.CreateQuad(_master.GetScreenInWorldSpace(_levelDepth));
-            _levelObj = _master.CreatePlaneLevel("Test",_levelMesh ,_levelMat);
+            SaveMesh(_levelMesh, _path, _name + "_mesh");
+            _levelObj = _master.CreatePlaneLevel(_name+"_card",_levelMesh ,_levelMat);
         }
         if (_prev_levelDepth != _levelDepth && _levelObj != null)
             _master.AdjustQuadDepth(_levelMesh, _levelDepth);

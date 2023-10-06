@@ -24,6 +24,8 @@ public class SceneCaptureWindow : EditorWindow
     private bool _renderDepth,_prev_renderDepth;
     private float _levelDepth = 1f, _prev_levelDepth;
 
+
+
     private UniversalAdditionalCameraData _urp_cam;
 
     private UniversalRendererData _rendererData;
@@ -158,15 +160,20 @@ public class SceneCaptureWindow : EditorWindow
 
         _levelDepth = EditorGUILayout.Slider("Level Depth",_levelDepth, _master.Cam.nearClipPlane, _master.Cam.farClipPlane);
         _levelMat = (Material)EditorGUILayout.ObjectField("Level Material",_levelMat, typeof(Material),true);
-
+        _levelObj = (GameObject)EditorGUILayout.ObjectField("Level Card", _levelObj, typeof(GameObject),true);
+        if (_levelObj && _levelObj.GetComponent<MeshFilter>()) 
+        {
+            _levelMesh = _levelObj.GetComponent<MeshFilter>().sharedMesh;
+        }
         
         if (GUILayout.Button("Create Level From Camera View"))
         {
-            if (_levelObj)
-                DestroyImmediate(_levelObj);
-            _levelMesh = _master.CreateQuad(_master.GetScreenInWorldSpace(_levelDepth));
+            if (!_levelObj) 
+            {
+                _levelMesh = _master.CreateQuad(_master.GetScreenInWorldSpace(_levelDepth));
+                _levelObj = _master.CreatePlaneLevel(_name + "_card", _levelMesh, _levelMat);
+            }
             SaveMesh(_levelMesh, _path, _name + "_mesh");
-            _levelObj = _master.CreatePlaneLevel(_name+"_card",_levelMesh ,_levelMat);
         }
         if (_prev_levelDepth != _levelDepth && _levelObj != null)
             _master.AdjustQuadDepth(_levelMesh, _levelDepth);

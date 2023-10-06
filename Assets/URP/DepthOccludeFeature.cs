@@ -77,7 +77,7 @@ public class DepthOccludeFeature : ScriptableRendererFeature
                 // Blit(cmd, _depthRef, _colSource);
 
                  context.DrawRenderers(renderingData.cullResults, ref _drawingSetting, ref _filteringSettings);
-
+                
 
                 /*Blit(cmd, _colSource, _temp.Identifier(), _mergeAlphaMat, 0);
                 Blit(cmd, _temp.Identifier(), _colSource);*/

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[ExecuteInEditMode]
 public class LightFlicker : MonoBehaviour
 {
     public float minIntensity = 0.5f; // Minimum intensity of the spotlight

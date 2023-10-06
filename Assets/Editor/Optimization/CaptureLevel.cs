@@ -18,6 +18,7 @@ public class CaptureLevel
         Cam.targetTexture = new RenderTexture(Cam.pixelWidth, Cam.pixelHeight, 24);
         RenderTexture.active = Cam.targetTexture;
         Cam.cullingMask = cullMask;
+        Cam.clearFlags = CameraClearFlags.Nothing;
         Cam.Render();
 
         Texture2D image = new Texture2D(Cam.targetTexture.width, Cam.targetTexture.height, TextureFormat.RGBAFloat, false);

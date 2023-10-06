@@ -302,8 +302,8 @@ MonoBehaviour:
   - {fileID: 4212481251623000232}
   - {fileID: 767972046944407254}
   - {fileID: -677920241729506194}
-  - {fileID: 3773786011707373028}
-  m_RendererFeatureMap: 941e1c57a56df6a1ff37480035906048f2e8e5c5c3358f17e2b6c92d6538fd85943afc25d5b67e185f23b96f8640f8950db820e854a270260ef34468fc129c4d313627c2be86e381ea20abb0b55b63fb71a044f49f770ce4a858fb3161bd753ad60e8dff8162a80a6e74aac5218b97f6e4f5271e622e5f34
+  - {fileID: 3387405720088621396}
+  m_RendererFeatureMap: 941e1c57a56df6a1ff37480035906048f2e8e5c5c3358f17e2b6c92d6538fd85943afc25d5b67e185f23b96f8640f8950db820e854a270260ef34468fc129c4d313627c2be86e381ea20abb0b55b63fb71a044f49f770ce4a858fb3161bd753ad60e8dff8162a80a6e74aac5218b97f6543102208e7b022f
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -339,7 +339,7 @@ MonoBehaviour:
   m_AccurateGbufferNormals: 0
   m_ClusteredRendering: 0
   m_TileSize: 32
-  m_IntermediateTextureMode: 0
+  m_IntermediateTextureMode: 1
 --- !u!114 &767972046944407254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -484,6 +484,29 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &3387405720088621396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2298e2065a1313945afcd1c442483a6a, type: 3}
+  m_Name: DepthOccludeFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  _depthPassSetting:
+    Event: 300
+    RenderQueue: 0
+    DepthCheckObjLayer:
+      serializedVersion: 2
+      m_Bits: 1
+    DepthReference: {fileID: 2800000, guid: b7fad5d77dbdaf54eae4a552033a39ea, type: 3}
+    ShowDepthMaterial: {fileID: 2100000, guid: 0f842ce72373de443bd47da7d588eae4, type: 2}
+    BlackMaterial: {fileID: 0}
+    MergeAlphaMaterial: {fileID: 2100000, guid: d82ce178ad01d3740a85bbbda568d3c6, type: 2}
 --- !u!114 &3773786011707373028
 MonoBehaviour:
   m_ObjectHideFlags: 0

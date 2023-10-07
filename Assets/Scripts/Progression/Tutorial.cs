@@ -3,7 +3,6 @@ using UnityEngine;
 using System;
 
 using static UIController;
-using Unity.VisualScripting;
 
 public class Tutorial : MonoBehaviour
 {
@@ -13,7 +12,7 @@ public class Tutorial : MonoBehaviour
     private GameObject clickUI;
 
     private Mirror[] hoodMirrors;
-    private bool havePlayedMirrorCollapseTutorial = false, mirrorCollapseConditionMet = false, canExitMirrorCollapseTutorial = false;
+    private bool havePlayedMirrorCollapseTutorial = false, mirrorCollapseConditionMet = false;
     private int mirrorCollapseClickTime = 0;
     public static Func<UIController> OnRequestTutorialMasterSupport;
     public static Action<bool> OnToggleDarkenScreen;

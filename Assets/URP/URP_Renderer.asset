@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: Render Depth
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     passTag: Render Depth
     Event: 600
@@ -215,7 +215,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 8192
+        m_Bits: 0
       PassNames: []
     overrideMaterial: {fileID: 2100000, guid: 0f842ce72373de443bd47da7d588eae4, type: 2}
     overrideMaterialPassIndex: 0
@@ -328,7 +328,7 @@ MonoBehaviour:
     m_Bits: 3127
   m_DefaultStencilState:
     overrideStencilState: 0
-    stencilReference: 5
+    stencilReference: 0
     stencilCompareFunction: 8
     passOperation: 2
     failOperation: 0

@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 
 using static UIController;
+using Unity.VisualScripting;
 
 public class Tutorial : MonoBehaviour
 {
@@ -50,6 +51,7 @@ public class Tutorial : MonoBehaviour
 
     void MirrorCollapseTutorial_Condition() 
     {
+        if (hoodMirrors!= null)
         if (hoodMirrors.Length == 2 && !mirrorCollapseConditionMet) 
         {
             mirrorCollapseConditionMet = true;

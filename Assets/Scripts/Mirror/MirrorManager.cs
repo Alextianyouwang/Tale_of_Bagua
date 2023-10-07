@@ -279,19 +279,23 @@ public class MirrorManager : MonoBehaviour
                         SetMirrorColor(m, selectedCol);
                     else if (m && m != currentMirror)
                         SetMirrorColor(m, normalCol);
-        if (hoodMirrors != null)
+        if (hoodMirrors != null && hoodMirrors.Length > 0) 
+        {
             foreach (Mirror mr in hoodMirrors)
                 if (mr)
                     SetMirrorColor(mr, hoodCol);
-                foreach (Mirror m in hoodMirrors)
-                    if (m && m == currentMirror)
+            foreach (Mirror m in hoodMirrors)
+                if (m)
+                    if (m == currentMirror)
                         SetMirrorColor(m, selectedCol);
                     else if (m && m != currentMirror)
                         SetMirrorColor(m, hoodCol);
-                if (isCollapsed && currentMirror)
-                    foreach (Mirror m in hoodMirrors)
-                        if (m)
-                            SetMirrorColor(m, selectedCol);
+            if (isCollapsed && currentMirror)
+                foreach (Mirror m in hoodMirrors)
+                    if (m)
+                        SetMirrorColor(m, selectedCol);
+        }
+           
    
     }
     void Update()

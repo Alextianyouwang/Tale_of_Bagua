@@ -20,7 +20,7 @@ MonoBehaviour:
       RenderQueueType: 1
       LayerMask:
         serializedVersion: 2
-        m_Bits: 512
+        m_Bits: 262656
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e58de2bd0a092a14b98f02d23ab0a93a, type: 3}
   m_Name: Darken
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     Event: 0
     blitMaterial: {fileID: 2100000, guid: d82ce178ad01d3740a85bbbda568d3c6, type: 2}

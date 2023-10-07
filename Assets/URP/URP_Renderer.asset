@@ -59,7 +59,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 295424
+        m_Bits: 819712
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -137,7 +137,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 294976
+        m_Bits: 819264
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -215,7 +215,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 262144
+        m_Bits: 8192
       PassNames: []
     overrideMaterial: {fileID: 2100000, guid: 0f842ce72373de443bd47da7d588eae4, type: 2}
     overrideMaterialPassIndex: 0
@@ -328,7 +328,7 @@ MonoBehaviour:
     m_Bits: 3127
   m_DefaultStencilState:
     overrideStencilState: 0
-    stencilReference: 1
+    stencilReference: 5
     stencilCompareFunction: 8
     passOperation: 2
     failOperation: 0
@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e58de2bd0a092a14b98f02d23ab0a93a, type: 3}
   m_Name: Darken
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     Event: 0
     blitMaterial: {fileID: 2100000, guid: d82ce178ad01d3740a85bbbda568d3c6, type: 2}
@@ -387,7 +387,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 295168
+        m_Bits: 819456
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -426,7 +426,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 303104
+        m_Bits: 827392
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -535,12 +535,12 @@ MonoBehaviour:
   m_Active: 1
   settings:
     passTag: RenderOnTopSelfSort
-    Event: 500
+    Event: 550
     filterSettings:
       RenderQueueType: 1
       LayerMask:
         serializedVersion: 2
-        m_Bits: 65536
+        m_Bits: 65538
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -579,7 +579,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 295040
+        m_Bits: 819328
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0

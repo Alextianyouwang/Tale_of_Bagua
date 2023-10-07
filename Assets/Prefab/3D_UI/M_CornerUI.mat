@@ -86,6 +86,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _Blend: 0
+    - _BlendOp: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -101,8 +102,10 @@ Material:
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 0
+    - _SampleGI: 0
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -111,10 +114,11 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 1, g: 0.83, b: 0.61, a: 1}
-    - _Color: {r: 1, g: 0.83, b: 0.61, a: 1}
+    - _BaseColor: {r: 2.6390157, g: 2.1940053, b: 1.6144567, a: 0.68235296}
+    - _Color: {r: 2.6390157, g: 2.1940053, b: 1.6144567, a: 0.68235296}
     - _EmissionColor: {r: 4.441776, g: 1.2745967, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _Tint: {r: 45.254833, g: 25.300253, b: 0, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &5862708264869539538
 MonoBehaviour:

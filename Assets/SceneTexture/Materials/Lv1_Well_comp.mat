@@ -8,19 +8,34 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Lv1_Well_comp
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: de28e9bcfd0678640893b6e060fbac81, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap:
-    RenderType: Opaque
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_5917C0F1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_7255C4CD:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_87DF1992:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_AF86F51C:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -79,6 +94,32 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - Vector1_33D6ED88: 0
+    - Vector1_3770B5C: 0.5
+    - Vector1_38047C91: 0.5
+    - Vector1_40C5EB4E: 0.4
+    - Vector1_41FAE320: 0.71
+    - Vector1_490079ED: 5
+    - Vector1_4C7B0289: 0.05
+    - Vector1_4ED49B17: 0.1
+    - Vector1_52E31C97: 0.03
+    - Vector1_5A3E2040: 0.2
+    - Vector1_5CCADC29: 1
+    - Vector1_68B44540: 0
+    - Vector1_717649CF: 0.5
+    - Vector1_81D95DDA: -0.25
+    - Vector1_8280C9BC: 0.4
+    - Vector1_894FE3F1: 0.28
+    - Vector1_965BA36C: 0.18
+    - Vector1_A465D6C0: 0.6
+    - Vector1_B2C28A3D: 1
+    - Vector1_B5C121FC: 0.3
+    - Vector1_C17124A0: 0.85
+    - Vector1_DFF69F7C: 0.025
+    - Vector1_E280F477: 0.5
+    - Vector1_E54BAFA9: 1.84
+    - Vector1_E7F1FCE4: 0.68
+    - Vector1_FCCF8EB4: 0.25
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -96,6 +137,7 @@ Material:
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
@@ -106,6 +148,10 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
+    - Color_7CCE133F: {r: 0, g: 0.2925463, b: 0.5471698, a: 0}
+    - Color_8B0C7504: {r: 0.1058206, g: 0.480613, b: 0.7735849, a: 0}
+    - Color_9FE5C60C: {r: 0.1058206, g: 0.480613, b: 0.7735849, a: 0}
+    - Color_DD5D9566: {r: 1, g: 1, b: 1, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

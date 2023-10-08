@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: RenderObjects
+  m_Name: Stencil LV3 Transp
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    passTag: RenderObjects
+    passTag: Stencil LV3 Transp
     Event: 500
     filterSettings:
       RenderQueueType: 1
       LayerMask:
         serializedVersion: 2
-        m_Bits: 262656
+        m_Bits: 512
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -88,17 +88,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: StencilLV0Grass
+  m_Name: StencilLV0 Transp
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
-    passTag: StencilLV0Grass
+    passTag: StencilLV0 Transp
     Event: 500
     filterSettings:
       RenderQueueType: 1
       LayerMask:
         serializedVersion: 2
-        m_Bits: 262208
+        m_Bits: 64
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: Render Depth
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: Render Depth
     Event: 600
@@ -244,17 +244,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: RenderObjects
+  m_Name: Stencil LV4 Transp
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    passTag: RenderObjects
+    passTag: Stencil LV4 Transp
     Event: 500
     filterSettings:
       RenderQueueType: 1
       LayerMask:
         serializedVersion: 2
-        m_Bits: 8192
+        m_Bits: 1024
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -302,8 +302,7 @@ MonoBehaviour:
   - {fileID: 4212481251623000232}
   - {fileID: 767972046944407254}
   - {fileID: -677920241729506194}
-  - {fileID: 3387405720088621396}
-  m_RendererFeatureMap: 941e1c57a56df6a1ff37480035906048f2e8e5c5c3358f17e2b6c92d6538fd85943afc25d5b67e185f23b96f8640f8950db820e854a270260ef34468fc129c4d313627c2be86e381ea20abb0b55b63fb71a044f49f770ce4a858fb3161bd753ad60e8dff8162a80a6e74aac5218b97f6543102208e7b022f
+  m_RendererFeatureMap: 941e1c57a56df6a1ff37480035906048f2e8e5c5c3358f17e2b6c92d6538fd85943afc25d5b67e185f23b96f8640f8950db820e854a270260ef34468fc129c4d313627c2be86e381ea20abb0b55b63fb71a044f49f770ce4a858fb3161bd753ad60e8dff8162a80a6e74aac5218b97f6
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -322,10 +321,10 @@ MonoBehaviour:
   m_AssetVersion: 1
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 3127
+    m_Bits: 268289
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 3127
+    m_Bits: 0
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 0
@@ -426,7 +425,7 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 827392
+        m_Bits: 820224
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
@@ -455,11 +454,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: StencilLV1Fire
+  m_Name: StencilLV1 Transp
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    passTag: StencilLV1Fire
+    passTag: StencilLV1 Transp
     Event: 500
     filterSettings:
       RenderQueueType: 1
@@ -484,29 +483,6 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
---- !u!114 &3387405720088621396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2298e2065a1313945afcd1c442483a6a, type: 3}
-  m_Name: DepthOccludeFeature
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  _depthPassSetting:
-    Event: 300
-    RenderQueue: 0
-    DepthCheckObjLayer:
-      serializedVersion: 2
-      m_Bits: 1
-    DepthReference: {fileID: 2800000, guid: b7fad5d77dbdaf54eae4a552033a39ea, type: 3}
-    ShowDepthMaterial: {fileID: 2100000, guid: 0f842ce72373de443bd47da7d588eae4, type: 2}
-    BlackMaterial: {fileID: 0}
-    MergeAlphaMaterial: {fileID: 2100000, guid: d82ce178ad01d3740a85bbbda568d3c6, type: 2}
 --- !u!114 &3773786011707373028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -608,11 +584,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: Stencil LV2 Grass
+  m_Name: Stencil LV2 Transp
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
-    passTag: Stencil LV2 Grass
+    passTag: Stencil LV2 Transp
     Event: 500
     filterSettings:
       RenderQueueType: 1

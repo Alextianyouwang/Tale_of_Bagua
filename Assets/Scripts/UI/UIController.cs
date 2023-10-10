@@ -374,7 +374,7 @@ public class UIController : MonoBehaviour
             arrows[i].SetActive(setActive);
 
             initialOffset += 90f;
-            alphas[i] = Mathf.Max(0f, materialAlpha - Mathf.Max( Mathf.Min(arrowDatas[i].lerpValue * arrowDatas[i].alphaMultiplier, 1f)),0) * fullMirrorAlpha;
+            alphas[i] = Mathf.Max((materialAlpha - arrowDatas[i].lerpValue * arrowDatas[i].alphaMultiplier) * fullMirrorAlpha,0) ;
             Color matCol = new Color(UIColor.r, UIColor.g, UIColor.b, alphas[i]);
             arrowDatas[i].mpb.SetColor("_BaseColor", matCol);
             arrowRenders[i].SetPropertyBlock(arrowDatas[i].mpb);

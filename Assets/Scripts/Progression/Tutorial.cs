@@ -240,12 +240,9 @@ public class Tutorial : MonoBehaviour
     {
         Mirror cm = FindObjectOfType<Mirror>();
         foreach (ArrowData d in tutorialArrowData) 
-        {
-            d.lerpValue = Mathf.Max(d.lerpValue, 0);
             d.alphaMultiplier = 0;
-        }
 
-        StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(),cm.transform, 1, 5f, 0f, 1f, 0f, 2f, tutorialArrowData, movementTutorialAnimationCurve, null, Tutorial_TurnOff));
+        StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(),cm.transform, 1, 5f, 0f, 2f, 0f, 2f, tutorialArrowData, movementTutorialAnimationCurve, null, Tutorial_TurnOff));
 
     }
 

@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: StencilLV0 Transp
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     passTag: StencilLV0 Transp
     Event: 500
@@ -327,7 +327,7 @@ MonoBehaviour:
     m_Bits: 284673
   m_DefaultStencilState:
     overrideStencilState: 0
-    stencilReference: 3
+    stencilReference: 0
     stencilCompareFunction: 8
     passOperation: 2
     failOperation: 0

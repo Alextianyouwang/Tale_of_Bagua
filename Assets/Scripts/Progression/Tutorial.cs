@@ -242,7 +242,7 @@ public class Tutorial : MonoBehaviour
         foreach (ArrowData d in tutorialArrowData) 
             d.alphaMultiplier = 0;
 
-        StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(),cm.transform, 1, 5f, 0f, 2f, 0f, 2f, tutorialArrowData, movementTutorialAnimationCurve, null, Tutorial_TurnOff));
+        StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(),cm.transform, 1, 5f, 0f, 2f, 0f, 1f, tutorialArrowData, movementTutorialAnimationCurve, null, Tutorial_TurnOff));
 
     }
 

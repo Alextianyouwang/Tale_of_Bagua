@@ -15,8 +15,8 @@ float4 _screenParam;
 
 float DrawBox(float2 uv, float2 pos, float2 size, float active) 
 {
-    float2 lowerLeft = pos - size * 0.5f;
-    float2 upperRight = pos + size * 0.5f;
+    float2 lowerLeft = pos - size * 0.5;
+    float2 upperRight = pos + size * 0.5;
     float2 stepValue = step(lowerLeft, uv) - step(upperRight, uv);
     return stepValue.x * stepValue.y * active;
 }
@@ -29,11 +29,10 @@ float DrawChecker(float2 uv)
     return result;
 }
 
-[numthreads(8,8,1)]
+[numthreads(10,10,1)]
 void CheckerRenderer (uint3 id : SV_DispatchThreadID)
 {
-    float2 uv = float2 (id.xy / _screenParam.xy);
-
+    float2 uv = float2 (id.x / (_screenParam.x - 1), id.y / (_screenParam.y - 1));
     float box = DrawChecker(uv);
     Result[id.xy] = float4(box.xxx,1);
 }

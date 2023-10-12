@@ -64,17 +64,34 @@ public class LevelGenerator
             {
                 Vector3 pos = offset + new Vector3(i * xLength, 0, j*yLength);
                 cells[i, j] = new Cell(pos,new Vector3 (xLength,height,yLength));
-                cells[i, j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2, ySegment * j + ySegment / 2), new Vector2(xSegment, ySegment));
+                cells[i, j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2f, ySegment * j + ySegment / 2f), new Vector2(xSegment, ySegment));
 
+                //Checker Pattern
                 cells[i, j].SetActive(j % 2 == 0 ? true : false);
-                cells[i, j].SetActive(i % 2 == 0 ? cells[i,j].isActive : cells[i, j].isActive ? false: true);
-              
+                cells[i, j].SetActive(i % 2 == 0 ? cells[i, j].isActive : cells[i, j].isActive ? false : true);
+
             } 
         }
         return cells;
     }
 
+    public Cell GetSelectedCell(Cell[] cells, Vector3 pos) 
+    {
+        Cell closestCell = null;
+        float shortestDist = float.MaxValue;
+        foreach (Cell c in cells) 
+        {
+            float dist = Vector3.Distance(pos, c.position);
+            if (dist <= shortestDist) 
+            {
+                shortestDist = dist;
+                closestCell = c;
+            }
+        }
+        return closestCell;
+    }
 }
+
 
 public class Cell
 {

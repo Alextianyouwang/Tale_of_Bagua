@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Linq;
+using Unity.Burst.CompilerServices;
 
 public class LevelGenerator_Editor : EditorWindow
 {
@@ -17,7 +18,7 @@ public class LevelGenerator_Editor : EditorWindow
     private string _path;
     private string _name;
 
-    private int _horizontalChunks = 32, _verticalChunks = 16;
+    private int _horizontalChunks = 32, _verticalChunks = 18;
 
     private Cell[,] _cells;
     private Cell[] _cellFlattenedList;
@@ -40,15 +41,16 @@ public class LevelGenerator_Editor : EditorWindow
         if (!_generator.Cam)
             Debug.LogError("No Camera Detected");
 
+        SceneView.duringSceneGui += OnSceneGUI; 
 
-        PrepareVisualSetup();
+        PrepareVisualSetup(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
 
     }
-
-    private void PrepareVisualSetup()
+    
+    private void PrepareVisualSetup(int texWidth, int texHeight)
     {
         _levelVisual_cs = (ComputeShader)Resources.Load("CS/CS_LevelVisual");
-        _levelVisual_tex = RenderTexture.GetTemporary(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight, 0, RenderTextureFormat.ARGB64, RenderTextureReadWrite.Linear);
+        _levelVisual_tex = RenderTexture.GetTemporary(texWidth,texHeight , 0, RenderTextureFormat.ARGB32);
         _levelVisual_tex.filterMode = FilterMode.Point;
         _levelVisual_tex.enableRandomWrite = true;
         _levelVisual_tex.Create();
@@ -65,16 +67,24 @@ public class LevelGenerator_Editor : EditorWindow
         _levelVisual_buffer.SetData(_cellFlattenedList.Select(x => x.cellStruct).ToArray(), 0, 0, count);
         _levelVisual_cs.SetInt("_cellCount", count);
         _levelVisual_cs.SetBuffer(0, "_CellBuffer", _levelVisual_buffer);
-        _levelVisual_cs.Dispatch(0, Mathf.CeilToInt(_generator.Cam.pixelWidth / 8f), Mathf.CeilToInt(_generator.Cam.pixelHeight / 8f), 1);
+        _levelVisual_cs.Dispatch(0, (_generator.Cam.pixelWidth / 10), (_generator.Cam.pixelHeight / 10), 1);
     }
 
-    private void OnDisable()
+    private void RemoveVisualSetup()
     {
         if (_levelVisual_buffer != null)
             _levelVisual_buffer.Dispose();
         _levelVisual_tex.Release();
+
     }
 
+    private void OnDisable()
+    {
+        RemoveVisualSetup();
+
+        SceneView.duringSceneGui -= OnSceneGUI;
+    }
+   
 
     private void OnGUI()
     {
@@ -134,16 +144,63 @@ public class LevelGenerator_Editor : EditorWindow
                 _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks, _verticalChunks, 1f);
                 _cellFlattenedList = new Cell[_horizontalChunks * _verticalChunks];
                 for (int i = 0; i < _horizontalChunks; i++)
-                    for (int j = 0; j < _verticalChunks; j++)
+                    for (int j = 0; j < _verticalChunks; j++) 
                         _cellFlattenedList[i * _verticalChunks + j] = _cells[i, j];
-
+                
                 UpdateVisualSetup(_horizontalChunks * _verticalChunks, sizeof(float) * 5);
             }
         }
         _prev_levelDepth = _levelDepth;
     }
 
- 
+    private void OnSceneGUI(SceneView sceneView) 
+    {
+        RaycastHit hit =  EditorClickSceneObject(sceneView);
+        UpdateCellActivationVisual(hit);
+    }
+
+    private RaycastHit EditorClickSceneObject(SceneView sceneView)
+    {
+        RaycastHit hit = new RaycastHit();
+        Camera cam = sceneView.camera;
+        if (!cam)
+            return hit;
+        Event e = Event.current;
+        Ray mouseRay = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+        if (Physics.Raycast(mouseRay, out hit, 100f))
+            return hit;
+        return hit;
+    }
+
+    private void UpdateCellActivationVisual(RaycastHit hit) 
+    {
+        if (!hit.transform)
+            return;
+        if (hit.transform.gameObject != _levelObj)
+            return;
+        Event e = Event.current;
+        Handles.color = Color.green;
+        Handles.DrawSolidDisc(hit.point, hit.normal, 0.1f);
+        Cell selected = null;
+        if (_cellFlattenedList != null)
+            selected = _generator.GetSelectedCell(_cellFlattenedList, hit.point);
+
+        if (selected != null)
+            if (e.type == EventType.MouseDown && e.button == 0)
+            {
+                selected.isActive = true;
+                UpdateVisualSetup(_horizontalChunks * _verticalChunks, sizeof(float) * 5);
+            }
+            else if (e.type == EventType.MouseDown && e.button == 1)
+            {
+                selected.isActive =false;
+                UpdateVisualSetup(_horizontalChunks * _verticalChunks, sizeof(float) * 5);
+            }
+
+    }
+
+
+
     public void SaveMesh(Mesh mesh, string path, string name)
     {
         AssetDatabase.CreateAsset(mesh, Path.Combine("Assets", path, name + ".asset"));

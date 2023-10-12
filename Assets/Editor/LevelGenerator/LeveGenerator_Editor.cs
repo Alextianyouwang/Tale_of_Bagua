@@ -2,8 +2,6 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using PlasticGui;
-using UnityEngine.UIElements;
 using System.Linq;
 
 public class LevelGenerator_Editor : EditorWindow
@@ -22,6 +20,7 @@ public class LevelGenerator_Editor : EditorWindow
     private int _horizontalChunks = 32, _verticalChunks = 16;
 
     private Cell[,] _cells;
+    private Cell[] _cellFlattenedList;
     private ComputeShader _levelVisual_cs;
     private RenderTexture _levelVisual_tex;
     private ComputeBuffer _levelVisual_buffer;
@@ -42,11 +41,11 @@ public class LevelGenerator_Editor : EditorWindow
             Debug.LogError("No Camera Detected");
 
 
-        PrepareVisual();
+        PrepareVisualSetup();
 
     }
 
-    private void PrepareVisual()
+    private void PrepareVisualSetup()
     {
         _levelVisual_cs = (ComputeShader)Resources.Load("CS/CS_LevelVisual");
         _levelVisual_tex = RenderTexture.GetTemporary(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight, 0, RenderTextureFormat.ARGB64, RenderTextureReadWrite.Linear);
@@ -55,13 +54,18 @@ public class LevelGenerator_Editor : EditorWindow
         _levelVisual_tex.Create();
 
         _levelVisual_cs.SetTexture(0, "Result", _levelVisual_tex);
+        _levelVisual_cs.SetVector("_screenParam", new Vector4(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight, 0, 0));
     }
 
-    private void PrepareComputeBuffer(int count, int stride) 
+    private void UpdateVisualSetup(int count, int stride) 
     {
         if(_levelVisual_buffer != null)
             _levelVisual_buffer.Dispose();
         _levelVisual_buffer = new ComputeBuffer(count, stride);
+        _levelVisual_buffer.SetData(_cellFlattenedList.Select(x => x.cellStruct).ToArray(), 0, 0, count);
+        _levelVisual_cs.SetInt("_cellCount", count);
+        _levelVisual_cs.SetBuffer(0, "_CellBuffer", _levelVisual_buffer);
+        _levelVisual_cs.Dispatch(0, Mathf.CeilToInt(_generator.Cam.pixelWidth / 8f), Mathf.CeilToInt(_generator.Cam.pixelHeight / 8f), 1);
     }
 
     private void OnDisable()
@@ -119,28 +123,22 @@ public class LevelGenerator_Editor : EditorWindow
         {
             if (_levelObj) 
             {
-                _horizontalChunks = EditorGUILayout.IntField("X Chunk", _horizontalChunks);
-                _verticalChunks = EditorGUILayout.IntField("Y Chunk", _verticalChunks);
+                _horizontalChunks = EditorGUILayout.IntField("X Chunk", _horizontalChunks < 1 ? 1 :_horizontalChunks);
+                _horizontalChunks = _horizontalChunks < 1 ? 1 : _horizontalChunks;
+                _verticalChunks = EditorGUILayout.IntField("Y Chunk", _verticalChunks < 1? 1 :_verticalChunks);
+                _verticalChunks = _verticalChunks < 1 ? 1 : _verticalChunks;
             }
                
             if (GUILayout.Button("Create Cells")) 
             {
                 _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks, _verticalChunks, 1f);
-                Cell[] cellList = new Cell[_horizontalChunks * _verticalChunks];
+                _cellFlattenedList = new Cell[_horizontalChunks * _verticalChunks];
                 for (int i = 0; i < _horizontalChunks; i++)
-                {
                     for (int j = 0; j < _verticalChunks; j++)
-                    {
-                        cellList[i * _verticalChunks + j] = _cells[i, j];
-                    }
-                }
-                PrepareComputeBuffer(_horizontalChunks * _verticalChunks, sizeof(float) * 7);
-                _levelVisual_buffer.SetData(cellList.Select(x => x.cellStruct).ToArray(), 0, 0, _horizontalChunks * _verticalChunks);
-                _levelVisual_cs.SetBuffer(0,"_CellBuffer", _levelVisual_buffer);
+                        _cellFlattenedList[i * _verticalChunks + j] = _cells[i, j];
 
-                _levelVisual_cs.Dispatch(0, Mathf.CeilToInt(_generator.Cam.pixelWidth / 8f), Mathf.CeilToInt(_generator.Cam.pixelHeight / 8f), 1);
+                UpdateVisualSetup(_horizontalChunks * _verticalChunks, sizeof(float) * 5);
             }
-                
         }
         _prev_levelDepth = _levelDepth;
     }

@@ -1,6 +1,4 @@
 
-using NUnit.Framework;
-using PlasticPipe.PlasticProtocol.Client;
 using UnityEngine;
 
 public class LevelGenerator
@@ -35,6 +33,7 @@ public class LevelGenerator
     public void AdjustQuadDepth(Mesh target, float depth)
     {
         target.vertices = GetScreenInWorldSpace(depth);
+        target.RecalculateBounds();
     }
     public Mesh CreateQuad(Vector3[] corners)
     {
@@ -54,18 +53,22 @@ public class LevelGenerator
     public Cell[,] CreateChunks(Mesh platform,int x, int y, float height) 
     {
         Cell[,] cells = new Cell[x, y];
+        float xSegment = 1f / x;
+        float ySegment = 1f / y;
         float xLength = platform.bounds.size.x / x;
-        float yLength = platform.bounds.size.y / y;
-        Vector3 offset = -new Vector3(platform.bounds.size.x + xLength, 0, platform.bounds.size.z + yLength)/2; 
+        float yLength = platform.bounds.size.z / y;
+        Vector3 offset = -new Vector3(platform.bounds.size.x - xLength, 0, platform.bounds.size.z - yLength)/2; 
         for (int i = 0; i < x; i++) 
         {
             for (int j = 0; j < y; j++) 
             {
-                Vector3 pos = offset + i * new Vector3(xLength, 0, yLength);
+                Vector3 pos = offset + new Vector3(i * xLength, 0, j*yLength);
                 cells[i, j] = new Cell(pos,new Vector3 (xLength,height,yLength));
+                cells[i, j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2, ySegment * j + ySegment / 2), new Vector2(xSegment, ySegment));
 
                 cells[i, j].SetActive(j % 2 == 0 ? true : false);
-                cells[i, j].SetActive(i % 2 == 0 ? cells[i, j-1 < 0? 0:j].isActive : cells[i, j].isActive);
+                cells[i, j].SetActive(i % 2 == 0 ? cells[i,j].isActive : cells[i, j].isActive ? false: true);
+              
             } 
         }
         return cells;
@@ -77,16 +80,19 @@ public class Cell
 {
     public Vector3 position = Vector3.zero;
     public Vector3 size = Vector3.zero;
-    public bool isActive = false;
-    public CellStruct cellStruct { get { return new CellStruct(position, size, isActive?1f:0f); } }
+    public bool isActive = true;
 
-    public struct CellStruct
+    public Vector2 texSpacePos = Vector2.zero;
+    public Vector2 texSpaceSize = Vector2.zero;
+    public CellUV cellStruct { get { return new CellUV(texSpacePos, texSpaceSize, isActive?1f:0f); } }
+
+    public struct CellUV
     {
-        public Vector3 position;
-        public Vector3 size;
+        public Vector2 position;
+        public Vector2 size;
         public float isActive;
 
-        public CellStruct(Vector3 position, Vector3 size, float isActive) 
+        public CellUV(Vector2 position, Vector2 size, float isActive) 
         {
              this.position= position;
              this.size= size;
@@ -94,7 +100,11 @@ public class Cell
         }
     }
 
-
+    public void SetTexSpaceInfo(Vector2 texSpacePos, Vector2 texSpaceSize ) 
+    {
+        this.texSpacePos = texSpacePos;
+        this.texSpaceSize = texSpaceSize;
+    }
 
     public Cell(Vector3 position, Vector3 size)
     {

@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using PlasticGui;
+using UnityEngine.UIElements;
 
 public class LevelGenerator_Editor : EditorWindow
 {
@@ -15,6 +17,13 @@ public class LevelGenerator_Editor : EditorWindow
 
     private string _path;
     private string _name;
+
+    private int _horizontalChunks = 32, _verticalChunks = 16;
+
+    private Cell[,] _cells;
+    private ComputeShader _levelVisual_cs;
+    private RenderTexture _levelVisual_tex;
+    private ComputeBuffer _levelVisual_buffer;
     [MenuItem("Tool/Level Generator")]
     public static void ShowWindow()
     {
@@ -28,8 +37,30 @@ public class LevelGenerator_Editor : EditorWindow
 
         _generator = new LevelGenerator();
         _generator.Cam = FindObjectOfType<Camera>();
+        if (!_generator.Cam)
+            Debug.LogError("No Camera Detected");
+
+
+        PrepareVisual();
 
     }
+
+    private void PrepareVisual()
+    {
+        _levelVisual_cs = (ComputeShader)Resources.Load("CS/CS_LevelVisual");
+        _levelVisual_tex = RenderTexture.GetTemporary(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight, 0, RenderTextureFormat.ARGB64, RenderTextureReadWrite.Linear);
+        _levelVisual_tex.filterMode = FilterMode.Point;
+        _levelVisual_tex.enableRandomWrite = true;
+        _levelVisual_tex.Create();
+
+        _levelVisual_cs.SetTexture(0, "Result", _levelVisual_tex);
+    }
+
+    private void OnDisable()
+    {
+        _levelVisual_tex.Release();
+    }
+
 
     private void OnGUI()
     {
@@ -39,27 +70,31 @@ public class LevelGenerator_Editor : EditorWindow
         if (!_generator.Cam)
             return;
 
-        _path = EditorGUILayout.TextField("Save Path", _path == null? "SceneTexture" : _path);
-        _name = EditorGUILayout.TextField("Name", _name);
+        _levelObj = (GameObject)EditorGUILayout.ObjectField("Level Card Template", _levelObj, typeof(GameObject), true) ;
+        if (_levelObj && !_levelObj.GetComponent<MeshRenderer>())
+            return;
 
-        _levelDepth = EditorGUILayout.Slider("Level Depth", _levelDepth, _generator.Cam.nearClipPlane, _generator.Cam.farClipPlane);
+        if (_levelObj)
+            _levelMat = _levelObj.GetComponent<MeshRenderer>()?.sharedMaterial;
+        _levelMat?.SetTexture("_MainTex", _levelVisual_tex);
         _levelMat = (Material)EditorGUILayout.ObjectField("Level Material", _levelMat, typeof(Material), true);
-        _levelObj = (GameObject)EditorGUILayout.ObjectField("Level Card Template", _levelObj, typeof(GameObject), true);
         if (_levelObj && _levelObj.GetComponent<MeshFilter>() && _levelObj.GetComponent<MeshFilter>().sharedMesh.vertexCount == 4)
             _levelMesh = _levelObj.GetComponent<MeshFilter>().sharedMesh;
+
+        _levelDepth = EditorGUILayout.Slider("Level Depth", _levelDepth, _generator.Cam.nearClipPlane, _generator.Cam.farClipPlane);
+
+        if (!_levelObj)
+        {
+            _path = EditorGUILayout.TextField("Save Path", _path == null ? "SceneTexture" : _path);
+            _name = EditorGUILayout.TextField("Name", _name);
+        }
 
         if (!_levelObj)
         if (GUILayout.Button("Create Level From Camera View"))
         {
-            if (!_levelObj)
-            {
-                _levelMesh = _generator.CreateQuad(_generator.GetScreenInWorldSpace(_levelDepth));
-                _levelObj = _generator.CreatePlaneLevel(_name + "_card", _levelMesh, _levelMat);
-            }
-            if (_levelMesh)
-                SaveMesh(_levelMesh, _path, _name + "_mesh");
-            else
-                Debug.LogWarning("Level Mesh is Null");
+            _levelMesh = _generator.CreateQuad(_generator.GetScreenInWorldSpace(_levelDepth));
+            _levelObj = _generator.CreatePlaneLevel(_name + "_card", _levelMesh, _levelMat);
+            SaveMesh(_levelMesh, _path, _name + "_mesh");
         }
         if (_prev_levelDepth != _levelDepth && _levelObj != null) 
         {
@@ -68,10 +103,35 @@ public class LevelGenerator_Editor : EditorWindow
             else
                 Debug.LogWarning("Level Mesh is Null");
         }
-            
+
+
+        if ( _levelMesh) 
+        {
+            if (_levelObj) 
+            {
+                _horizontalChunks = EditorGUILayout.IntField("X Chunk", _horizontalChunks);
+                _verticalChunks = EditorGUILayout.IntField("Y Chunk", _verticalChunks);
+            }
+               
+            if (GUILayout.Button("Create Cells")) 
+            {
+                _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks, _verticalChunks, 1f);
+                /*for (int i = 0; i < _horizontalChunks; i++)
+                {
+                    for (int j = 0; j < _verticalChunks; j++)
+                    {
+                        Cell localCell = _cells[i,j];
+                       
+                    }
+                }*/
+                _levelVisual_cs.Dispatch(0, Mathf.CeilToInt(_generator.Cam.pixelWidth / 8f), Mathf.CeilToInt(_generator.Cam.pixelHeight / 8f), 1);
+            }
+                
+        }
         _prev_levelDepth = _levelDepth;
     }
 
+ 
     public void SaveMesh(Mesh mesh, string path, string name)
     {
         AssetDatabase.CreateAsset(mesh, Path.Combine("Assets", path, name + ".asset"));

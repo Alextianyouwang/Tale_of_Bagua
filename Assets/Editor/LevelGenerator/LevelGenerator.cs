@@ -1,4 +1,6 @@
 
+using NUnit.Framework;
+using PlasticPipe.PlasticProtocol.Client;
 using UnityEngine;
 
 public class LevelGenerator
@@ -47,6 +49,37 @@ public class LevelGenerator
         m.RecalculateBounds();
 
         return m;
+    }
+
+    public Cell[,] CreateChunks(Mesh platform,int x, int y, float height) 
+    {
+        Cell[,] cells = new Cell[x, y];
+        float xLength = platform.bounds.size.x / x;
+        float yLength = platform.bounds.size.y / y;
+        Vector3 offset = -new Vector3(platform.bounds.size.x + xLength, 0, platform.bounds.size.z + yLength)/2; 
+        for (int i = 0; i < x; i++) 
+        {
+            for (int j = 0; j < y; j++) 
+            {
+                Vector3 pos = offset + i * new Vector3(xLength, 0, yLength);
+                cells[i, j] = new Cell(pos,new Vector3 (xLength,height,yLength));
+            } 
+        }
+        return cells;
+    }
+
+}
+
+public class Cell
+{
+    public Vector3 position = Vector3.zero;
+    public Vector3 size = Vector3.zero;
+    public bool isActive = false;
+
+    public Cell(Vector3 position, Vector3 size)
+    {
+        this.position = position;
+        this.size = size;
     }
 
 }

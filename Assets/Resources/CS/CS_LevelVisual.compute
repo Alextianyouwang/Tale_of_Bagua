@@ -2,6 +2,15 @@
 
 RWTexture2D<float4> Result;
 
+struct CellStruct 
+{
+    float3 position;
+    float3 size;
+    bool isActive;
+};
+
+StructuredBuffer<CellStruct> _CellBuffer;
+
 [numthreads(8,8,1)]
 void CheckerRenderer (uint3 id : SV_DispatchThreadID)
 {

@@ -63,6 +63,9 @@ public class LevelGenerator
             {
                 Vector3 pos = offset + i * new Vector3(xLength, 0, yLength);
                 cells[i, j] = new Cell(pos,new Vector3 (xLength,height,yLength));
+
+                cells[i, j].SetActive(j % 2 == 0 ? true : false);
+                cells[i, j].SetActive(i % 2 == 0 ? cells[i, j-1 < 0? 0:j].isActive : cells[i, j].isActive);
             } 
         }
         return cells;
@@ -75,11 +78,33 @@ public class Cell
     public Vector3 position = Vector3.zero;
     public Vector3 size = Vector3.zero;
     public bool isActive = false;
+    public CellStruct cellStruct { get { return new CellStruct(position, size, isActive?1f:0f); } }
+
+    public struct CellStruct
+    {
+        public Vector3 position;
+        public Vector3 size;
+        public float isActive;
+
+        public CellStruct(Vector3 position, Vector3 size, float isActive) 
+        {
+             this.position= position;
+             this.size= size;
+             this.isActive = isActive;
+        }
+    }
+
+
 
     public Cell(Vector3 position, Vector3 size)
     {
         this.position = position;
         this.size = size;
+    }
+
+    public void SetActive(bool value) 
+    {
+        isActive = value;
     }
 
 }

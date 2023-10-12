@@ -4,6 +4,7 @@ using UnityEditor;
 using System.IO;
 using PlasticGui;
 using UnityEngine.UIElements;
+using System.Linq;
 
 public class LevelGenerator_Editor : EditorWindow
 {
@@ -56,8 +57,17 @@ public class LevelGenerator_Editor : EditorWindow
         _levelVisual_cs.SetTexture(0, "Result", _levelVisual_tex);
     }
 
+    private void PrepareComputeBuffer(int count, int stride) 
+    {
+        if(_levelVisual_buffer != null)
+            _levelVisual_buffer.Dispose();
+        _levelVisual_buffer = new ComputeBuffer(count, stride);
+    }
+
     private void OnDisable()
     {
+        if (_levelVisual_buffer != null)
+            _levelVisual_buffer.Dispose();
         _levelVisual_tex.Release();
     }
 
@@ -116,14 +126,18 @@ public class LevelGenerator_Editor : EditorWindow
             if (GUILayout.Button("Create Cells")) 
             {
                 _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks, _verticalChunks, 1f);
-                /*for (int i = 0; i < _horizontalChunks; i++)
+                Cell[] cellList = new Cell[_horizontalChunks * _verticalChunks];
+                for (int i = 0; i < _horizontalChunks; i++)
                 {
                     for (int j = 0; j < _verticalChunks; j++)
                     {
-                        Cell localCell = _cells[i,j];
-                       
+                        cellList[i * _verticalChunks + j] = _cells[i, j];
                     }
-                }*/
+                }
+                PrepareComputeBuffer(_horizontalChunks * _verticalChunks, sizeof(float) * 7);
+                _levelVisual_buffer.SetData(cellList.Select(x => x.cellStruct).ToArray(), 0, 0, _horizontalChunks * _verticalChunks);
+                _levelVisual_cs.SetBuffer(0,"_CellBuffer", _levelVisual_buffer);
+
                 _levelVisual_cs.Dispatch(0, Mathf.CeilToInt(_generator.Cam.pixelWidth / 8f), Mathf.CeilToInt(_generator.Cam.pixelHeight / 8f), 1);
             }
                 

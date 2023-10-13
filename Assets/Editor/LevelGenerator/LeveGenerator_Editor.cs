@@ -124,7 +124,7 @@ public class LevelGenerator_Editor : EditorWindow
             {
                 _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks, _verticalChunks, 1f);
                 _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5);
-               // _levelVisual.UpdateSearchClosestSetup(_cells.Length);
+                _levelVisual.UpdateSearchClosestSetup(_cells.Length);
                 _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
                 _canEditCells = false;
             }
@@ -134,7 +134,7 @@ public class LevelGenerator_Editor : EditorWindow
         if (_cells != null) 
         {
             GUI.enabled = !_canEditCells;
-            if (GUILayout.Button(_canEditCells? "Paint: RMB     Erase: Alt + RMB ": "Edit Cells"))
+            if (GUILayout.Button(_canEditCells? "Paint: RMB    Erase: Alt + RMB    Enlarge: Shift": "Edit Cells"    ))
             {
                 _canEditCells = true;
                 foreach (Cell c in _cells)
@@ -176,6 +176,9 @@ public class LevelGenerator_Editor : EditorWindow
         if (_cells != null)
             selected = _generator.GetSelectedCell(_cells, hit.point);
 
+        float handleRadius = e.shift ? 1.5f : 0.2f;
+        Handles.color = e.alt ? Color.green : Color.red;
+        Handles.DrawWireDisc(hit.point, hit.normal, handleRadius);
         if (selected != null)
         {
             Handles.color = Color.blue;
@@ -184,16 +187,16 @@ public class LevelGenerator_Editor : EditorWindow
             {
 
                 selected.isActive = e.alt;
-                //_levelVisual.TogglePaintAndErase(e.alt ? 0 : 1);
-                //_levelVisual.UpdateSearchClosestPerFrame(hit.point, _cells);
+          
+                _levelVisual.TogglePaintAndErase(e.alt ? 0 : 1);
+                if (e.shift) 
+                    _levelVisual.UpdateSearchClosestPerFrame(hit.point, _cells);
                 _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
 
                 e.Use();
             }
         }
-           
-        Handles.color = e.alt ? Color.green : Color.red;
-        Handles.DrawSolidDisc(hit.point, hit.normal, 0.2f);
+     
 
     }
 

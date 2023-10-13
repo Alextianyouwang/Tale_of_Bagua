@@ -39,6 +39,8 @@ public class LevelGenerator_Visual
         _levelVisual_cs.Dispatch(0, Mathf.CeilToInt(texWidth / 10), Mathf.CeilToInt(texHeight / 10), 1);
     }
 
+
+
     public void UpdateSearchClosestSetup(int count)
     {
         if (_levelFindClosest_buffer != null)

@@ -44,9 +44,11 @@ float DrawChecker(float2 uv)
 [numthreads(10,10,1)]
 void CheckerRenderer (uint3 id : SV_DispatchThreadID)
 {
+   
     float2 uv = float2 (id.x / (_screenParam.x - 1), id.y / (_screenParam.y - 1));
     float box = DrawChecker(uv);
     Result[id.xy] = float4(box.xxx,1);
+
 }
 
 [numthreads(32, 1, 1)]
@@ -55,8 +57,8 @@ void CheckerFindClosest(uint3 id : SV_DispatchThreadID)
     float dist = distance(_cursorPos, _CellBuffer_WS[id.x].position) ;
 
     _CellBuffer_WS[id.x].isActive = _erase == 0?
-        dist < 1 ? 1 : _CellBuffer_WS[id.x].isActive
+        dist < 1.5 ? 1 : _CellBuffer_WS[id.x].isActive
         :
-        dist < 1 ? 0: _CellBuffer_WS[id.x].isActive;
+        dist < 1.5 ? 0: _CellBuffer_WS[id.x].isActive;
 }
 

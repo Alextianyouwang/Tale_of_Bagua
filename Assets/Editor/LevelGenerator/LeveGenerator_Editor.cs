@@ -62,7 +62,13 @@ public class LevelGenerator_Editor : EditorWindow
             return;
         EditorUtil.DrawSeparator();
 
-        EditorGUILayout.LabelField("Start With Generated Template:", EditorStyles.boldLabel);
+
+        _path = EditorGUILayout.TextField("Save Path", _path == null ? "SceneTexture" : _path);
+        _name = EditorGUILayout.TextField("Name", _name);
+
+        EditorUtil.DrawSeparator();
+        if (!_levelObj)
+            EditorGUILayout.LabelField("Start With Level Template:", EditorStyles.boldLabel);
         _levelObj = (GameObject)EditorGUILayout.ObjectField("Level Card Template", _levelObj, typeof(GameObject), true) ;
     
 
@@ -70,22 +76,14 @@ public class LevelGenerator_Editor : EditorWindow
             return;
         if (_levelObj && _levelObj.GetComponent<MeshFilter>() && _levelObj.GetComponent<MeshFilter>().sharedMesh.vertexCount == 4)
             _levelMesh = _levelObj.GetComponent<MeshFilter>().sharedMesh;
-    
-  
 
         if (!_levelObj)
-        {
-            EditorGUILayout.LabelField("Or Create New Level:", EditorStyles.boldLabel);
-            _path = EditorGUILayout.TextField("Save Path", _path == null ? "SceneTexture" : _path);
-            _name = EditorGUILayout.TextField("Name", _name);
-  
-        }
+            EditorGUILayout.LabelField("Or Generate New Level:", EditorStyles.boldLabel);
 
         if (_levelObj)
             _levelMat = _levelObj.GetComponent<MeshRenderer>()?.sharedMaterial;
-        _levelMat?.SetTexture("_MainTex", _levelVisual. _levelVisual_tex);
+        _levelMat?.SetTexture("_MainTex", _levelVisual._levelVisual_tex);
         _levelMat = (Material)EditorGUILayout.ObjectField("Level Material", _levelMat, typeof(Material), true);
-
 
         if (_levelMesh)
             _levelDepth = EditorGUILayout.Slider("Level Depth", _levelDepth, _generator.Cam.nearClipPlane, _generator.Cam.farClipPlane);
@@ -101,9 +99,11 @@ public class LevelGenerator_Editor : EditorWindow
         {
             if (_levelMesh) 
             {
-                _cells = _generator.AdjustCellData(_cells,_horizontalChunks,_verticalChunks, _levelMesh, 1f);
+                if (_cells != null)
+                    _cells = _generator.AdjustCellData(_cells,_horizontalChunks,_verticalChunks, _levelMesh, 1f);
                 _generator.AdjustQuadDepth(_levelMesh, _levelDepth);
-                _levelObj.GetComponent<MeshCollider>().sharedMesh = _levelMesh;
+                _levelObj.GetComponent<BoxCollider>().size = _levelMesh.bounds.size;
+                _levelObj.GetComponent<BoxCollider>().center = _levelMesh.bounds.center;
             }
                
             else
@@ -139,10 +139,16 @@ public class LevelGenerator_Editor : EditorWindow
             }
             GUI.enabled = true;
         }
-           
+
+        if (_canEditCells && _levelMesh)
+            if (GUILayout.Button( "Save Level Collider"))
+            {
+                
+            }
 
 
-        _prev_levelDepth = _levelDepth;
+
+     _prev_levelDepth = _levelDepth;
     }
     private void OnSceneGUI(SceneView sceneView) 
     {

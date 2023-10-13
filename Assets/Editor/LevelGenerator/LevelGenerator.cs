@@ -1,7 +1,5 @@
 
-using Codice.CM.WorkspaceServer.Tree;
-using System.Runtime.CompilerServices;
-using UnityEditor;
+
 using UnityEngine;
 
 public class LevelGenerator
@@ -28,10 +26,11 @@ public class LevelGenerator
         GameObject g = new GameObject(name);
         MeshFilter mf = g.AddComponent<MeshFilter>();
         MeshRenderer mr = g.AddComponent<MeshRenderer>();
-        MeshCollider mc = g.AddComponent<MeshCollider>();
+        BoxCollider mc = g.AddComponent<BoxCollider>();
         mr.sharedMaterial = mat;
         mf.sharedMesh = mesh;
-        mc.sharedMesh = mesh;
+        mc.size = mesh.bounds.size;
+        mc.center = mesh.bounds.center;
         return g;
     }
 

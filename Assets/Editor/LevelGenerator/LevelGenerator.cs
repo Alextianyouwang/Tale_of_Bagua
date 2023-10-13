@@ -1,6 +1,10 @@
 
-
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
+using static Cell;
+using UnityEditor;
 
 public class LevelGenerator
 {
@@ -66,8 +70,8 @@ public class LevelGenerator
         {
             for (int j = 0; j < y; j++) 
             {
-                Vector3 pos = offset + new Vector3(i * xLength, 0, j*yLength);
-                cells[i * y + j] = new Cell(pos,new Vector3 (xLength,height,yLength));
+                Vector3 pos = offset + new Vector3(i * xLength, platform.bounds.center.y, j*yLength);
+                cells[i * y + j] = new Cell(pos,new Vector3 (xLength,height ,yLength));
                 cells[i * y + j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2f, ySegment * j + ySegment / 2f), new Vector2(xSegment, ySegment));
 
                 //Checker Pattern
@@ -91,7 +95,7 @@ public class LevelGenerator
         {
             for (int j = 0; j < y; j++)
             {
-                Vector3 pos = offset + new Vector3(i * xLength, 0, j * yLength);
+                Vector3 pos = offset + new Vector3(i * xLength, platform.bounds.center.y, j * yLength);
                 input[i * y + j].position = pos;
                 input[i * y + j].size = new Vector3(xLength, height, yLength);
                 input[i * y + j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2f, ySegment * j + ySegment / 2f), new Vector2(xSegment, ySegment));
@@ -115,7 +119,52 @@ public class LevelGenerator
         }
         return closestCell;
     }
+
+    public Mesh GenerateLevelMesh(Cell[] cells) 
+    {
+        Mesh level = new Mesh();
+        List<GameObject> tempList = new List<GameObject>();
+        foreach (Cell c in cells) 
+        {
+            if (!c.isActive)
+                continue;
+
+            GameObject g = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            tempList.Add(g);
+
+            g.transform.position = c.position + Vector3.up * c.size.y/2f;
+            g.transform.localScale = c.size;
+        }
+        CombineInstance[] combine = new CombineInstance[tempList.Count]; 
+        for (int i = 0; i< tempList.Count; i++)
+        {
+            combine[i].mesh = tempList[i].GetComponent<MeshFilter>().sharedMesh;
+            combine[i].transform = tempList[i].transform.localToWorldMatrix;
+            GameObject.DestroyImmediate(tempList[i]);
+        }
+        level.CombineMeshes(combine);
+        return level;
+    }
+    public GameObject GenerateLevelObject(Cell[] cells, string name) 
+    {
+        GameObject level = new GameObject();
+        level.name = name;
+        level.transform.position = Vector3.zero;
+        foreach (Cell c in cells)
+        {
+            if (!c.isActive)
+                continue;
+
+            GameObject g = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            g.name = "Level Chunk";
+            g.transform.position = c.position + Vector3.up * c.size.y / 2f;
+            g.transform.localScale = c.size;
+            g.transform.parent = level.transform;
+        }
+        return level;
+    }
 }
+
 
 
 public class Cell

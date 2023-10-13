@@ -143,7 +143,9 @@ public class LevelGenerator_Editor : EditorWindow
         if (_canEditCells && _levelMesh)
             if (GUILayout.Button( "Save Level Collider"))
             {
-                
+                //Only Convex collider is supported... need optimization
+                //SaveMesh(_generator.GenerateLevelMesh(_cells), _path, _name + "_levelMesh");
+                _generator.GenerateLevelObject(_cells,_name + "_levelObject");
             }
 
 

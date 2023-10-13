@@ -2,29 +2,21 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using System.Linq;
-using Unity.Burst.CompilerServices;
-
 public class LevelGenerator_Editor : EditorWindow
 {
-
     private LevelGenerator _generator;
     private GameObject _levelObj;
-
     private Material _levelMat;
     private Mesh _levelMesh;
-    private float _levelDepth = 1f, _prev_levelDepth;
-
-    private string _path;
-    private string _name;
-
+    private float _levelDepth = 10f, _prev_levelDepth;
+    private string _path, _name;
     private int _horizontalChunks = 32, _verticalChunks = 18;
 
-    private Cell[,] _cells;
-    private Cell[] _cellFlattenedList;
-    private ComputeShader _levelVisual_cs;
-    private RenderTexture _levelVisual_tex;
-    private ComputeBuffer _levelVisual_buffer;
+    private Cell[] _cells;
+
+    private LevelGenerator_Visual _levelVisual;
+
+    private bool _canEditCells = false;
     [MenuItem("Tool/Level Generator")]
     public static void ShowWindow()
     {
@@ -35,83 +27,68 @@ public class LevelGenerator_Editor : EditorWindow
 
     private void OnEnable()
     {
-
+        _levelVisual = new LevelGenerator_Visual();
         _generator = new LevelGenerator();
+
+        _levelMat = EditorUtil.GetObject<Material>("M_LevelTemplate.mat");
         _generator.Cam = FindObjectOfType<Camera>();
         if (!_generator.Cam)
             Debug.LogError("No Camera Detected");
 
-        SceneView.duringSceneGui += OnSceneGUI; 
-
-        PrepareVisualSetup(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
-
-    }
-    
-    private void PrepareVisualSetup(int texWidth, int texHeight)
-    {
-        _levelVisual_cs = (ComputeShader)Resources.Load("CS/CS_LevelVisual");
-        _levelVisual_tex = RenderTexture.GetTemporary(texWidth,texHeight , 0, RenderTextureFormat.ARGB32);
-        _levelVisual_tex.filterMode = FilterMode.Point;
-        _levelVisual_tex.enableRandomWrite = true;
-        _levelVisual_tex.Create();
-
-        _levelVisual_cs.SetTexture(0, "Result", _levelVisual_tex);
-        _levelVisual_cs.SetVector("_screenParam", new Vector4(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight, 0, 0));
+       _levelVisual.PrepareVisualSetup(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+        SceneView.duringSceneGui += OnSceneGUI;
     }
 
-    private void UpdateVisualSetup(int count, int stride) 
-    {
-        if(_levelVisual_buffer != null)
-            _levelVisual_buffer.Dispose();
-        _levelVisual_buffer = new ComputeBuffer(count, stride);
-        _levelVisual_buffer.SetData(_cellFlattenedList.Select(x => x.cellStruct).ToArray(), 0, 0, count);
-        _levelVisual_cs.SetInt("_cellCount", count);
-        _levelVisual_cs.SetBuffer(0, "_CellBuffer", _levelVisual_buffer);
-        _levelVisual_cs.Dispatch(0, (_generator.Cam.pixelWidth / 10), (_generator.Cam.pixelHeight / 10), 1);
-    }
-
-    private void RemoveVisualSetup()
-    {
-        if (_levelVisual_buffer != null)
-            _levelVisual_buffer.Dispose();
-        _levelVisual_tex.Release();
-
-    }
 
     private void OnDisable()
     {
-        RemoveVisualSetup();
-
+        _levelVisual.RemoveVisualSetup();
         SceneView.duringSceneGui -= OnSceneGUI;
     }
    
 
     private void OnGUI()
     {
-        EditorGUILayout.LabelField("Level Generator", EditorStyles.boldLabel);
+        if (!_levelObj)
+        {
+            _levelMesh = null;
+            _cells = null;
+        }
 
+        EditorGUILayout.Space(5);
+        EditorGUILayout.LabelField("Camera Source", EditorStyles.boldLabel);
         _generator.Cam = (Camera)EditorGUILayout.ObjectField("Camera", _generator.Cam, typeof(Camera), true);
         if (!_generator.Cam)
             return;
+        EditorUtil.DrawSeparator();
 
+        EditorGUILayout.LabelField("Start With Generated Template:", EditorStyles.boldLabel);
         _levelObj = (GameObject)EditorGUILayout.ObjectField("Level Card Template", _levelObj, typeof(GameObject), true) ;
+    
+
         if (_levelObj && !_levelObj.GetComponent<MeshRenderer>())
             return;
-
-        if (_levelObj)
-            _levelMat = _levelObj.GetComponent<MeshRenderer>()?.sharedMaterial;
-        _levelMat?.SetTexture("_MainTex", _levelVisual_tex);
-        _levelMat = (Material)EditorGUILayout.ObjectField("Level Material", _levelMat, typeof(Material), true);
         if (_levelObj && _levelObj.GetComponent<MeshFilter>() && _levelObj.GetComponent<MeshFilter>().sharedMesh.vertexCount == 4)
             _levelMesh = _levelObj.GetComponent<MeshFilter>().sharedMesh;
-
-        _levelDepth = EditorGUILayout.Slider("Level Depth", _levelDepth, _generator.Cam.nearClipPlane, _generator.Cam.farClipPlane);
+    
+  
 
         if (!_levelObj)
         {
+            EditorGUILayout.LabelField("Or Create New Level:", EditorStyles.boldLabel);
             _path = EditorGUILayout.TextField("Save Path", _path == null ? "SceneTexture" : _path);
             _name = EditorGUILayout.TextField("Name", _name);
+  
         }
+
+        if (_levelObj)
+            _levelMat = _levelObj.GetComponent<MeshRenderer>()?.sharedMaterial;
+        _levelMat?.SetTexture("_MainTex", _levelVisual. _levelVisual_tex);
+        _levelMat = (Material)EditorGUILayout.ObjectField("Level Material", _levelMat, typeof(Material), true);
+
+
+        if (_levelMesh)
+            _levelDepth = EditorGUILayout.Slider("Level Depth", _levelDepth, _generator.Cam.nearClipPlane, _generator.Cam.farClipPlane);
 
         if (!_levelObj)
         if (GUILayout.Button("Create Level From Camera View"))
@@ -122,54 +99,57 @@ public class LevelGenerator_Editor : EditorWindow
         }
         if (_prev_levelDepth != _levelDepth && _levelObj != null) 
         {
-            if (_levelMesh)
+            if (_levelMesh) 
+            {
+                _cells = _generator.AdjustCellData(_cells,_horizontalChunks,_verticalChunks, _levelMesh, 1f);
                 _generator.AdjustQuadDepth(_levelMesh, _levelDepth);
+                _levelObj.GetComponent<MeshCollider>().sharedMesh = _levelMesh;
+            }
+               
             else
                 Debug.LogWarning("Level Mesh is Null");
         }
-
+ 
 
         if ( _levelMesh) 
         {
-            if (_levelObj) 
-            {
                 _horizontalChunks = EditorGUILayout.IntField("X Chunk", _horizontalChunks < 1 ? 1 :_horizontalChunks);
                 _horizontalChunks = _horizontalChunks < 1 ? 1 : _horizontalChunks;
                 _verticalChunks = EditorGUILayout.IntField("Y Chunk", _verticalChunks < 1? 1 :_verticalChunks);
                 _verticalChunks = _verticalChunks < 1 ? 1 : _verticalChunks;
-            }
-               
-            if (GUILayout.Button("Create Cells")) 
+
+            if (GUILayout.Button("Create Cells"))
             {
                 _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks, _verticalChunks, 1f);
-                _cellFlattenedList = new Cell[_horizontalChunks * _verticalChunks];
-                for (int i = 0; i < _horizontalChunks; i++)
-                    for (int j = 0; j < _verticalChunks; j++) 
-                        _cellFlattenedList[i * _verticalChunks + j] = _cells[i, j];
-                
-                UpdateVisualSetup(_horizontalChunks * _verticalChunks, sizeof(float) * 5);
+                _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5,_generator.Cam.pixelWidth,_generator.Cam.pixelHeight);
+                _canEditCells = false;
             }
+
         }
+
+        if (_cells != null) 
+        {
+            GUI.enabled = !_canEditCells;
+            if (GUILayout.Button(_canEditCells? "Paint: RMB     Erase: Alt + RMB ": "Edit Cells"))
+            {
+                _canEditCells = true;
+                foreach (Cell c in _cells)
+                    c.isActive = true;
+                _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+            }
+            GUI.enabled = true;
+        }
+           
+
+
         _prev_levelDepth = _levelDepth;
     }
-
     private void OnSceneGUI(SceneView sceneView) 
     {
-        RaycastHit hit =  EditorClickSceneObject(sceneView);
+        if (!_canEditCells)
+            return;
+        RaycastHit hit = EditorUtil. EditorClickSceneObject(sceneView);
         UpdateCellActivationVisual(hit);
-    }
-
-    private RaycastHit EditorClickSceneObject(SceneView sceneView)
-    {
-        RaycastHit hit = new RaycastHit();
-        Camera cam = sceneView.camera;
-        if (!cam)
-            return hit;
-        Event e = Event.current;
-        Ray mouseRay = HandleUtility.GUIPointToWorldRay(e.mousePosition);
-        if (Physics.Raycast(mouseRay, out hit, 100f))
-            return hit;
-        return hit;
     }
 
     private void UpdateCellActivationVisual(RaycastHit hit) 
@@ -179,23 +159,19 @@ public class LevelGenerator_Editor : EditorWindow
         if (hit.transform.gameObject != _levelObj)
             return;
         Event e = Event.current;
-        Handles.color = Color.green;
-        Handles.DrawSolidDisc(hit.point, hit.normal, 0.1f);
+        Handles.color = e.alt ? Color.green : Color.red;
         Cell selected = null;
-        if (_cellFlattenedList != null)
-            selected = _generator.GetSelectedCell(_cellFlattenedList, hit.point);
+        if (_cells != null)
+            selected = _generator.GetSelectedCell(_cells, hit.point);
 
         if (selected != null)
-            if (e.type == EventType.MouseDown && e.button == 0)
+            if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 1)
             {
-                selected.isActive = true;
-                UpdateVisualSetup(_horizontalChunks * _verticalChunks, sizeof(float) * 5);
+                selected.isActive = e.alt;
+                _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+                e.Use();
             }
-            else if (e.type == EventType.MouseDown && e.button == 1)
-            {
-                selected.isActive =false;
-                UpdateVisualSetup(_horizontalChunks * _verticalChunks, sizeof(float) * 5);
-            }
+        Handles.DrawSolidDisc(hit.point, hit.normal, 0.2f);
 
     }
 

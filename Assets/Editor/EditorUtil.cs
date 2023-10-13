@@ -32,4 +32,17 @@ public static class EditorUtil
 
         return loadedObject;
     }
+
+    public static RaycastHit EditorClickSceneObject(SceneView sceneView)
+    {
+        RaycastHit hit = new RaycastHit();
+        Camera cam = sceneView.camera;
+        if (!cam)
+            return hit;
+        Event e = Event.current;
+        Ray mouseRay = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+        if (Physics.Raycast(mouseRay, out hit, 100f))
+            return hit;
+        return hit;
+    }
 }

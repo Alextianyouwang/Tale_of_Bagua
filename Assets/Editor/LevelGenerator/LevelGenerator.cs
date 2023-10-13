@@ -1,4 +1,7 @@
 
+using Codice.CM.WorkspaceServer.Tree;
+using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 
 public class LevelGenerator
@@ -25,8 +28,10 @@ public class LevelGenerator
         GameObject g = new GameObject(name);
         MeshFilter mf = g.AddComponent<MeshFilter>();
         MeshRenderer mr = g.AddComponent<MeshRenderer>();
+        MeshCollider mc = g.AddComponent<MeshCollider>();
         mr.sharedMaterial = mat;
-        mf.mesh = mesh;
+        mf.sharedMesh = mesh;
+        mc.sharedMesh = mesh;
         return g;
     }
 
@@ -50,9 +55,9 @@ public class LevelGenerator
         return m;
     }
 
-    public Cell[,] CreateChunks(Mesh platform,int x, int y, float height) 
+    public Cell[] CreateChunks(Mesh platform,int x, int y, float height) 
     {
-        Cell[,] cells = new Cell[x, y];
+        Cell[] cells = new Cell[x*y];
         float xSegment = 1f / x;
         float ySegment = 1f / y;
         float xLength = platform.bounds.size.x / x;
@@ -63,16 +68,37 @@ public class LevelGenerator
             for (int j = 0; j < y; j++) 
             {
                 Vector3 pos = offset + new Vector3(i * xLength, 0, j*yLength);
-                cells[i, j] = new Cell(pos,new Vector3 (xLength,height,yLength));
-                cells[i, j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2f, ySegment * j + ySegment / 2f), new Vector2(xSegment, ySegment));
+                cells[i * y + j] = new Cell(pos,new Vector3 (xLength,height,yLength));
+                cells[i * y + j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2f, ySegment * j + ySegment / 2f), new Vector2(xSegment, ySegment));
 
                 //Checker Pattern
-                cells[i, j].SetActive(j % 2 == 0 ? true : false);
-                cells[i, j].SetActive(i % 2 == 0 ? cells[i, j].isActive : cells[i, j].isActive ? false : true);
+                cells[i * y + j].SetActive(j % 2 == 0 ? true : false);
+                cells[i * y + j].SetActive(i % 2 == 0 ? cells[i * y + j].isActive : cells[i * y + j].isActive ? false : true);
 
             } 
         }
         return cells;
+    }
+
+    public Cell[] AdjustCellData(Cell[] input,int x, int y, Mesh platform , float height) 
+    {
+        float xSegment = 1f / x;
+        float ySegment = 1f / y;
+        float xLength = platform.bounds.size.x / x;
+        float yLength = platform.bounds.size.z / y;
+        Vector3 offset = -new Vector3(platform.bounds.size.x - xLength, 0, platform.bounds.size.z - yLength) / 2;
+
+        for (int i = 0; i < x; i++)
+        {
+            for (int j = 0; j < y; j++)
+            {
+                Vector3 pos = offset + new Vector3(i * xLength, 0, j * yLength);
+                input[i * y + j].position = pos;
+                input[i * y + j].size = new Vector3(xLength, height, yLength);
+                input[i * y + j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2f, ySegment * j + ySegment / 2f), new Vector2(xSegment, ySegment));
+            }
+        }
+        return input;
     }
 
     public Cell GetSelectedCell(Cell[] cells, Vector3 pos) 

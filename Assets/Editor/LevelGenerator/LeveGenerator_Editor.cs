@@ -8,7 +8,7 @@ public class LevelGenerator_Editor : EditorWindow
     private GameObject _levelObj;
     private Material _levelMat;
     private Mesh _levelMesh;
-    private float _levelDepth = 10f, _prev_levelDepth;
+    private float _levelDepth = 15f, _prev_levelDepth;
     private string _path, _name;
     private int _horizontalChunks = 32, _verticalChunks = 18;
 
@@ -63,7 +63,7 @@ public class LevelGenerator_Editor : EditorWindow
         EditorUtil.DrawSeparator();
 
 
-        _path = EditorGUILayout.TextField("Save Path", _path == null ? "SceneTexture" : _path);
+        _path = EditorGUILayout.TextField("Save Path", _path == null ? "LevelData" : _path);
         _name = EditorGUILayout.TextField("Name", _name);
 
         EditorUtil.DrawSeparator();
@@ -167,18 +167,29 @@ public class LevelGenerator_Editor : EditorWindow
         if (hit.transform.gameObject != _levelObj)
             return;
         Event e = Event.current;
-        Handles.color = e.alt ? Color.green : Color.red;
+     
         Cell selected = null;
         if (_cells != null)
             selected = _generator.GetSelectedCell(_cells, hit.point);
 
-        if (selected != null)
+        if (selected != null) 
+        {
+            Handles.color = Color.blue;
+            Handles.DrawWireCube(selected.position + selected.size.y/2 * Vector3.up, selected.size);
+            if (e.type == EventType.MouseMove)
+            {
+                
+            }
             if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 1)
             {
+
                 selected.isActive = e.alt;
                 _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
                 e.Use();
             }
+        }
+           
+        Handles.color = e.alt ? Color.green : Color.red;
         Handles.DrawSolidDisc(hit.point, hit.normal, 0.2f);
 
     }

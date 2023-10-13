@@ -65,7 +65,7 @@ public class LevelCapturer_Editor : EditorWindow
         if (!_capturer.Cam)
             return;
 
-        _path = EditorGUILayout.TextField("Save Path", _path == null? "SceneTexture":_path);
+        _path = EditorGUILayout.TextField("Save Path", _path == null? "LevelData":_path);
         _name = EditorGUILayout.TextField("Name", _name);
         _mask = EditorGUILayout.MaskField("Culling Mask",_mask, UnityEditorInternal.InternalEditorUtility.layers);
         if (GUILayout.Button("Capture Scene"))

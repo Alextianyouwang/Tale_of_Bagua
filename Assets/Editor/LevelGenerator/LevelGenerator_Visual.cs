@@ -10,7 +10,7 @@ public class LevelGenerator_Visual
 
     public void PrepareVisualSetup(int texWidth, int texHeight)
     {
-        _levelVisual_cs = (ComputeShader)Resources.Load("CS/CS_LevelVisual");
+        _levelVisual_cs = EditorUtil.GetObject<ComputeShader>("CS_LevelVisual.compute");
         _levelVisual_tex = RenderTexture.GetTemporary(texWidth, texHeight, 0, RenderTextureFormat.ARGB32);
         _levelVisual_tex.filterMode = FilterMode.Point;
         _levelVisual_tex.enableRandomWrite = true;

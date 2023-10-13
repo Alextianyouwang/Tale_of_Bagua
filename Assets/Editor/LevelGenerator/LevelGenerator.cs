@@ -171,12 +171,11 @@ public class Cell
 {
     public Vector3 position = Vector3.zero;
     public Vector3 size = Vector3.zero;
-    public bool isActive = true;
+    public bool isActive = false;
 
     public Vector2 texSpacePos = Vector2.zero;
     public Vector2 texSpaceSize = Vector2.zero;
-    public CellUV cellStruct { get { return new CellUV(texSpacePos, texSpaceSize, isActive?1f:0f); } }
-
+    public CellUV cellStruct { get { return new CellUV(texSpacePos, texSpaceSize, isActive ? 1f : 0f); } }
     public struct CellUV
     {
         public Vector2 position;
@@ -188,6 +187,20 @@ public class Cell
              this.position= position;
              this.size= size;
              this.isActive = isActive;
+        }
+    }
+
+
+    public CellWorldSpace cellStruct_WS { get { return new CellWorldSpace(position, isActive ? 1f : 0f); } set { } }
+    public struct CellWorldSpace
+    {
+        public Vector3 position;
+        public float isActive;
+
+        public CellWorldSpace(Vector3 position, float isActive)
+        {
+            this.position = position;
+            this.isActive = isActive;
         }
     }
 

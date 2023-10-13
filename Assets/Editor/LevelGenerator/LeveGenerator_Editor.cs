@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using static Cell;
+
 public class LevelGenerator_Editor : EditorWindow
 {
     private LevelGenerator _generator;
@@ -121,7 +123,9 @@ public class LevelGenerator_Editor : EditorWindow
             if (GUILayout.Button("Create Cells"))
             {
                 _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks, _verticalChunks, 1f);
-                _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5,_generator.Cam.pixelWidth,_generator.Cam.pixelHeight);
+                _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5);
+               // _levelVisual.UpdateSearchClosestSetup(_cells.Length);
+                _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
                 _canEditCells = false;
             }
 
@@ -135,7 +139,7 @@ public class LevelGenerator_Editor : EditorWindow
                 _canEditCells = true;
                 foreach (Cell c in _cells)
                     c.isActive = true;
-                _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+                _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
             }
             GUI.enabled = true;
         }
@@ -167,24 +171,23 @@ public class LevelGenerator_Editor : EditorWindow
         if (hit.transform.gameObject != _levelObj)
             return;
         Event e = Event.current;
-     
+
         Cell selected = null;
         if (_cells != null)
             selected = _generator.GetSelectedCell(_cells, hit.point);
 
-        if (selected != null) 
+        if (selected != null)
         {
             Handles.color = Color.blue;
             Handles.DrawWireCube(selected.position + selected.size.y/2 * Vector3.up, selected.size);
-            if (e.type == EventType.MouseMove)
-            {
-                
-            }
             if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 1)
             {
 
                 selected.isActive = e.alt;
-                _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+                //_levelVisual.TogglePaintAndErase(e.alt ? 0 : 1);
+                //_levelVisual.UpdateSearchClosestPerFrame(hit.point, _cells);
+                _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+
                 e.Use();
             }
         }

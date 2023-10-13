@@ -1,17 +1,29 @@
 #pragma kernel CheckerRenderer
+#pragma kernel CheckerFindClosest
 
 RWTexture2D<float4> Result;
-
 struct CellStruct 
 {
     float2 position;
     float2 size;
     float isActive;
 };
-
 StructuredBuffer<CellStruct> _CellBuffer;
 int _cellCount;
 float4 _screenParam;
+
+
+
+float3 _cursorPos;
+struct CellStruct_WS 
+{
+    float3 position;
+    float isActive;
+};
+RWStructuredBuffer<CellStruct_WS> _CellBuffer_WS;
+float _erase;
+
+
 
 float DrawBox(float2 uv, float2 pos, float2 size, float active) 
 {
@@ -36,3 +48,15 @@ void CheckerRenderer (uint3 id : SV_DispatchThreadID)
     float box = DrawChecker(uv);
     Result[id.xy] = float4(box.xxx,1);
 }
+
+[numthreads(32, 1, 1)]
+void CheckerFindClosest(uint3 id : SV_DispatchThreadID)
+{
+    float dist = distance(_cursorPos, _CellBuffer_WS[id.x].position) ;
+
+    _CellBuffer_WS[id.x].isActive = _erase == 0?
+        dist < 1 ? 1 : _CellBuffer_WS[id.x].isActive
+        :
+        dist < 1 ? 0: _CellBuffer_WS[id.x].isActive;
+}
+

@@ -22,6 +22,7 @@ struct CellStruct_WS
 };
 RWStructuredBuffer<CellStruct_WS> _CellBuffer_WS;
 float _erase;
+float _radius;
 
 
 
@@ -57,8 +58,8 @@ void CheckerFindClosest(uint3 id : SV_DispatchThreadID)
     float dist = distance(_cursorPos, _CellBuffer_WS[id.x].position) ;
 
     _CellBuffer_WS[id.x].isActive = _erase == 0?
-        dist < 1.5 ? 1 : _CellBuffer_WS[id.x].isActive
+        dist < _radius ? 1 : _CellBuffer_WS[id.x].isActive
         :
-        dist < 1.5 ? 0: _CellBuffer_WS[id.x].isActive;
+        dist < _radius ? 0: _CellBuffer_WS[id.x].isActive;
 }
 

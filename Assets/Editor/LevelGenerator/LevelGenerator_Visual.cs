@@ -39,7 +39,10 @@ public class LevelGenerator_Visual
         _levelVisual_cs.Dispatch(0, Mathf.CeilToInt(texWidth / 10), Mathf.CeilToInt(texHeight / 10), 1);
     }
 
-
+    public void SetPaintRadius(float value) 
+    {
+        _levelVisual_cs.SetFloat("_radius", value);
+    }
 
     public void UpdateSearchClosestSetup(int count)
     {

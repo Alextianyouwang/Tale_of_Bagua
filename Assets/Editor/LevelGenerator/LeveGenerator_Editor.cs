@@ -175,12 +175,15 @@ public class LevelGenerator_Editor : EditorWindow
         Cell selected = null;
         if (_cells != null)
             selected = _generator.GetSelectedCell(_cells, hit.point);
-
-        float handleRadius = e.shift ? 1.5f : 0.2f;
-        Handles.color = e.alt ? Color.green : Color.red;
-        Handles.DrawWireDisc(hit.point, hit.normal, handleRadius);
+      
         if (selected != null)
         {
+            float r = Mathf.Sqrt(_levelMesh.bounds.size.x * _levelMesh.bounds.size.z / 10f / Mathf.PI);
+            float handleRadius = e.shift ? r : Mathf.Max(selected.size.x/2f, selected.size.z/2f);
+            _levelVisual.SetPaintRadius(r);
+            Handles.color = e.alt ? Color.green : Color.red;
+            Handles.DrawWireDisc(hit.point, hit.normal, handleRadius);
+
             Handles.color = Color.blue;
             Handles.DrawWireCube(selected.position + selected.size.y/2 * Vector3.up, selected.size);
             if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 1)

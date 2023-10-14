@@ -1,10 +1,6 @@
-
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using static Cell;
-using UnityEditor;
+
 
 public class LevelGenerator
 {
@@ -89,15 +85,15 @@ public class LevelGenerator
         float ySegment = 1f / y;
         float xLength = platform.bounds.size.x / x;
         float yLength = platform.bounds.size.z / y;
+ 
         Vector3 offset = -new Vector3(platform.bounds.size.x - xLength, 0, platform.bounds.size.z - yLength) / 2;
 
         for (int i = 0; i < x; i++)
         {
             for (int j = 0; j < y; j++)
             {
-                Vector3 pos = offset + new Vector3(i * xLength, platform.bounds.center.y, j * yLength);
-                input[i * y + j].position = pos;
-                input[i * y + j].size = new Vector3(xLength, height, yLength);
+                Vector3 pos = offset + new Vector3(i * xLength,platform.bounds.center.y, j * yLength);
+                input[i * y + j].SetWorldSpaceInfo(pos, new Vector3(xLength, height, yLength));
                 input[i * y + j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2f, ySegment * j + ySegment / 2f), new Vector2(xSegment, ySegment));
             }
         }
@@ -169,8 +165,8 @@ public class LevelGenerator
 
 public class Cell
 {
-    public Vector3 position = Vector3.zero;
-    public Vector3 size = Vector3.zero;
+    public Vector3 position { get; private set; } = Vector3.zero;
+    public Vector3 size { get; private set; } = Vector3.zero;
     public bool isActive = false;
 
     public Vector2 texSpacePos = Vector2.zero;
@@ -202,6 +198,11 @@ public class Cell
             this.position = position;
             this.isActive = isActive;
         }
+    }
+    public void SetWorldSpaceInfo(Vector3 position, Vector3 size) 
+    {
+       this. position = position;
+       this. size = size;
     }
 
     public void SetTexSpaceInfo(Vector2 texSpacePos, Vector2 texSpaceSize ) 

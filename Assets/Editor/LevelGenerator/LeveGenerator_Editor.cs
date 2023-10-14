@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using static Cell;
 
 public class LevelGenerator_Editor : EditorWindow
 {
@@ -101,9 +100,10 @@ public class LevelGenerator_Editor : EditorWindow
         {
             if (_levelMesh) 
             {
+                _generator.AdjustQuadDepth(_levelMesh, _levelDepth);
+
                 if (_cells != null)
                     _cells = _generator.AdjustCellData(_cells,_horizontalChunks,_verticalChunks, _levelMesh, 1f);
-                _generator.AdjustQuadDepth(_levelMesh, _levelDepth);
                 _levelObj.GetComponent<BoxCollider>().size = _levelMesh.bounds.size;
                 _levelObj.GetComponent<BoxCollider>().center = _levelMesh.bounds.center;
             }
@@ -199,11 +199,7 @@ public class LevelGenerator_Editor : EditorWindow
                 e.Use();
             }
         }
-     
-
     }
-
-
 
     public void SaveMesh(Mesh mesh, string path, string name)
     {

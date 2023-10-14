@@ -13,7 +13,6 @@ int _cellCount;
 float4 _screenParam;
 
 
-
 float3 _cursorPos;
 struct CellStruct_WS 
 {

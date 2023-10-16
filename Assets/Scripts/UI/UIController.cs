@@ -44,7 +44,7 @@ public class UIController : MonoBehaviour
         MirrorManager.OnCollapsing += UI_Behavior_ConstantlyUpdatePosition;
         MirrorManager.OnExpand += UI_Behavior_InitiateEaseOut;
 
-        LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
+        LevelManager.OnShareHoodMirror += ReceiveHoodMirror;
         Tutorial.OnRequestTutorialMasterSupport += GetSelf;
 
         
@@ -58,7 +58,7 @@ public class UIController : MonoBehaviour
         MirrorManager.OnCollapsing -= UI_Behavior_ConstantlyUpdatePosition;
         MirrorManager.OnExpand -= UI_Behavior_InitiateEaseOut;
 
-        LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
+        LevelManager.OnShareHoodMirror -= ReceiveHoodMirror;
         Tutorial.OnRequestTutorialMasterSupport -= GetSelf;
 
 

@@ -1,8 +1,6 @@
 using UnityEngine;
 using System;
 using System.Linq;
-using UnityEngine.Experimental.AI;
-
 public class MirrorManager : MonoBehaviour
 {
     private Mirror currentMirror;
@@ -10,7 +8,6 @@ public class MirrorManager : MonoBehaviour
     private Vector3 offset, finalWorldPos;
     private bool firstMirrorHasBeenClicked = false, isClicking = false, isCollapsed = false, isCharged = false, canChargeAgain = true;
     private Mirror[] hoodMirrors,allMirrors;
-    public static Func<bool> OnCheckingSlidable;
     public static Action<Mirror> OnSharingCurrentMirror;
 
     public static Action<float,float> OnChargingCollapse;
@@ -39,15 +36,15 @@ public class MirrorManager : MonoBehaviour
 
     private void OnEnable()
     {
-        LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
-        LayerCheck.OnShareAllMirror += ReceiveAllMirror;
-        LayerCheck.OnFixUpdate += FollowFixUpdate;
+        LevelManager.OnShareHoodMirror += ReceiveHoodMirror;
+        LevelManager.OnShareAllMirror += ReceiveAllMirror;
+        LevelManager.OnFixUpdate += FollowFixUpdate;
     }
     private void OnDisable()
     {
-        LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
-        LayerCheck.OnFixUpdate -= FollowFixUpdate;
-        LayerCheck.OnShareAllMirror -= ReceiveAllMirror;
+        LevelManager.OnShareHoodMirror -= ReceiveHoodMirror;
+        LevelManager.OnFixUpdate -= FollowFixUpdate;
+        LevelManager.OnShareAllMirror -= ReceiveAllMirror;
 
         canUseRightClick = true;
         canUseLeftClick= true;
@@ -80,6 +77,7 @@ public class MirrorManager : MonoBehaviour
                 if (!firstMirrorHasBeenClicked)
                 {
                     firstMirrorHasBeenClicked = true;
+     
                     currentMirror = singleHit.transform.gameObject.GetComponent<Mirror>();
                     offset = currentMirror.transform.position - singleHit.point;
                     offset.y = 0;
@@ -195,6 +193,7 @@ public class MirrorManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 isClicking = true;
+                
             }
             if (Input.GetMouseButtonUp(0))
             {
@@ -317,10 +316,6 @@ public class MirrorManager : MonoBehaviour
         }
         OnSharingCurrentMirror?.Invoke(currentMirror);
 
-        if (!currentMirror || !firstMirrorHasBeenClicked)
-            return;
-        if (!hoodMirrors.Contains(currentMirror) || LayerCheck.isPlayerOnLastLevel)
-            currentMirror.ToggleBoxesRigidCollider(OnCheckingSlidable.Invoke());
 
     }
     private void OnDrawGizmos()

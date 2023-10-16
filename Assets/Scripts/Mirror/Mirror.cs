@@ -16,9 +16,10 @@ public class Mirror : MonoBehaviour
 
     [HideInInspector]
     public Material[] material;
-    [HideInInspector]
+    //[HideInInspector]
 
     public GetCollider crossCollider;
+    public GetCollider boxCollider;
     [HideInInspector]
     public MeshRenderer frameRenderer;
 
@@ -90,11 +91,11 @@ public class Mirror : MonoBehaviour
     }
     void GetBoxs() 
     {
-        boxs = GetComponents<Collider>();
-        Collider[] colliders = new Collider[boxs.Length + crossCollider.colliders.Length];
+       // boxs = GetComponents<Collider>();
+        Collider[] colliders = new Collider[boxCollider.colliders.Length + crossCollider.colliders.Length];
         for (int i = 0; i < colliders.Length; i++)
         {
-            colliders[i] = i < boxs.Length ? boxs[i] : crossCollider.colliders[i - boxs.Length];
+            colliders[i] = i < boxCollider.colliders.Length ? boxCollider.colliders[i] : crossCollider.colliders[i - boxCollider.colliders.Length];
         }
         boxs = colliders;
         foreach (Collider b in boxs)

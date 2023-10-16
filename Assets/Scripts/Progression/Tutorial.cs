@@ -33,12 +33,12 @@ public class Tutorial : MonoBehaviour
 
     private void OnEnable()
     {
-        LayerCheck.OnShareHoodMirror += ReceiveHoodMirror;
+        LevelManager.OnShareHoodMirror += ReceiveHoodMirror;
         ProgressionController.OnBaguaCollected += ReceiveBaguaCollected;
     }
     private void OnDisable()
     {
-        LayerCheck.OnShareHoodMirror -= ReceiveHoodMirror;
+        LevelManager.OnShareHoodMirror -= ReceiveHoodMirror;
         ProgressionController.OnBaguaCollected -= ReceiveBaguaCollected;
 
 

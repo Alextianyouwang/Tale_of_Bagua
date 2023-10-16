@@ -1,13 +1,10 @@
 using System.Collections;
 using UnityEngine;
 using System;
-using System.Linq;
 
 public class Mirror : MonoBehaviour
 {
     private Collider[] boxs;
-   //private bool colliderToggleState = false;
-
     private Coroutine movingCo;
 
     public Action OnFinishMoving;
@@ -16,7 +13,6 @@ public class Mirror : MonoBehaviour
 
     [HideInInspector]
     public Material[] material;
-    //[HideInInspector]
 
     public GetCollider crossCollider;
     public GetCollider boxCollider;
@@ -32,11 +28,6 @@ public class Mirror : MonoBehaviour
             Debug.LogWarning("Emissive Material for Mirror not found");
         rb = GetComponent<Rigidbody>();
         GetBoxs();
-    }
-
-    void Start()
-    {
-     
     }
 
     public void MoveMirrorTowards(float time, Vector3 targetPos, AnimationCurve curve) 
@@ -91,7 +82,6 @@ public class Mirror : MonoBehaviour
     }
     void GetBoxs() 
     {
-       // boxs = GetComponents<Collider>();
         Collider[] colliders = new Collider[boxCollider.colliders.Length + crossCollider.colliders.Length];
         for (int i = 0; i < colliders.Length; i++)
         {
@@ -104,9 +94,6 @@ public class Mirror : MonoBehaviour
    
     public void ToggleBoxesRigidCollider(bool value) 
     {
-        /*if (colliderToggleState == value)
-            return;
-        colliderToggleState = value;*/
         foreach (Collider b in boxs)
             b.isTrigger = !value;
     }

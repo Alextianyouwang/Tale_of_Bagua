@@ -21,7 +21,6 @@ public class MirrorManager : MonoBehaviour
 
     public AnimationCurve mirrorMoveCurve;
 
-    private float mirrorWorldY = 2.1f;
     private int previousHoodMirrorCount = 0,currentHoodMirrorCount = 0; 
 
     public static bool canUseRightClick = true, canUseLeftClick = true;
@@ -70,7 +69,7 @@ public class MirrorManager : MonoBehaviour
             if (singleHit.transform.gameObject.tag == "MirrorPlane")
                 finalWorldPos = singleHit.point;
 
-            finalWorldPos.y = mirrorWorldY;
+            //finalWorldPos.y = mirrorWorldY;
 
             if (singleHit.transform.gameObject.tag == "Mirror")
             {
@@ -91,7 +90,7 @@ public class MirrorManager : MonoBehaviour
 
     public void MoveMirrorTo(Mirror m, Vector3 target, float speed ) 
     {
-        Vector3 posXZ = new Vector3(m.transform.position.x, mirrorWorldY, m.transform.position.z);
+        Vector3 posXZ = m.transform.position;
         Vector3 direction = Vector3.Normalize(target - (posXZ - offset));
         float distance = (finalWorldPos - (posXZ - offset)).magnitude;
       m.GetComponent<Rigidbody>().AddForce(direction * Mathf.Min(distance * speed, 5), ForceMode.Force);
@@ -123,10 +122,10 @@ public class MirrorManager : MonoBehaviour
         
         else
              MoveMirrorTo(currentMirror, finalWorldPos, 2);
-        foreach (Mirror m in allMirrors)
+        /*foreach (Mirror m in allMirrors)
         {
             m.rb.position = new Vector3(m.rb.position.x, mirrorWorldY, m.rb.position.z);
-        }
+        }*/
 
     }
 
@@ -197,6 +196,7 @@ public class MirrorManager : MonoBehaviour
             }
             if (Input.GetMouseButtonUp(0))
             {
+    
                 isClicking = false;
                 currentMirror = null;
                 firstMirrorHasBeenClicked = false;

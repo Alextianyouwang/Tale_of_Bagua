@@ -133,22 +133,10 @@ public class Tutorial : MonoBehaviour
         tutorialArrowData = arrows;
     }
 
-    Vector3 GetScreenCenterPosition() 
-    {
-        Ray centerRay = Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
-        RaycastHit[] hits = Physics.RaycastAll (centerRay,Mathf.Infinity, LayerMask.GetMask("MirrorPlane"));
-        RaycastHit finalHit = new RaycastHit();
-        foreach (RaycastHit hit in hits) 
-        {
-            if (hit.transform.tag.Equals("MirrorPlane"))
-                finalHit = hit;
-        }
-
-        return finalHit.point;
-    }
+ 
     void MovementTutorial() 
     {
-        StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(), PlayerMove.playerTransform, 3f, 1f, 0f, 0f, 1f, 1.5f, tutorialArrowData, movementTutorialAnimationCurve,uc.SyncOtherStuffWithArrow, MovementTutorial_FollowArrowWithPlayer));   
+        StartCoroutine(uc.MoveArrowsAsGroup(Utility.GetScreenCenterPosition_WorldSpace(), PlayerMove.playerTransform, 3f, 1f, 0f, 0f, 1f, 1.5f, tutorialArrowData, movementTutorialAnimationCurve,uc.SyncOtherStuffWithArrow, MovementTutorial_FollowArrowWithPlayer));   
     }
     void MovementTutorial_FollowArrowWithPlayer(UIController uc) 
     {
@@ -226,7 +214,7 @@ public class Tutorial : MonoBehaviour
         PlayerMove.canUseWASD = false;
         MirrorManager.canUseLeftClick = false;
         OnToggleDarkenScreen?.Invoke(true);
-        StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(), NewTransformFromPositon(GetScreenCenterPosition()), 4f, 1f, 0f, 0f, 1f, 6f, tutorialArrowData, movementTutorialAnimationCurve, null, MirrorDragTutorial_LockMirror));
+        StartCoroutine(uc.MoveArrowsAsGroup(Utility.GetScreenCenterPosition_WorldSpace(), NewTransformFromPositon(Utility.GetScreenCenterPosition_WorldSpace()), 4f, 1f, 0f, 0f, 1f, 6f, tutorialArrowData, movementTutorialAnimationCurve, null, MirrorDragTutorial_LockMirror));
     }
     void MirrorDragTutorial_LockMirror(UIController uc) 
     {
@@ -242,7 +230,7 @@ public class Tutorial : MonoBehaviour
         foreach (ArrowData d in tutorialArrowData) 
             d.alphaMultiplier = 0;
 
-        StartCoroutine(uc.MoveArrowsAsGroup(GetScreenCenterPosition(),cm.transform, 1, 5f, 0f, 2f, 0f, 1f, tutorialArrowData, movementTutorialAnimationCurve, null, Tutorial_TurnOff));
+        StartCoroutine(uc.MoveArrowsAsGroup(Utility.GetScreenCenterPosition_WorldSpace(), cm.transform, 1, 5f, 0f, 2f, 0f, 1f, tutorialArrowData, movementTutorialAnimationCurve, null, Tutorial_TurnOff));
 
     }
 
@@ -269,7 +257,7 @@ public class Tutorial : MonoBehaviour
     {
 
         Coroutine clickUI_Co = StartCoroutine(ClickButtonShow(uc, new Mirror[] { cm },0.7f, true, -1, () => false));
-        Coroutine arrowFollowCo = StartCoroutine(uc.ArrowsFollowObject(NewTransformFromPositon(GetScreenCenterPosition()), 1f, 0f, 0f, tutorialArrowData, () => true,null,null)); 
+        Coroutine arrowFollowCo = StartCoroutine(uc.ArrowsFollowObject(NewTransformFromPositon(Utility.GetScreenCenterPosition_WorldSpace()), 1f, 0f, 0f, tutorialArrowData, () => true,null,null)); 
         Vector3 initialPos = cm.transform.position;
         float currentTime = Time.time;
         while (!exitCondition.Invoke(initialPos,cm)) {
@@ -278,7 +266,7 @@ public class Tutorial : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && IsCursorOnMirror())
                 cm.AbortMovement();
             if (Input.GetMouseButtonUp(0)) 
-                cm.MoveMirrorTowards(1f, GetScreenCenterPosition(), movementTutorialAnimationCurve);
+                cm.MoveMirrorTowards(1f, Utility.GetScreenCenterPosition_WorldSpace(), movementTutorialAnimationCurve);
 
             yield return null;
 

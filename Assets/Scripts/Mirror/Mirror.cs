@@ -69,16 +69,12 @@ public class Mirror : MonoBehaviour
     }
     public void ToggleFreezeMirror(bool value) 
     {
-        if (value)
-        {
-            rb.isKinematic = true;
-            rb.constraints = RigidbodyConstraints.FreezeAll;
-        }
-        else 
-        {
-            rb.isKinematic = false;
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
-        }
+            rb.isKinematic = value;
+    }
+
+    public void RigidBodyAddForce(Vector3 direction, float intensity) 
+    {
+        rb.AddForce(direction * intensity, ForceMode.Force);
     }
     void GetBoxs() 
     {

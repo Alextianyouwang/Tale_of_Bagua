@@ -1,11 +1,13 @@
 using UnityEngine;
 using System;
 using System.Linq;
+using System.Net.NetworkInformation;
+
 public class MirrorManager : MonoBehaviour
 {
     private Mirror currentMirror;
     public LayerMask mirrorMask;
-    private Vector3 offset, finalWorldPos;
+    private Vector3 offset, finalWorldPos, screenCenter_WorldSpace;
     private bool firstMirrorHasBeenClicked = false, isClicking = false, isCollapsed = false, isCharged = false, canChargeAgain = true;
     private Mirror[] hoodMirrors,allMirrors;
     public static Action<Mirror> OnSharingCurrentMirror;
@@ -35,6 +37,7 @@ public class MirrorManager : MonoBehaviour
 
     private void OnEnable()
     {
+        screenCenter_WorldSpace = Utility.GetScreenCenterPosition_WorldSpace();
         LevelManager.OnShareHoodMirror += ReceiveHoodMirror;
         LevelManager.OnShareAllMirror += ReceiveAllMirror;
         LevelManager.OnFixUpdate += FollowFixUpdate;
@@ -56,6 +59,7 @@ public class MirrorManager : MonoBehaviour
     void ReceiveAllMirror(Mirror[] allMirror) 
     {
         allMirrors = allMirror;
+        
     }
 
     void UpdateMirrorPhysics()
@@ -63,70 +67,54 @@ public class MirrorManager : MonoBehaviour
         if (!isClicking) return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] allHits = Physics.RaycastAll(ray, Mathf.Infinity, mirrorMask);
-        Mirror[] selecetedMirrors = allHits.Select(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
-        foreach (RaycastHit singleHit in allHits)
+        finalWorldPos = allHits.Where(x => x.transform.tag.Equals("MirrorPlane")).FirstOrDefault().point;
+        if (!firstMirrorHasBeenClicked)
         {
-            if (singleHit.transform.gameObject.tag == "MirrorPlane")
-                finalWorldPos = singleHit.point;
-
-            //finalWorldPos.y = mirrorWorldY;
-
-            if (singleHit.transform.gameObject.tag == "Mirror")
-            {
-                if (!firstMirrorHasBeenClicked)
-                {
-                    firstMirrorHasBeenClicked = true;
-     
-                    currentMirror = singleHit.transform.gameObject.GetComponent<Mirror>();
-                    offset = currentMirror.transform.position - singleHit.point;
-                    offset.y = 0;
-                }
-                else
-                    continue;
-            }
+            firstMirrorHasBeenClicked = true;
+            currentMirror = allHits.Where(x => x.transform.tag.Equals("Mirror")).Select(x => x.transform.gameObject.GetComponent<Mirror>()).FirstOrDefault();
+            if (currentMirror != null) 
+            offset =currentMirror.transform.position - finalWorldPos;
         }
     }
  
 
     public void MoveMirrorTo(Mirror m, Vector3 target, float speed ) 
     {
-        Vector3 posXZ = m.transform.position;
-        Vector3 direction = Vector3.Normalize(target - (posXZ - offset));
-        float distance = (finalWorldPos - (posXZ - offset)).magnitude;
-      m.GetComponent<Rigidbody>().AddForce(direction * Mathf.Min(distance * speed, 5), ForceMode.Force);
+        Vector3 mirrorCenter = m.transform.position - offset;
+        Vector3 direction = Vector3.Normalize(target - mirrorCenter);
+        float distance = (finalWorldPos - mirrorCenter).magnitude;
+        m.RigidBodyAddForce(direction, Mathf.Min(distance * speed, 5));
+     
+    }
+
+    private void SetMirrorYPos() 
+    {
+        foreach(Mirror m in allMirrors) 
+            m.rb.position = new Vector3(m.rb.position.x, screenCenter_WorldSpace.y, m.rb.position.z);
+    }
+
+    private void CageMirrorWhenCollapsed() 
+    {
+        foreach (Mirror m in hoodMirrors)
+            if (isCollapsed)
+                m.ToggleBoxesRigidCollider(true);
     }
 
 
     private void FollowFixUpdate() 
     {
         UpdateMirrorPhysics();
-        if (isCollapsed) 
-            for (int i = 0; i < hoodMirrors.Length; i++)
-                hoodMirrors[i].ToggleBoxesRigidCollider(true);
+        SetMirrorYPos();
+        CageMirrorWhenCollapsed();
 
-
-        if (!currentMirror || !firstMirrorHasBeenClicked)
+        if (!currentMirror || !firstMirrorHasBeenClicked) 
             return;
-
-
+ 
         if (isCollapsed && hoodMirrors.Contains(currentMirror))
-        {
-
             for (int i = 0; i < hoodMirrors.Length; i++)
-            {
-                Mirror m = hoodMirrors[i];
-                m.ToggleBoxesRigidCollider(true);
-                MoveMirrorTo(m, finalWorldPos, 2);
-            }
-        }
-        
+                MoveMirrorTo(hoodMirrors[i], finalWorldPos, 2);
         else
              MoveMirrorTo(currentMirror, finalWorldPos, 2);
-        /*foreach (Mirror m in allMirrors)
-        {
-            m.rb.position = new Vector3(m.rb.position.x, mirrorWorldY, m.rb.position.z);
-        }*/
-
     }
 
     public void CollapseHoodMirror()
@@ -299,21 +287,12 @@ public class MirrorManager : MonoBehaviour
     }
     void Update()
     {
-        foreach (Mirror m in allMirrors)
-            m.ToggleFreezeMirror(!canUseLeftClick);
+
  
         UpdateInput();
         UpdateMaterial();
         CheckIfNewHoodMirrorAdded();
 
-        if (hoodMirrors.Length == 0 && isCollapsed)
-        {
-            OnAbortCollapse?.Invoke(collapseTimer, chargeTime, true);
-            isCharged = false;
-            canChargeAgain = true;
-            isCollapsed = false;
-
-        }
         OnSharingCurrentMirror?.Invoke(currentMirror);
 
 

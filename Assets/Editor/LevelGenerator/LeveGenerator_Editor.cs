@@ -93,7 +93,7 @@ public class LevelGenerator_Editor : EditorWindow
         if (GUILayout.Button("Create Level From Camera View"))
         {
             _levelMesh = _generator.CreateQuad(_generator.GetScreenInWorldSpace(_levelDepth));
-            _levelObj = _generator.CreatePlaneLevel(_name + "_card", _levelMesh, _levelMat);
+            _levelObj = _generator.CreatePlaneLevel(_name + "_foundation", _levelMesh, _levelMat);
             SaveMesh(_levelMesh, _path, _name + "_mesh");
         }
         if (_prev_levelDepth != _levelDepth && _levelObj != null) 

@@ -67,10 +67,6 @@ public class Mirror : MonoBehaviour
         OnFinishMoving?.Invoke();
 
     }
-    public void ToggleFreezeMirror(bool value) 
-    {
-            rb.isKinematic = value;
-    }
 
     public void RigidBodyAddForce(Vector3 direction, float intensity) 
     {

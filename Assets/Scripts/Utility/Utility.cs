@@ -16,4 +16,15 @@ public static class Utility
 
         return finalHit.point;
     }
+
+    public static Vector2[] RadiusPosition(int numSlices)
+    {
+        Vector2[] dirs = new Vector2[numSlices];
+        float inc = Mathf.PI * 2 / numSlices;
+        for (int i = 0; i < numSlices; i++)
+        {
+            dirs[i] = new Vector2(Mathf.Sin(inc * i), Mathf.Cos(i * inc));
+        }
+        return dirs;
+    }
 }

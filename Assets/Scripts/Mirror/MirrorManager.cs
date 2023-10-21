@@ -137,22 +137,12 @@ public class MirrorManager : MonoBehaviour
         }
     }
 
-    public Vector2[] RadiusPosition(int numSlices)
-    {
-        Vector2[] dirs = new Vector2[numSlices];
-        float inc = Mathf.PI * 2 / numSlices;
-        for (int i = 0; i < numSlices; i++) 
-        {
-            dirs[i] = new Vector2(Mathf.Sin(inc*i), Mathf.Cos(i*inc));
-        }
-        return dirs;
-    }
     public void ExpandHoodMirror() 
     {
         if (hoodMirrors.Length <= 1)
             return;
         isCollapsed = false;
-        Vector2[] offsets = RadiusPosition(hoodMirrors.Length);
+        Vector2[] offsets = Utility.RadiusPosition(hoodMirrors.Length);
         Vector3 playerPos = PlayerMove.playerTransform.position;
 
         for (int i = 0; i < hoodMirrors.Length; i++)
@@ -172,84 +162,84 @@ public class MirrorManager : MonoBehaviour
         }
         previousHoodMirrorCount = currentHoodMirrorCount;
     }
+
+    void LeftClick() {
+        if (!canUseLeftClick)
+            return;
+        if (Input.GetMouseButtonDown(0))
+        {
+            isClicking = true;
+
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+
+            isClicking = false;
+            currentMirror = null;
+            firstMirrorHasBeenClicked = false;
+            offset = Vector3.zero;
+        }
+    }
+    void RightClick() 
+    {
+        if (!canUseRightClick)
+            return;
+
+        if (isCollapsed && !Input.GetMouseButton(1))
+            OnCollapsing?.Invoke();
+        if (Input.GetMouseButtonDown(1))
+        {
+
+            if (isCollapsed)
+            {
+                canChargeAgain = false;
+                OnExpand?.Invoke(false);
+                ExpandHoodMirror();
+
+            }
+
+        }
+        if (Input.GetMouseButton(1))
+        {
+            if (!canChargeAgain)
+                return;
+            collapseTimer += Time.deltaTime;
+            if (!isCollapsed)
+                OnChargingCollapse?.Invoke(collapseTimer, chargeTime);
+
+
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            if (!canChargeAgain)
+            {
+                isCharged = false;
+                canChargeAgain = true;
+                return;
+            }
+            if (collapseTimer >= chargeTime)
+            {
+
+                OnChargedCollapse?.Invoke(collapseTimer, chargeTime);
+                if (!isCollapsed)
+                {
+                    CollapseHoodMirror();
+                    isCharged = true;
+                }
+            }
+            else
+            {
+                if (!isCharged)
+                    OnAbortCollapse?.Invoke(collapseTimer, chargeTime, false);
+            }
+            collapseTimer = 0;
+        }
+
+    }
     void UpdateInput() 
     {
-
-        if (canUseLeftClick) 
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                isClicking = true;
-                
-            }
-            if (Input.GetMouseButtonUp(0))
-            {
-    
-                isClicking = false;
-                currentMirror = null;
-                firstMirrorHasBeenClicked = false;
-                offset = Vector3.zero;
-            }
-        }
-       
-
-
-        if (canUseRightClick) 
-        {
-            if (isCollapsed && !Input.GetMouseButton(1))
-                OnCollapsing?.Invoke();
-            if (Input.GetMouseButtonDown(1))
-            {
-
-                if (isCollapsed)
-                {
-                    canChargeAgain = false;
-                    OnExpand?.Invoke(false);
-                    ExpandHoodMirror();
-
-                }
-
-            }
-            if (Input.GetMouseButton(1))
-            {
-                if (!canChargeAgain)
-                    return;
-                collapseTimer += Time.deltaTime;
-                if (!isCollapsed)
-                    OnChargingCollapse?.Invoke(collapseTimer, chargeTime);
-
-
-            }
-            if (Input.GetMouseButtonUp(1))
-            {
-                if (!canChargeAgain)
-                {
-                    isCharged = false;
-                    canChargeAgain = true;
-                    return;
-                }
-                if (collapseTimer >= chargeTime)
-                {
-
-                    OnChargedCollapse?.Invoke(collapseTimer, chargeTime);
-                    if (!isCollapsed)
-                    {
-                        CollapseHoodMirror();
-                        isCharged = true;
-                    }
-                }
-                else
-                {
-                    if (!isCharged)
-                        OnAbortCollapse?.Invoke(collapseTimer, chargeTime, false);
-                }
-                collapseTimer = 0;
-            }
-        }
-       
-
-       
-
+        LeftClick();
+        RightClick();
     }
 
     void SetMirrorColor(Mirror m, Color color) 

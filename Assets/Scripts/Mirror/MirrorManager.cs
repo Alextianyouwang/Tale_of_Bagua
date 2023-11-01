@@ -155,6 +155,7 @@ public class MirrorManager : MonoBehaviour
 
     void CheckIfNewHoodMirrorAdded() 
     {
+        if( hoodMirrors.Length == 0 )return;
         currentHoodMirrorCount = hoodMirrors.Length;
         if (previousHoodMirrorCount != currentHoodMirrorCount && isCollapsed) 
         {

@@ -5,10 +5,10 @@ using UnityEngine.UIElements;
 
 public class GetCollider : MonoBehaviour
 {
-    public Collider[] colliders;
+    public BoxCollider[] colliders;
 
-    private void OnEnable()
+    private void Awake()
     {
-        colliders= GetComponents<Collider>();
+        colliders= GetComponents<BoxCollider>();
     }
 }

@@ -1,10 +1,9 @@
 using System.Collections;
 using UnityEngine;
 using System;
-
 public class Mirror : MonoBehaviour
 {
-    private Collider[] boxs;
+    private BoxCollider[] boxs;
     private Coroutine movingCo;
 
     public Action OnFinishMoving;
@@ -27,8 +26,13 @@ public class Mirror : MonoBehaviour
         if (material == null)
             Debug.LogWarning("Emissive Material for Mirror not found");
         rb = GetComponent<Rigidbody>();
+       
+    }
+    private void OnEnable()
+    {
         GetBoxs();
     }
+
 
     public void MoveMirrorTowards(float time, Vector3 targetPos, AnimationCurve curve) 
     {
@@ -74,19 +78,21 @@ public class Mirror : MonoBehaviour
     }
     void GetBoxs() 
     {
-        Collider[] colliders = new Collider[boxCollider.colliders.Length + crossCollider.colliders.Length];
+        BoxCollider[] colliders = new BoxCollider[boxCollider.colliders.Length + crossCollider.colliders.Length];
         for (int i = 0; i < colliders.Length; i++)
         {
-            colliders[i] = i < boxCollider.colliders.Length ? boxCollider.colliders[i] : crossCollider.colliders[i - boxCollider.colliders.Length];
+            colliders[i] =(i < boxCollider.colliders.Length ? boxCollider.colliders[i] : crossCollider.colliders[i - boxCollider.colliders.Length]);
         }
+        
         boxs = colliders;
-        foreach (Collider b in boxs)
+        
+        foreach (BoxCollider b in boxs)
             b.isTrigger = true;
     }
    
     public void ToggleBoxesRigidCollider(bool value) 
     {
-        foreach (Collider b in boxs)
+        foreach (BoxCollider b in boxs)
             b.isTrigger = !value;
     }
 

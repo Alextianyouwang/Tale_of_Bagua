@@ -236,7 +236,7 @@ public class Tutorial : MonoBehaviour
 
     bool MirrorDragTutorial_ExitCondition(Vector3 initialPos, Mirror cm) 
     {
-        return Vector3.Distance(initialPos,cm.transform.position) >= 2.5f;
+        return Vector3.Distance(initialPos,cm.transform.position) >= 1.5f;
     }
 
     void MirrorDragTutorial_UpdateArrow(float currnentTime,Vector3 initialPos, Mirror cm) 

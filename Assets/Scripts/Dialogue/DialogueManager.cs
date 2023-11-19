@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -12,35 +11,17 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private Image dialogueIcon ;
     private Story currentDialogue_NPC;
-    private TextAsset currentDialogueText_NPC;
-    private Sprite currentIcon_NPC;
-
     private void OnEnable()
     {
-        NPC_Manager.OnReadyToPlayDialogue += PlayerReadyToPlayDialogue;
+        PlayerInteract.OnPlayDialogue += EnterDialogueMode;
     }
     private void OnDisable()
     {
-        NPC_Manager.OnReadyToPlayDialogue -= PlayerReadyToPlayDialogue;
-
+        PlayerInteract.OnPlayDialogue -= EnterDialogueMode;
     }
     public void Awake()
     {
         DialoguePanel.gameObject.SetActive(false);
-    }
-    void PlayerReadyToPlayDialogue(TextAsset inkStory_NPC, Sprite icon)
-    {
-        currentDialogueText_NPC = inkStory_NPC;
-        currentIcon_NPC = icon;
-    }
-
-    private void Update()
-    {
-        if (currentDialogueText_NPC) 
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-                EnterDialogueMode(currentDialogueText_NPC, currentIcon_NPC);
-        }
     }
 
     void EnterDialogueMode(TextAsset inkJson_NPC,Sprite icon) 
@@ -50,6 +31,8 @@ public class DialogueManager : MonoBehaviour
             isDialoguePlaying = true;
             DialoguePanel.gameObject.SetActive(true);
             PlayerMove.canUseWASD = false;
+            MirrorManager.canUseLeftClick = false;
+            MirrorManager.canUseRightClick = false;
             currentDialogue_NPC = new Story(inkJson_NPC.text);
             dialogueIcon.sprite = icon;
         }
@@ -66,6 +49,8 @@ public class DialogueManager : MonoBehaviour
         isDialoguePlaying = false;
         DialoguePanel.gameObject.SetActive(false);
         PlayerMove.canUseWASD = true;
+        MirrorManager.canUseLeftClick = true;
+        MirrorManager.canUseRightClick = true;
         dialogueText.text = null;
         dialogueIcon.sprite = null;
     }

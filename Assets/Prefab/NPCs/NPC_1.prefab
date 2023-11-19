@@ -17,7 +17,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 67706180261237990, guid: 04ccafae03aec82498f428932ec786d3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.337017
+      value: 4.43
       objectReference: {fileID: 0}
     - target: {fileID: 67706180261237990, guid: 04ccafae03aec82498f428932ec786d3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -25,7 +25,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 67706180261237990, guid: 04ccafae03aec82498f428932ec786d3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.7636101
+      value: -2.08
       objectReference: {fileID: 0}
     - target: {fileID: 67706180261237990, guid: 04ccafae03aec82498f428932ec786d3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -62,6 +62,10 @@ PrefabInstance:
     - target: {fileID: 67706180261237991, guid: 04ccafae03aec82498f428932ec786d3, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 67706180261237991, guid: 04ccafae03aec82498f428932ec786d3, type: 3}
+      propertyPath: m_TagString
+      value: NPC
       objectReference: {fileID: 0}
     - target: {fileID: 6418353913969257712, guid: 04ccafae03aec82498f428932ec786d3, type: 3}
       propertyPath: IconImage

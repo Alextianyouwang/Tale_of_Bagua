@@ -16,11 +16,6 @@ public class NPC_Manager : MonoBehaviour
     {
         
         npcs = FindObjectsOfType<NPC_Controller>();
-        foreach (NPC_Controller n in npcs) 
-        {
-            n.OnDetactPlayer += DisplayIcon;
-            n.OnLostPlayer += HideIcon;
-        }
         exclamationIcon_prefab = Resources.Load<GameObject>("UI/P_ExclamationIcon");
         exclamationIcon_instance = Instantiate(exclamationIcon_prefab);
         exclamationIcon_instance.SetActive(false);
@@ -29,11 +24,16 @@ public class NPC_Manager : MonoBehaviour
     private void OnEnable()
     {
         LevelManager.OnFixUpdate += CheckNPCLevel;
+        PlayerInteract.OnDetactPlayer += DisplayIcon;
+        PlayerInteract.OnLostPlayer += HideIcon;
     }
 
     private void OnDisable()
     {
         LevelManager.OnFixUpdate -= CheckNPCLevel;
+        PlayerInteract.OnDetactPlayer -= DisplayIcon;
+        PlayerInteract.OnLostPlayer -= HideIcon;
+
 
     }
     void CheckNPCLevel() 
@@ -57,18 +57,15 @@ public class NPC_Manager : MonoBehaviour
                 t.GetComponent<Collider>().enabled = value;     
     }
 
-    void DisplayIcon(Vector3 pos, TextAsset inkStory_NPC, Sprite icon) 
+    void DisplayIcon(Vector3 pos) 
     {
         exclamationIcon_instance.transform.position = pos;
         exclamationIcon_instance.SetActive(true);
-        OnReadyToPlayDialogue?.Invoke(inkStory_NPC,icon);
     }
 
     void HideIcon()
     {
         exclamationIcon_instance.SetActive(false);
-        OnReadyToPlayDialogue?.Invoke(null,null);
-
     }
 
 }

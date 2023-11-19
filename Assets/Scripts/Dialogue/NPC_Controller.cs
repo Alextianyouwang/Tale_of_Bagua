@@ -9,6 +9,7 @@ public class NPC_Controller : MonoBehaviour
     public Action OnLostPlayer;
     public TextAsset InkDialogueAsset;
     public Sprite IconImage;
+
     private void OnTriggerEnter(Collider other)
     {
         if (!InkDialogueAsset)

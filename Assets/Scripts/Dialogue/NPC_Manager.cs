@@ -9,6 +9,8 @@ public class NPC_Manager : MonoBehaviour
     private GameObject exclamationIcon_prefab;
     private GameObject exclamationIcon_instance;
     public static Action<TextAsset,Sprite> OnReadyToPlayDialogue;
+    public GameObject[] NPC_Levels;
+    GameObject currentNPCLevel, previousNPCLevel;
 
     private void Awake()
     {
@@ -24,6 +26,37 @@ public class NPC_Manager : MonoBehaviour
         exclamationIcon_instance.SetActive(false);
     }
 
+    private void OnEnable()
+    {
+        LevelManager.OnFixUpdate += CheckNPCLevel;
+    }
+
+    private void OnDisable()
+    {
+        LevelManager.OnFixUpdate -= CheckNPCLevel;
+
+    }
+    void CheckNPCLevel() 
+    {
+        currentNPCLevel = NPC_Levels[LevelManager.allMirrorOnTop];
+        ToggleChildGameobjectColliderActivation(true, currentNPCLevel);
+        foreach (GameObject level in NPC_Levels)
+            if (level != currentNPCLevel) 
+                ToggleChildGameobjectColliderActivation(false, level);
+        if (previousNPCLevel != currentNPCLevel)
+            HideIcon();
+        previousNPCLevel = currentNPCLevel;
+    }
+
+    void ToggleChildGameobjectColliderActivation(bool value, GameObject target) 
+    {
+        if (target.transform.childCount == 0)
+            return;
+        foreach (Transform t in target.transform) 
+            if (t.GetComponent<Collider>())
+                t.GetComponent<Collider>().enabled = value;     
+    }
+
     void DisplayIcon(Vector3 pos, TextAsset inkStory_NPC, Sprite icon) 
     {
         exclamationIcon_instance.transform.position = pos;
@@ -37,4 +70,5 @@ public class NPC_Manager : MonoBehaviour
         OnReadyToPlayDialogue?.Invoke(null,null);
 
     }
+
 }

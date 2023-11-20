@@ -6,7 +6,7 @@ using System;
 public class PlayerInteract : MonoBehaviour
 {
     public float InteractionDistance = 0.5f;
-    private NPC_Controller currentNPC,previousNPC;
+    public static NPC_Controller currentNPC,previousNPC;
     public static Action<Vector3> OnDetactPlayer;
     public static Action OnLostPlayer;
     public static Action<TextAsset, Sprite> OnPlayDialogue;
@@ -16,8 +16,12 @@ public class PlayerInteract : MonoBehaviour
         CheckObjectSelection();
         if (currentNPC)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space)) 
+            {
                 OnPlayDialogue?.Invoke(currentNPC.InkDialogueAsset, currentNPC.IconImage);
+                
+            }
+               
         }
     }
     void CheckObjectSelection()

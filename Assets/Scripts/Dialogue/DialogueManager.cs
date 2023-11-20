@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Ink.Runtime;
+using System;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -26,21 +27,40 @@ public class DialogueManager : MonoBehaviour
 
     void EnterDialogueMode(TextAsset inkJson_NPC,Sprite icon) 
     {
-        if (!isDialoguePlaying) 
+        if (!isDialoguePlaying)
         {
             isDialoguePlaying = true;
             DialoguePanel.gameObject.SetActive(true);
             PlayerMove.canUseWASD = false;
             MirrorManager.canUseLeftClick = false;
             MirrorManager.canUseRightClick = false;
-            currentDialogue_NPC = new Story(inkJson_NPC.text);
             dialogueIcon.sprite = icon;
+            currentDialogue_NPC = new Story(inkJson_NPC.text);
+            PlayerInteract.currentNPC.UpdateInteractionBeforePrint();
+            print(PlayerInteract.currentNPC.interactionCounter);
+            try
+            {
+                currentDialogue_NPC.ChoosePathString($"{PlayerInteract.currentNPC.interactionCounter}Interaction");
+            }
+            catch (StoryException)
+            {
+                currentDialogue_NPC.ChoosePathString("Fallback");
+            }
+            if (currentDialogue_NPC.canContinue)
+                dialogueText.text = currentDialogue_NPC.Continue();
+            else
+                ExitDialogueMode();
+       
         }
-        
-        if (currentDialogue_NPC.canContinue)
-            dialogueText.text = currentDialogue_NPC.Continue();
         else
-            ExitDialogueMode();
+        {
+
+            if (currentDialogue_NPC.canContinue)
+                dialogueText.text = currentDialogue_NPC.Continue();
+            else
+                ExitDialogueMode();
+        }
+       
 
     }
 
@@ -53,5 +73,7 @@ public class DialogueManager : MonoBehaviour
         MirrorManager.canUseRightClick = true;
         dialogueText.text = null;
         dialogueIcon.sprite = null;
+        PlayerInteract.currentNPC.UpdateInteractionAfterPrint();
+
     }
 }

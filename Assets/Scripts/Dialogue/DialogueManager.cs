@@ -12,17 +12,21 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private Image dialogueIcon ;
     private Story currentDialogue_NPC;
+    public static Func<string,object> OnGeneralEventCalled;
     private void OnEnable()
     {
         PlayerInteract.OnPlayDialogue += EnterDialogueMode;
+        OnGeneralEventCalled += ReceiveGeneralEvent;
     }
     private void OnDisable()
     {
         PlayerInteract.OnPlayDialogue -= EnterDialogueMode;
+        OnGeneralEventCalled -= ReceiveGeneralEvent;
     }
     public void Awake()
     {
         DialoguePanel.gameObject.SetActive(false);
+
     }
 
     void EnterDialogueMode(TextAsset inkJson_NPC,Sprite icon) 
@@ -36,6 +40,7 @@ public class DialogueManager : MonoBehaviour
             MirrorManager.canUseRightClick = false;
             dialogueIcon.sprite = icon;
             currentDialogue_NPC = new Story(inkJson_NPC.text);
+            currentDialogue_NPC.BindExternalFunction("GeneralEvent", OnGeneralEventCalled);
             PlayerInteract.currentNPC.UpdateInteractionBeforePrint();
             print(PlayerInteract.currentNPC.interactionCounter);
             try
@@ -75,5 +80,11 @@ public class DialogueManager : MonoBehaviour
         dialogueIcon.sprite = null;
         PlayerInteract.currentNPC.UpdateInteractionAfterPrint();
 
+    }
+
+    object ReceiveGeneralEvent(string eventName) 
+    {
+        print("GeneralEvent:" + eventName);
+        return null;
     }
 }

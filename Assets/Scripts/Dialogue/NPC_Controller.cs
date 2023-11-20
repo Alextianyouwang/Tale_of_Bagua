@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using UnityEditor.SceneManagement;
+using Palmmedia.ReportGenerator.Core.Reporting.Builders.Rendering;
 
 public class NPC_Controller : MonoBehaviour
 {
@@ -17,20 +18,37 @@ public class NPC_Controller : MonoBehaviour
     [Serializable]
     public class DialogueProgressionSetting 
     {
+
+        public bool progressRegardless;
+
         public NPC_Controller npcToCompare;
         public int atSpecificDialogueToProgress;
-        public bool progressRegardless;
-    }
 
+        public string progressEventName;
+        public int setToWhichInteractionWhenCalled;
+    }
+    private void OnEnable()
+    { 
+        DialogueManager.OnGeneralEventCalled += ReceiveGeneralEvent;
+    }
+    private void OnDisable()
+    {
+        DialogueManager.OnGeneralEventCalled -= ReceiveGeneralEvent;
+    }
+    object ReceiveGeneralEvent(string value) 
+    {
+        var stage = ProgressionSettings[interactionCounter <= ProgressionSettings.Length - 1 ? interactionCounter : ProgressionSettings.Length - 1];
+        if (stage.progressEventName != null)
+            if (stage.progressEventName == value)
+                interactionCounter = stage.setToWhichInteractionWhenCalled;
+        return null;
+    }
     public void UpdateInteractionBeforePrint() 
     {
         var stage = ProgressionSettings[interactionCounter <= ProgressionSettings.Length -1?interactionCounter : ProgressionSettings.Length -1];
-        if (stage == null) 
-        {
-            print($"Next Progression Condition has not been set for {name}, next dialogue will not displayed.");
-            return;
-        }
         if (stage.progressRegardless)
+            return;
+        if (stage.npcToCompare == null)
             return;
         if (stage.npcToCompare.interactionCounter == stage.atSpecificDialogueToProgress)
             interactionCounter++;
@@ -43,11 +61,6 @@ public class NPC_Controller : MonoBehaviour
     public void UpdateInteractionAfterPrint()
     {
         var stage = ProgressionSettings[interactionCounter <= ProgressionSettings.Length - 1 ? interactionCounter : ProgressionSettings.Length - 1];
-        if (stage == null)
-        {
-            print($"Next Progression Condition has not been set for {name}, next dialogue will not displayed.");
-            return;
-        }
         if (stage.progressRegardless)
             interactionCounter++;
 

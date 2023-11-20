@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using TMPro;
 using Ink.Runtime;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -12,7 +14,12 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private Image dialogueIcon ;
     private Story currentDialogue_NPC;
-    public static Func<string,object> OnGeneralEventCalled;
+    public Func<string,bool,object> OnGeneralEventCalled;
+    public static Action<string> OnGeneralEventCalledGlobal;
+    private Dictionary<string, int> GeneralEventRecorder = new Dictionary<string, int>();
+
+    [SerializeField] private GameObject[] choiceButtons;
+    private TextMeshProUGUI[] choicesText;
     private void OnEnable()
     {
         PlayerInteract.OnPlayDialogue += EnterDialogueMode;
@@ -21,12 +28,40 @@ public class DialogueManager : MonoBehaviour
     private void OnDisable()
     {
         PlayerInteract.OnPlayDialogue -= EnterDialogueMode;
-        OnGeneralEventCalled -= ReceiveGeneralEvent;
     }
     public void Awake()
     {
         DialoguePanel.gameObject.SetActive(false);
 
+        choicesText = new TextMeshProUGUI[choiceButtons.Length];
+        for (int i = 0; i < choicesText.Length; i++) 
+        {
+            choicesText[i] = choiceButtons[i].GetComponentInChildren<TextMeshProUGUI>();
+        }
+
+    }
+
+    private void DisplayChoices() 
+    {
+        List<Choice> currentChoices = currentDialogue_NPC.currentChoices;
+        if (currentChoices.Count > choiceButtons.Length)
+            Debug.LogError("More choices were given than the UI Could Support");
+        int index;
+        for (index = 0; index < currentChoices.Count; index++)
+        {
+            choiceButtons[index].gameObject.SetActive(true);
+            choicesText[index].text = currentChoices[index].text;
+        }
+        for (int i = index; i < choiceButtons.Length; i++) 
+        {
+            choiceButtons[i].gameObject.SetActive(false);
+        }
+
+    }
+    public void MakeChoices(int choiceIndex) 
+    {
+        currentDialogue_NPC.ChooseChoiceIndex(choiceIndex);
+        ContinueDialogue();
     }
 
     void EnterDialogueMode(TextAsset inkJson_NPC,Sprite icon) 
@@ -40,7 +75,8 @@ public class DialogueManager : MonoBehaviour
             MirrorManager.canUseRightClick = false;
             dialogueIcon.sprite = icon;
             currentDialogue_NPC = new Story(inkJson_NPC.text);
-            currentDialogue_NPC.BindExternalFunction("GeneralEvent", OnGeneralEventCalled);
+            currentDialogue_NPC.BindExternalFunction("GeneralEvent",  OnGeneralEventCalled);
+           
             PlayerInteract.currentNPC.UpdateInteractionBeforePrint();
             print(PlayerInteract.currentNPC.interactionCounter);
             try
@@ -51,22 +87,21 @@ public class DialogueManager : MonoBehaviour
             {
                 currentDialogue_NPC.ChoosePathString("Fallback");
             }
-            if (currentDialogue_NPC.canContinue)
-                dialogueText.text = currentDialogue_NPC.Continue();
-            else
-                ExitDialogueMode();
-       
+        }
+
+        ContinueDialogue();
+    }
+
+    void ContinueDialogue() 
+    {
+
+        if (currentDialogue_NPC.canContinue)
+        {
+            dialogueText.text = currentDialogue_NPC.Continue();
+            DisplayChoices();
         }
         else
-        {
-
-            if (currentDialogue_NPC.canContinue)
-                dialogueText.text = currentDialogue_NPC.Continue();
-            else
-                ExitDialogueMode();
-        }
-       
-
+            ExitDialogueMode();
     }
 
     void ExitDialogueMode()
@@ -82,9 +117,21 @@ public class DialogueManager : MonoBehaviour
 
     }
 
-    object ReceiveGeneralEvent(string eventName) 
+    object ReceiveGeneralEvent(string eventName, bool onlyAllowOnce)
     {
-        print("GeneralEvent:" + eventName);
+        if (!GeneralEventRecorder.ContainsKey(eventName)) 
+        {
+            GeneralEventRecorder.Add(eventName, 1);
+            OnGeneralEventCalledGlobal?.Invoke(eventName);
+        }
+        else
+        {
+            if (!onlyAllowOnce) 
+                OnGeneralEventCalledGlobal?.Invoke(eventName);
+           KeyValuePair<string,int> selected = GeneralEventRecorder.Where(x => x.Key == eventName).FirstOrDefault();
+            GeneralEventRecorder[selected.Key]++;
+        }
+        
         return null;
     }
 }

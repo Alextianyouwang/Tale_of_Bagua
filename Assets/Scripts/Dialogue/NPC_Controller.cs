@@ -18,30 +18,30 @@ public class NPC_Controller : MonoBehaviour
     [Serializable]
     public class DialogueProgressionSetting 
     {
-
+        [Header (">>>>>>>>>>> Always Move to the Next Interaction When Clicked")]
         public bool progressRegardless;
 
+        [Header(">>>>>>>>>>> Only Move to the Next Interaction When Condition Satisfied")]
         public NPC_Controller npcToCompare;
         public int atSpecificDialogueToProgress;
 
+        [Header(">>>>>>>>>>> Only Move to the Next Interaction When Event is Called")]
         public string progressEventName;
-        public int setToWhichInteractionWhenCalled;
     }
     private void OnEnable()
     { 
-        DialogueManager.OnGeneralEventCalled += ReceiveGeneralEvent;
+        DialogueManager.OnGeneralEventCalledGlobal+= ReceiveGeneralEvent;
     }
     private void OnDisable()
     {
-        DialogueManager.OnGeneralEventCalled -= ReceiveGeneralEvent;
+        DialogueManager.OnGeneralEventCalledGlobal-= ReceiveGeneralEvent;
     }
-    object ReceiveGeneralEvent(string value) 
+    void ReceiveGeneralEvent(string value) 
     {
         var stage = ProgressionSettings[interactionCounter <= ProgressionSettings.Length - 1 ? interactionCounter : ProgressionSettings.Length - 1];
         if (stage.progressEventName != null)
             if (stage.progressEventName == value)
-                interactionCounter = stage.setToWhichInteractionWhenCalled;
-        return null;
+                interactionCounter ++;
     }
     public void UpdateInteractionBeforePrint() 
     {

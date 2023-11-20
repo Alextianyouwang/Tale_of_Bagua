@@ -1,8 +1,6 @@
 
 using UnityEngine;
 using System;
-using UnityEditor.SceneManagement;
-using Palmmedia.ReportGenerator.Core.Reporting.Builders.Rendering;
 
 public class NPC_Controller : MonoBehaviour
 {

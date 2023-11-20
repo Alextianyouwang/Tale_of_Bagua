@@ -1,7 +1,11 @@
 === 0Interaction ===
 ...A guy standing here doing nothing >>> 
 ...
+#type player
+wtf?..
 .........
+#type player
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 -> DONE
 
 === 1Interaction ===

@@ -18,8 +18,10 @@ public class DialogueManager : MonoBehaviour
     public static Action<string> OnGeneralEventCalledGlobal;
     private Dictionary<string, int> GeneralEventRecorder = new Dictionary<string, int>();
 
+    private List<string> tags = new List<string>();
     [SerializeField] private GameObject[] choiceButtons;
     private TextMeshProUGUI[] choicesText;
+    Sprite playerIcon;
     private void OnEnable()
     {
         PlayerInteract.OnPlayDialogue += EnterDialogueMode;
@@ -39,6 +41,7 @@ public class DialogueManager : MonoBehaviour
             choicesText[i] = choiceButtons[i].GetComponentInChildren<TextMeshProUGUI>();
         }
 
+        playerIcon = Resources.Load<Sprite>("Icon/PlayerIcon");
     }
 
     private void DisplayChoices() 
@@ -99,6 +102,7 @@ public class DialogueManager : MonoBehaviour
         {
             dialogueText.text = currentDialogue_NPC.Continue();
             DisplayChoices();
+            ParseTags();
         }
         else
             ExitDialogueMode();
@@ -117,6 +121,30 @@ public class DialogueManager : MonoBehaviour
 
     }
 
+    void ParseTags()
+    {
+        tags = currentDialogue_NPC.currentTags;
+        foreach (string t in tags)
+        {
+            string prefix = t.Split(' ')[0];
+            string param = t.Split(' ')[1];
+
+            switch (prefix.ToLower())
+            {
+                case "type":
+                    if (param == "player") 
+                    {
+                        SetPlayerIcon();
+                    }
+                    break;
+                default: break;
+            }
+        }
+    }
+    void SetPlayerIcon() 
+    {
+        dialogueIcon.sprite = playerIcon;
+    }
     object ReceiveGeneralEvent(string eventName, bool onlyAllowOnce)
     {
         if (!GeneralEventRecorder.ContainsKey(eventName)) 

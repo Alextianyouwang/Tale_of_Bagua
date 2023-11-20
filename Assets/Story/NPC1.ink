@@ -3,6 +3,10 @@ Hi This is NPC 1,
 this marks our first interaction.
 If you talk to NPC 2,
 you will unlock the second part of our conversation.
+#type player
+Okay
+#type player
+Got it Will do 
 ->DONE
 
 === 1Interaction ===

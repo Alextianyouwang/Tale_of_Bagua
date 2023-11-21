@@ -26,18 +26,29 @@ public class TypeWritter : MonoBehaviour
     }
     IEnumerator WriteText(TextMeshProUGUI textHolder, string stringToWrite, float timePerChar, Func<bool> exitCondition, Action todo) 
     {
-        int charIndex = 0;
         isTyping = true;
+        int charIndex = 0;
         bool canContinue = true;
+        bool isAddingRichTextTag = false;
         float timer = timePerChar;
+        textHolder.text = null;
         while (charIndex < stringToWrite.Length && canContinue) 
         {
+            if (isAddingRichTextTag || stringToWrite[charIndex] == '<')
+                isAddingRichTextTag = true;
+            
+            while (isAddingRichTextTag)
+            {
+                isAddingRichTextTag = stringToWrite[charIndex] != '>';
+                textHolder.text += stringToWrite[charIndex];
+                charIndex++;
+            }
             if (timer > 0)
                 timer -= Time.deltaTime;
             else 
             {
                 timer = timePerChar;
-                textHolder.text = stringToWrite.Substring(0, charIndex);
+                textHolder.text += stringToWrite[charIndex];
                 charIndex++;
             }
             yield return null;

@@ -1,5 +1,5 @@
 === 0Interaction ===
-Hi This is NPC 1,
+Hi This is <color=\#F8FF30>NPC 1</color>,
 this marks our first interaction.
 If you talk to NPC 2,
 you will unlock the second part of our conversation.

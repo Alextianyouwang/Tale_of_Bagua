@@ -8,7 +8,7 @@ HI, i can only say hi.
 HI, i can only say hi.
 -> DONE
 === 3Interaction ===
-HI, i can only say hi. (But I must be able to do something right?)
+HI, i can only say hi. <color=\#F8FF30>(But I must be able to do something right?)</color>
 SYSTEM MESSAGE : You have experienced all possible interactions with this NPC.
 -> DONE
 === Fallback ===

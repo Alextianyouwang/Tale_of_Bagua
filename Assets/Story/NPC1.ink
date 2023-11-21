@@ -7,6 +7,7 @@ you will unlock the second part of our conversation.
 Okay
 #type player
 Got it Will do 
+:)
 ->DONE
 
 === 1Interaction ===

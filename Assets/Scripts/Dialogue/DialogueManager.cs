@@ -13,6 +13,7 @@ public class DialogueManager : MonoBehaviour
     private bool isDialoguePlaying = false;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private Image dialogueIcon ;
+    [SerializeField] private Image dialogueContinue;
     private Story currentDialogue_NPC;
     public Func<string,bool,object> OnGeneralEventCalled;
     public static Action<string> OnGeneralEventCalledGlobal;
@@ -22,9 +23,11 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject[] choiceButtons;
     private TextMeshProUGUI[] choicesText;
 
-    public static Action<TextMeshProUGUI, string> OnRequestTyping;
+    public static Action<TextMeshProUGUI, string,Action> OnRequestTyping;
     public static Func<bool> OnCheckingTypingState;
     private Sprite playerIcon;
+
+    [SerializeField] private Animator iconAnimator;
     private void OnEnable()
     {
         PlayerInteract.OnPlayDialogue += EnterDialogueMode;
@@ -79,10 +82,8 @@ public class DialogueManager : MonoBehaviour
             PlayerMove.canUseWASD = false;
             MirrorManager.canUseLeftClick = false;
             MirrorManager.canUseRightClick = false;
-            dialogueIcon.sprite = icon;
             currentDialogue_NPC = new Story(inkJson_NPC.text);
             currentDialogue_NPC.BindExternalFunction("GeneralEvent",  OnGeneralEventCalled);
-           
             PlayerInteract.currentNPC.UpdateInteractionBeforePrint();
             print("Current dialogue:" + PlayerInteract.currentNPC.name + " interaction " + PlayerInteract.currentNPC.interactionCounter);
             try
@@ -95,16 +96,18 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
+        iconAnimator.SetBool("ShowOnRight", false);
+        dialogueIcon.sprite = icon;
         ContinueDialogue();
     }
 
     void ContinueDialogue() 
     {
-
         if (currentDialogue_NPC.canContinue)
         {
+            dialogueContinue.gameObject.SetActive(false);
             if (!OnCheckingTypingState())
-                 OnRequestTyping?.Invoke(dialogueText, currentDialogue_NPC.Continue());
+                 OnRequestTyping?.Invoke(dialogueText, currentDialogue_NPC.Continue(),() => dialogueContinue.gameObject.SetActive(true));
             DisplayChoices();
             ParseTags();
         }
@@ -112,7 +115,28 @@ public class DialogueManager : MonoBehaviour
             if (!OnCheckingTypingState())
                 ExitDialogueMode();
     }
+    void ParseTags()
+    {
+        tags = currentDialogue_NPC.currentTags;
+        foreach (string t in tags)
+        {
+            string prefix = t.Split(' ')[0];
+            string param = t.Split(' ')[1];
 
+            switch (prefix.ToLower())
+            {
+                case "type":
+                    if (param == "player")
+                    {
+                        dialogueIcon.sprite = playerIcon;
+                        iconAnimator.SetBool("ShowOnRight", true);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
     void ExitDialogueMode()
     {
         isDialoguePlaying = false;
@@ -126,30 +150,6 @@ public class DialogueManager : MonoBehaviour
 
     }
 
-    void ParseTags()
-    {
-        tags = currentDialogue_NPC.currentTags;
-        foreach (string t in tags)
-        {
-            string prefix = t.Split(' ')[0];
-            string param = t.Split(' ')[1];
-
-            switch (prefix.ToLower())
-            {
-                case "type":
-                    if (param == "player") 
-                    {
-                        SetPlayerIcon();
-                    }
-                    break;
-                default: break;
-            }
-        }
-    }
-    void SetPlayerIcon() 
-    {
-        dialogueIcon.sprite = playerIcon;
-    }
     object ReceiveGeneralEvent(string eventName, bool onlyAllowOnce)
     {
         if (!GeneralEventRecorder.ContainsKey(eventName)) 

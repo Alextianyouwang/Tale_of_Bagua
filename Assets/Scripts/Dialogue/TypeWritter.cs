@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class TypeWritter : MonoBehaviour
 {
@@ -19,11 +20,11 @@ public class TypeWritter : MonoBehaviour
         DialogueManager.OnCheckingTypingState -= IsTyping;
     }
 
-    void StartTyping(TextMeshProUGUI guiText, string content) 
+    void StartTyping(TextMeshProUGUI guiText, string content,Action todo) 
     {
-        StartCoroutine(WriteText(guiText, content, 0.01f));
+        StartCoroutine(WriteText(guiText, content, 0.01f,todo));
     }
-    IEnumerator WriteText(TextMeshProUGUI textHolder, string stringToWrite, float timePerChar) 
+    IEnumerator WriteText(TextMeshProUGUI textHolder, string stringToWrite, float timePerChar, Action todo) 
     {
         int charIndex = 0;
         isTyping = true;
@@ -34,6 +35,7 @@ public class TypeWritter : MonoBehaviour
             yield return new WaitForSeconds (timePerChar);
         }
         isTyping = false;
+        todo?.Invoke();
     }
     public bool IsTyping() 
     {

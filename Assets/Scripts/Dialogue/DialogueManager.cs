@@ -21,7 +21,10 @@ public class DialogueManager : MonoBehaviour
     private List<string> tags = new List<string>();
     [SerializeField] private GameObject[] choiceButtons;
     private TextMeshProUGUI[] choicesText;
-    Sprite playerIcon;
+
+    public static Action<TextMeshProUGUI, string> OnRequestTyping;
+    public static Func<bool> OnCheckingTypingState;
+    private Sprite playerIcon;
     private void OnEnable()
     {
         PlayerInteract.OnPlayDialogue += EnterDialogueMode;
@@ -81,7 +84,7 @@ public class DialogueManager : MonoBehaviour
             currentDialogue_NPC.BindExternalFunction("GeneralEvent",  OnGeneralEventCalled);
            
             PlayerInteract.currentNPC.UpdateInteractionBeforePrint();
-            print(PlayerInteract.currentNPC.interactionCounter);
+            print("Current dialogue:" + PlayerInteract.currentNPC.name + " interaction " + PlayerInteract.currentNPC.interactionCounter);
             try
             {
                 currentDialogue_NPC.ChoosePathString($"{PlayerInteract.currentNPC.interactionCounter}Interaction");
@@ -100,12 +103,14 @@ public class DialogueManager : MonoBehaviour
 
         if (currentDialogue_NPC.canContinue)
         {
-            dialogueText.text = currentDialogue_NPC.Continue();
+            if (!OnCheckingTypingState())
+                 OnRequestTyping?.Invoke(dialogueText, currentDialogue_NPC.Continue());
             DisplayChoices();
             ParseTags();
         }
         else
-            ExitDialogueMode();
+            if (!OnCheckingTypingState())
+                ExitDialogueMode();
     }
 
     void ExitDialogueMode()

@@ -20,21 +20,31 @@ public class TypeWritter : MonoBehaviour
         DialogueManager.OnCheckingTypingState -= IsTyping;
     }
 
-    void StartTyping(TextMeshProUGUI guiText, string content,Action todo) 
+    void StartTyping(TextMeshProUGUI guiText, string content,Func<bool> exitCondition, Action todo) 
     {
-        StartCoroutine(WriteText(guiText, content, 0.01f,todo));
+        StartCoroutine(WriteText(guiText, content, 0.01f,exitCondition, todo));
     }
-    IEnumerator WriteText(TextMeshProUGUI textHolder, string stringToWrite, float timePerChar, Action todo) 
+    IEnumerator WriteText(TextMeshProUGUI textHolder, string stringToWrite, float timePerChar, Func<bool> exitCondition, Action todo) 
     {
         int charIndex = 0;
         isTyping = true;
-        while (charIndex < stringToWrite.Length) 
+        bool canContinue = true;
+        float timer = timePerChar;
+        while (charIndex < stringToWrite.Length && canContinue) 
         {
-            textHolder.text = stringToWrite.Substring(0, charIndex);
-            charIndex ++;
-            yield return new WaitForSeconds (timePerChar);
+            if (timer > 0)
+                timer -= Time.deltaTime;
+            else 
+            {
+                timer = timePerChar;
+                textHolder.text = stringToWrite.Substring(0, charIndex);
+                charIndex++;
+            }
+            yield return null;
+            canContinue = !exitCondition();
         }
         isTyping = false;
+        textHolder.text = stringToWrite;
         todo?.Invoke();
     }
     public bool IsTyping() 

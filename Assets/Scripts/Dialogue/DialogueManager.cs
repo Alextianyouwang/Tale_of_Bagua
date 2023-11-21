@@ -23,7 +23,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject[] choiceButtons;
     private TextMeshProUGUI[] choicesText;
 
-    public static Action<TextMeshProUGUI, string,Action> OnRequestTyping;
+    public static Action<TextMeshProUGUI, string,Func<bool>,Action> OnRequestTyping;
     public static Func<bool> OnCheckingTypingState;
     private Sprite playerIcon;
 
@@ -107,7 +107,7 @@ public class DialogueManager : MonoBehaviour
         {
             dialogueContinue.gameObject.SetActive(false);
             if (!OnCheckingTypingState())
-                 OnRequestTyping?.Invoke(dialogueText, currentDialogue_NPC.Continue(),() => dialogueContinue.gameObject.SetActive(true));
+                OnRequestTyping?.Invoke(dialogueText, currentDialogue_NPC.Continue(), () => Input.GetKeyDown(KeyCode.Space),() => dialogueContinue.gameObject.SetActive(true));
             DisplayChoices();
             ParseTags();
         }

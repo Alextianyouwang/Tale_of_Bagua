@@ -54,6 +54,8 @@ public class DialogueManager : MonoBehaviour
     private void DisplayChoices() 
     {
         List<Choice> currentChoices = currentDialogue_NPC.currentChoices;
+        if (currentChoices.Count > 0)
+            StartCoroutine(SelectFirstChoice());
         if (currentChoices.Count > choiceButtons.Length)
             Debug.LogError("More choices were given than the UI Could Support");
         int index;
@@ -106,7 +108,8 @@ public class DialogueManager : MonoBehaviour
 
         iconAnimator.SetBool("ShowOnRight", false);
         dialogueIcon.sprite = icon;
-        ContinueDialogue();
+        if (currentDialogue_NPC.currentChoices.Count == 0)
+            ContinueDialogue();
     }
 
     void ContinueDialogue() 
@@ -117,7 +120,6 @@ public class DialogueManager : MonoBehaviour
             if (!OnCheckingTypingState())
                 OnRequestTyping?.Invoke(dialogueText, currentDialogue_NPC.Continue(), () => Input.GetKeyDown(KeyCode.Space),() => dialogueContinue.gameObject.SetActive(true));
             DisplayChoices();
-            StartCoroutine(SelectFirstChoice());
             ParseTags();
         }
         else

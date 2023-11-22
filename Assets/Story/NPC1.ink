@@ -8,7 +8,15 @@ Okay
 #type player
 Got it Will do 
 :)
-->DONE
+* Test Choice 1
+  You chosed 1
+    ->DONE
+* Test Choice 2
+  You chosed 2
+    ->DONE
+* Test Choice 3
+  You chosed 3
+    ->DONE
 
 === 1Interaction ===
 It seems you have somehow overcomed all the side hussle to reaching this stage,

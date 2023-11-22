@@ -6,7 +6,8 @@ using Ink.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Collections;
+using UnityEngine.EventSystems;
 public class DialogueManager : MonoBehaviour
 {
     [SerializeField] private Canvas DialoguePanel;
@@ -67,6 +68,13 @@ public class DialogueManager : MonoBehaviour
         }
 
     }
+
+    public IEnumerator SelectFirstChoice() 
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        yield return null;
+        EventSystem.current.SetSelectedGameObject(choiceButtons[0]);
+    }
     public void MakeChoices(int choiceIndex) 
     {
         currentDialogue_NPC.ChooseChoiceIndex(choiceIndex);
@@ -109,6 +117,7 @@ public class DialogueManager : MonoBehaviour
             if (!OnCheckingTypingState())
                 OnRequestTyping?.Invoke(dialogueText, currentDialogue_NPC.Continue(), () => Input.GetKeyDown(KeyCode.Space),() => dialogueContinue.gameObject.SetActive(true));
             DisplayChoices();
+            StartCoroutine(SelectFirstChoice());
             ParseTags();
         }
         else

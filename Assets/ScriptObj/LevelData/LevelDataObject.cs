@@ -1,4 +1,5 @@
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu (menuName = "TTOBG/LevelObject")]
@@ -6,7 +7,6 @@ public class LevelDataObject : ScriptableObject
 {
     public int HorizontalChunk;
     public int VerticalChunk;
-    //[Header("*Nest vertical inside horizontal when looping to read from this list properly")]
     [SerializeField]
     private bool[] LevelDataArray;
 
@@ -18,5 +18,6 @@ public class LevelDataObject : ScriptableObject
     public void SetLevelDataArray(bool[] value) 
     {
         LevelDataArray = value.ToArray();
+        EditorUtility.SetDirty(this);
     }
 }

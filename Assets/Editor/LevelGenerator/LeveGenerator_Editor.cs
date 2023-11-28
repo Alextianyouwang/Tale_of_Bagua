@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using PlasticPipe.PlasticProtocol.Client.Proxies;
 
 public class LevelGenerator_Editor : EditorWindow
 {
@@ -9,8 +10,9 @@ public class LevelGenerator_Editor : EditorWindow
     private GameObject _levelObj;
     private Material _levelMat;
     private Mesh _levelMesh;
+    private LevelDataObject _levelDataObject;
     private float _levelDepth = 15f, _prev_levelDepth;
-    private string _path, _name;
+    private string _path, _meshName;
     private int _horizontalChunks = 32, _verticalChunks = 18;
 
     private Cell[] _cells;
@@ -45,6 +47,7 @@ public class LevelGenerator_Editor : EditorWindow
     private void OnDisable()
     {
         _levelVisual.RemoveVisualSetup();
+        _levelDataObject = null;
         SceneView.duringSceneGui -= OnSceneGUI;
     }
    
@@ -65,8 +68,8 @@ public class LevelGenerator_Editor : EditorWindow
         EditorUtil.DrawSeparator();
 
 
-        _path = EditorGUILayout.TextField("Save Path", _path == null ? "LevelData" : _path);
-        _name = EditorGUILayout.TextField("Name", _name);
+        _path = EditorGUILayout.TextField("Mesh Save Path", _path == null ? "LevelData" : _path);
+        _meshName = EditorGUILayout.TextField("Mesh Name", _meshName);
 
         EditorUtil.DrawSeparator();
         if (!_levelObj)
@@ -94,8 +97,8 @@ public class LevelGenerator_Editor : EditorWindow
         if (GUILayout.Button("Create Level From Camera View"))
         {
             _levelMesh = _generator.CreateQuad(_generator.GetScreenInWorldSpace(_levelDepth));
-            _levelObj = _generator.CreatePlaneLevel(_name + "_foundation", _levelMesh, _levelMat);
-            SaveMesh(_levelMesh, _path, _name + "_mesh");
+            _levelObj = _generator.CreatePlaneLevel(_meshName + "_foundation", _levelMesh, _levelMat);
+            SaveMesh(_levelMesh, _path, _meshName + "_mesh");
         }
         if (_prev_levelDepth != _levelDepth && _levelObj != null) 
         {
@@ -124,6 +127,7 @@ public class LevelGenerator_Editor : EditorWindow
             if (GUILayout.Button("Create Cells"))
             {
                 _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks, _verticalChunks, 1f);
+                _generator.CreateCheckerPattern(_cells, _horizontalChunks, _verticalChunks);
                 _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5);
                 _levelVisual.UpdateSearchClosestSetup(_cells.Length);
                 _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
@@ -150,12 +154,74 @@ public class LevelGenerator_Editor : EditorWindow
             {
                 //Only Convex collider is supported... need optimization
                 //SaveMesh(_generator.GenerateLevelMesh(_cells), _path, _name + "_levelMesh");
-                _generator.GenerateLevelObject(_cells,_name + "_levelObject");
+                _generator.GenerateLevelObject(_cells,_meshName + "_levelObject");
             }
 
+        GUILayout.FlexibleSpace();
+        if (_cells != null && _canEditCells) 
+        {
+            if (GUILayout.Button("Save to Level Container"))
+            {
+                SaveLevelData();
+            }
+            if (GUILayout.Button("Load from Level Container"))
+            {
+                LoadLevelData();
+                _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5);
+                _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+            }
+            _levelDataObject = (LevelDataObject)EditorGUILayout.ObjectField("Level Data Container", _levelDataObject, typeof(LevelDataObject), false);
+        }
+    
 
+        _prev_levelDepth = _levelDepth;
+    }
 
-     _prev_levelDepth = _levelDepth;
+    private void SaveLevelData() 
+    {
+        if (!_levelDataObject) 
+        {
+            Debug.LogWarning("No Level Data Object Assigned");
+            return;
+        }
+     
+        bool[] value = new bool[_horizontalChunks* _verticalChunks];
+        for (int i = 0; i < _horizontalChunks; i++) 
+        {
+            for (int j = 0; j < _verticalChunks; j++) 
+            {
+               value[i * _verticalChunks + j] = _cells[i * _verticalChunks + j].isActive;
+            }
+        }
+        _levelDataObject.SetLevelDataArray(value);
+        _levelDataObject.HorizontalChunk = _horizontalChunks;
+        _levelDataObject.VerticalChunk = _verticalChunks;
+        Debug.Log($"Level Data Saved to {_levelDataObject.name}");
+    }
+    private void LoadLevelData() 
+    {
+        if (!_levelDataObject)
+        {
+            Debug.LogWarning("No Level Data Object Assigned");
+            return;
+        }
+        if (_levelDataObject.GetLevelDataArray() == null)
+        {
+            Debug.LogWarning("Level Data Array has value of Null");
+            return;
+        }
+        _horizontalChunks = _levelDataObject.HorizontalChunk;
+        _verticalChunks = _levelDataObject.VerticalChunk;
+        _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks,_verticalChunks, 1f);
+        for (int i = 0; i < _horizontalChunks; i++)
+        {
+            for (int j = 0; j < _verticalChunks; j++)
+            {
+                _cells[i * _verticalChunks + j].isActive =  _levelDataObject.GetLevelDataArray()[i * _verticalChunks + j];
+            }
+        }
+        Debug.Log($"Level Data Loaded from {_levelDataObject.name}");
+
     }
     private void OnSceneGUI(SceneView sceneView) 
     {

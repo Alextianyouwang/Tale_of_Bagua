@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using PlasticPipe.PlasticProtocol.Client.Proxies;
+using System.Linq;
 
 public class LevelGenerator_Editor : EditorWindow
 {
@@ -79,7 +80,7 @@ public class LevelGenerator_Editor : EditorWindow
 
         if (_levelObj && !_levelObj.GetComponent<MeshRenderer>())
             return;
-        if (_levelObj && _levelObj.GetComponent<MeshFilter>() && _levelObj.GetComponent<MeshFilter>().sharedMesh.vertexCount == 4)
+        if (_levelObj && _levelObj.GetComponent<MeshFilter>() && _levelObj.GetComponent<MeshFilter>().sharedMesh&& _levelObj.GetComponent<MeshFilter>().sharedMesh.vertexCount == 4)
             _levelMesh = _levelObj.GetComponent<MeshFilter>().sharedMesh;
 
         if (!_levelObj)
@@ -127,7 +128,6 @@ public class LevelGenerator_Editor : EditorWindow
             if (GUILayout.Button("Create Cells"))
             {
                 _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks, _verticalChunks, 1f);
-                _generator.CreateCheckerPattern(_cells, _horizontalChunks, _verticalChunks);
                 _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5);
                 _levelVisual.UpdateSearchClosestSetup(_cells.Length);
                 _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
@@ -184,16 +184,7 @@ public class LevelGenerator_Editor : EditorWindow
             Debug.LogWarning("No Level Data Object Assigned");
             return;
         }
-     
-        bool[] value = new bool[_horizontalChunks* _verticalChunks];
-        for (int i = 0; i < _horizontalChunks; i++) 
-        {
-            for (int j = 0; j < _verticalChunks; j++) 
-            {
-               value[i * _verticalChunks + j] = _cells[i * _verticalChunks + j].isActive;
-            }
-        }
-        _levelDataObject.SetLevelDataArray(value);
+        _levelDataObject.SetLevelDataArray(_cells.Select(x=>x.isActive).ToArray());
         _levelDataObject.HorizontalChunk = _horizontalChunks;
         _levelDataObject.VerticalChunk = _verticalChunks;
         Debug.Log($"Level Data Saved to {_levelDataObject.name}");
@@ -213,15 +204,13 @@ public class LevelGenerator_Editor : EditorWindow
         _horizontalChunks = _levelDataObject.HorizontalChunk;
         _verticalChunks = _levelDataObject.VerticalChunk;
         _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks,_verticalChunks, 1f);
-        for (int i = 0; i < _horizontalChunks; i++)
+        int index = 0;
+        foreach (bool b in _levelDataObject.GetLevelDataArray()) 
         {
-            for (int j = 0; j < _verticalChunks; j++)
-            {
-                _cells[i * _verticalChunks + j].isActive =  _levelDataObject.GetLevelDataArray()[i * _verticalChunks + j];
-            }
+            _cells[index].isActive = b;
+            index++;
         }
         Debug.Log($"Level Data Loaded from {_levelDataObject.name}");
-
     }
     private void OnSceneGUI(SceneView sceneView) 
     {

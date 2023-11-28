@@ -35,8 +35,9 @@ public class LevelGenerator_Editor : EditorWindow
         _generator.Cam = FindObjectOfType<Camera>();
         if (!_generator.Cam)
             Debug.LogError("No Camera Detected");
+        _generator.SetupCamera();
 
-       _levelVisual.PrepareVisualSetup(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+        _levelVisual.PrepareVisualSetup(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
         SceneView.duringSceneGui += OnSceneGUI;
     }
 
@@ -138,7 +139,7 @@ public class LevelGenerator_Editor : EditorWindow
             {
                 _canEditCells = true;
                 foreach (Cell c in _cells)
-                    c.isActive = true;
+                    c.isActive = false;
                 _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
             }
             GUI.enabled = true;
@@ -189,9 +190,9 @@ public class LevelGenerator_Editor : EditorWindow
             if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 1)
             {
 
-                selected.isActive = e.alt;
+                selected.isActive = !(e.alt);
           
-                _levelVisual.TogglePaintAndErase(e.alt ? 0 : 1);
+                _levelVisual.TogglePaintAndErase(e.alt ? 1 : 0);
                 if (e.shift) 
                     _levelVisual.UpdateSearchClosestPerFrame(hit.point, _cells);
                 _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);

@@ -6,6 +6,17 @@ public class LevelGenerator
 {
     public Camera Cam { get; set; }
 
+    public void SetupCamera()
+    {
+        Cam.transform.position =  new Vector3(0f,15f,0f);
+        Cam.transform.rotation = Quaternion.Euler(90, 0, 0);
+        Cam.transform.localScale = Vector3.one;
+        Cam.nearClipPlane = 0.01f;
+        Cam.farClipPlane = 30f;
+        Cam.fieldOfView = 34;
+    }
+
+
     public Vector3[] GetScreenInWorldSpace(float depth)
     {
         Vector3[] corners = new Vector3[4];

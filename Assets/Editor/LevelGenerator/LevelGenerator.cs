@@ -1,10 +1,24 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Codice.Client.Common;
+using static UnityEngine.Rendering.HableCurve;
+using UnityEngine.UIElements;
 
 
 public class LevelGenerator
 {
     public Camera Cam { get; set; }
+
+    public void SetupCamera()
+    {
+        Cam.transform.position =  new Vector3(0f,15f,0f);
+        Cam.transform.rotation = Quaternion.Euler(90, 0, 0);
+        Cam.transform.localScale = Vector3.one;
+        Cam.nearClipPlane = 0.01f;
+        Cam.farClipPlane = 30f;
+        Cam.fieldOfView = 34;
+    }
+
 
     public Vector3[] GetScreenInWorldSpace(float depth)
     {
@@ -70,22 +84,18 @@ public class LevelGenerator
                 cells[i * y + j] = new Cell(pos,new Vector3 (xLength,height ,yLength));
                 cells[i * y + j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2f, ySegment * j + ySegment / 2f), new Vector2(xSegment, ySegment));
 
-                //Checker Pattern
                 cells[i * y + j].SetActive(j % 2 == 0 ? true : false);
-                cells[i * y + j].SetActive(i % 2 == 0 ? cells[i * y + j].isActive : cells[i * y + j].isActive ? false : true);
-
+                cells[i * y + j].SetActive(i % 2 == 0 ? cells[i * y + j].isActive : !cells[i * y + j].isActive);
             } 
         }
         return cells;
     }
-
-    public Cell[] AdjustCellData(Cell[] input,int x, int y, Mesh platform , float height) 
+    public Cell[] AdjustCellData(Cell[] input,int x, int y, Mesh platform , float height)
     {
         float xSegment = 1f / x;
         float ySegment = 1f / y;
         float xLength = platform.bounds.size.x / x;
         float yLength = platform.bounds.size.z / y;
- 
         Vector3 offset = -new Vector3(platform.bounds.size.x - xLength, 0, platform.bounds.size.z - yLength) / 2;
 
         for (int i = 0; i < x; i++)

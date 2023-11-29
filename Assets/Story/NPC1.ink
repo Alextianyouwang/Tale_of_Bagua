@@ -1,5 +1,5 @@
 === 0Interaction ===
-Hi This is NPC 1,
+Hi This is <color=\#F8FF30>NPC 1</color>,
 this marks our first interaction.
 If you talk to NPC 2,
 you will unlock the second part of our conversation.
@@ -7,7 +7,16 @@ you will unlock the second part of our conversation.
 Okay
 #type player
 Got it Will do 
-->DONE
+:)
+* Test Choice 1
+  You chosed 1
+    ->DONE
+* Test Choice 2
+  You chosed 2
+    ->DONE
+* Test Choice 3
+  You chosed 3
+    ->DONE
 
 === 1Interaction ===
 It seems you have somehow overcomed all the side hussle to reaching this stage,

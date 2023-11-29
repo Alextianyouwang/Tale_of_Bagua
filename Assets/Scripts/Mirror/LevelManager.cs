@@ -6,6 +6,7 @@ using System.Linq;
 
 public class LevelManager : MonoBehaviour
 {
+    public bool enableMirrorAtStart = false;
     public LayerMask mirrorMask,obstacleMask;
     public List<Level> levels = new List<Level>();
     private Level currentLevel,lastLevel,nextLevel;
@@ -29,7 +30,7 @@ public class LevelManager : MonoBehaviour
         allMirrors = FindObjectsOfType<Mirror>();
         foreach (var mirror in allMirrors) 
         {
-            mirror.gameObject.SetActive(false);
+            mirror.gameObject.SetActive(enableMirrorAtStart);
          }
         OnShareAllMirror?.Invoke(allMirrors);
     }

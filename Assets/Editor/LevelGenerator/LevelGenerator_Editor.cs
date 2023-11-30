@@ -237,7 +237,7 @@ public class LevelGenerator_Editor : EditorWindow
             float r = Mathf.Sqrt(_levelMesh.bounds.size.x * _levelMesh.bounds.size.z / 10f / Mathf.PI);
             float handleRadius = e.shift ? r : Mathf.Max(selected.size.x/2f, selected.size.z/2f);
             _levelVisual.SetPaintRadius(r);
-            Handles.color = e.alt ? Color.red : Color.green;
+            Handles.color = e.alt ? Color.green : Color.red;
             Handles.DrawWireDisc(hit.point, hit.normal, handleRadius);
 
             Handles.color = Color.blue;
@@ -253,13 +253,6 @@ public class LevelGenerator_Editor : EditorWindow
                 _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
 
                 e.Use();
-            }
-            if (e.type == EventType.KeyDown)
-            {
-                if (e.control && e.keyCode == KeyCode.Z)
-                {
-                    e.Use();
-                }
             }
         }
     }

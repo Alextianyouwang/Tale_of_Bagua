@@ -153,8 +153,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 16.305202, y: 0, z: 9.171677}
-  m_Center: {x: 0, y: -0.0000019073486, z: -0.00000166893}
+  m_Size: {x: 30.792006, y: 0.0000019073486, z: 17.3205}
+  m_Center: {x: 0, y: -0.0000019073486, z: -0.00000047683716}
 --- !u!23 &1875319286
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -270,9 +270,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.01
-  far clip plane: 30
-  field of view: 34
+  near clip plane: 0.3
+  far clip plane: 20
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

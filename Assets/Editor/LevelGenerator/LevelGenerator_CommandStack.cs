@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public interface ICommand 
 {
@@ -23,6 +24,17 @@ public class LevelGenerator_MouseDragAction : ICommand
         }
         currentCell.isActive = value;
 
+    }
+    public bool ChangeMade() 
+    {
+        int index = 0;
+        foreach (bool original in originalState) 
+        {
+            if (newState[index] != original)
+                return true;
+            index++;
+        }
+        return false;
     }
 
     public void Undo() 

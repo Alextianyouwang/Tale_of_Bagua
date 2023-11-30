@@ -277,7 +277,6 @@ public class LevelGenerator_Editor : EditorWindow
             {
                 _isMouseDown = true;
                 _currentAction = new LevelGenerator_MouseDragAction();
-                _commandStack.RecordAction(_currentAction);
                 _commandStack.ClearRedoStack();
             }
             if (e.shift)
@@ -298,6 +297,8 @@ public class LevelGenerator_Editor : EditorWindow
         }
         if ((e.type == EventType.MouseUp) && e.button == 1)
         {
+            if (_currentAction.ChangeMade())
+            _commandStack.RecordAction(_currentAction);
             _isMouseDown = false;
             _currentAction = null;
             e.Use();

@@ -39,10 +39,7 @@ public class LevelGenerator_Visual
         _levelVisual_cs.Dispatch(0, Mathf.CeilToInt(texWidth / 10), Mathf.CeilToInt(texHeight / 10), 1);
     }
 
-    public void SetPaintRadius(float value) 
-    {
-        _levelVisual_cs.SetFloat("_radius", value);
-    }
+
 
     public void UpdateSearchClosestSetup(int count)
     {
@@ -55,19 +52,8 @@ public class LevelGenerator_Visual
     {
         _levelVisual_cs.SetFloat("_erase", value);
     }
-    public void UpdateSearchClosestPerFrame(Vector3 cursorPos, Cell[] cells)
-    {
-        _levelFindClosest_buffer.SetData(cells.Select(x => x.cellStruct_WS).ToArray(), 0, 0, cells.Length);
-        _levelVisual_cs.SetBuffer(1, "_CellBuffer_WS", _levelFindClosest_buffer);
-        _levelVisual_cs.SetVector("_cursorPos", cursorPos);
-        _levelVisual_cs.Dispatch(1, Mathf.CeilToInt(cells.Length / 32), 1, 1);
 
-        CellWorldSpace[] data = new CellWorldSpace[cells.Length];
-        _levelFindClosest_buffer.GetData(data);
 
-        for (int i = 0; i < cells.Length; i++)
-            cells[i].isActive = data[i].isActive == 0 ? false : true;
-    }
     public void RemoveSearchClosestSetup() 
     {
         if (_levelFindClosest_buffer != null)
@@ -80,6 +66,23 @@ public class LevelGenerator_Visual
         _levelVisual_tex.Release();
 
         RemoveSearchClosestSetup();
+
+    }
+
+    // Cannot use Compute shader to paint cells since it is hard to support Undo...
+    public void SetPaintRadius(float value)
+    {
+        _levelVisual_cs.SetFloat("_radius", value);
+    }
+    public void UpdateSearchClosestPerFrame(Vector3 cursorPos, Cell[] cells, out CellWorldSpace[] data)
+    {
+        _levelFindClosest_buffer.SetData(cells.Select(x => x.cellStruct_WS).ToArray(), 0, 0, cells.Length);
+        _levelVisual_cs.SetBuffer(1, "_CellBuffer_WS", _levelFindClosest_buffer);
+        _levelVisual_cs.SetVector("_cursorPos", cursorPos);
+        _levelVisual_cs.Dispatch(1, Mathf.CeilToInt(cells.Length / 32), 1, 1);
+
+        data = new CellWorldSpace[cells.Length];
+        _levelFindClosest_buffer.GetData(data);
 
     }
 }

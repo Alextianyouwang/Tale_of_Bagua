@@ -4,6 +4,8 @@ using UnityEditor;
 using System.IO;
 using PlasticPipe.PlasticProtocol.Client.Proxies;
 using System.Linq;
+using static Cell;
+using Codice.Client.Common.FsNodeReaders;
 
 public class LevelGenerator_Editor : EditorWindow
 {
@@ -21,6 +23,10 @@ public class LevelGenerator_Editor : EditorWindow
     private LevelGenerator_Visual _levelVisual;
 
     private bool _canEditCells = false;
+    private bool _isMouseDown = false;
+
+    private LevelGenerator_CommandStack _commandStack;
+    private LevelGenerator_MouseDragAction _currentAction;
     [MenuItem("Tool/Level Generator")]
     public static void ShowWindow()
     {
@@ -33,6 +39,7 @@ public class LevelGenerator_Editor : EditorWindow
     {
         _levelVisual = new LevelGenerator_Visual();
         _generator = new LevelGenerator();
+        _commandStack = new LevelGenerator_CommandStack();
 
         _levelMat = EditorUtil.GetObject<Material>("M_LevelTemplate.mat");
         _generator.Cam = FindObjectOfType<Camera>();
@@ -139,7 +146,7 @@ public class LevelGenerator_Editor : EditorWindow
         if (_cells != null) 
         {
             GUI.enabled = !_canEditCells;
-            if (GUILayout.Button(_canEditCells? "Paint: RMB    Erase: Alt + RMB    Enlarge: Shift": "Edit Cells"    ))
+            if (GUILayout.Button(_canEditCells? "Paint: RMB    Erase: Alt + RMB    Enlarge: Shift    Ctrl+Z: Undo    Ctrl+Y: Redo" : "Edit Cells"    ))
             {
                 _canEditCells = true;
                 foreach (Cell c in _cells)
@@ -218,8 +225,29 @@ public class LevelGenerator_Editor : EditorWindow
             return;
         RaycastHit hit = EditorUtil. EditorClickSceneObject(sceneView);
         UpdateCellActivationVisual(hit);
+        HandingUndoRedo();
     }
 
+    private void HandingUndoRedo() 
+    {
+        Event e = Event.current;
+        if (e.type == EventType.KeyDown && e.control && e.keyCode == KeyCode.Z)
+        {
+            e.Use();
+            if (_isMouseDown)
+                return;
+            _commandStack.UndoAction();
+            _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+        }
+        else if (e.type == EventType.KeyDown && e.control && e.keyCode == KeyCode.Y) 
+        {
+            e.Use();
+            if (_isMouseDown)
+                return;
+            _commandStack.RedoAction();
+            _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+        }
+    }
     private void UpdateCellActivationVisual(RaycastHit hit) 
     {
         if (!hit.transform)
@@ -231,36 +259,49 @@ public class LevelGenerator_Editor : EditorWindow
         Cell selected = null;
         if (_cells != null)
             selected = _generator.GetSelectedCell(_cells, hit.point);
-      
-        if (selected != null)
+
+        if (selected == null)
+            return;
+
+        float r = Mathf.Sqrt(_levelMesh.bounds.size.x * _levelMesh.bounds.size.z / 10f / Mathf.PI);
+        float handleRadius = e.shift ? r : Mathf.Max(selected.size.x / 2f, selected.size.z / 2f);
+        Handles.color = e.alt ? Color.red : Color.green;
+        Handles.DrawWireDisc(hit.point, hit.normal, handleRadius);
+
+        Handles.color = Color.blue;
+        Handles.DrawWireCube(selected.position + selected.size.y / 2 * Vector3.up, selected.size);
+
+        if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 1)
         {
-            float r = Mathf.Sqrt(_levelMesh.bounds.size.x * _levelMesh.bounds.size.z / 10f / Mathf.PI);
-            float handleRadius = e.shift ? r : Mathf.Max(selected.size.x/2f, selected.size.z/2f);
-            _levelVisual.SetPaintRadius(r);
-            Handles.color = e.alt ? Color.red : Color.green;
-            Handles.DrawWireDisc(hit.point, hit.normal, handleRadius);
 
-            Handles.color = Color.blue;
-            Handles.DrawWireCube(selected.position + selected.size.y/2 * Vector3.up, selected.size);
-            if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 1)
+            if (!_isMouseDown)
             {
-
-                selected.isActive = !(e.alt);
-          
-                _levelVisual.TogglePaintAndErase(e.alt ? 1 : 0);
-                if (e.shift) 
-                    _levelVisual.UpdateSearchClosestPerFrame(hit.point, _cells);
-                _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
-
-                e.Use();
+                _isMouseDown = true;
+                _currentAction = new LevelGenerator_MouseDragAction();
+                _commandStack.RecordAction(_currentAction);
+                _commandStack.ClearRedoStack();
             }
-            if (e.type == EventType.KeyDown)
+            if (e.shift)
             {
-                if (e.control && e.keyCode == KeyCode.Z)
-                {
-                    e.Use();
-                }
+                Cell[] cellInRadius = _generator.GetCellsInRadius(_cells, hit.point, r);
+                foreach (Cell c in cellInRadius)
+                    _currentAction.Execute(c, !e.alt);
             }
+            else
+                _currentAction.Execute(selected, !e.alt);
+
+
+            _levelVisual.TogglePaintAndErase(e.alt ? 1 : 0);
+            _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+
+            e.Use();
+
+        }
+        if ((e.type == EventType.MouseUp) && e.button == 1)
+        {
+            _isMouseDown = false;
+            _currentAction = null;
+            e.Use();
         }
     }
 

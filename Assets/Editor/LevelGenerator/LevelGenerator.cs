@@ -125,6 +125,19 @@ public class LevelGenerator
         }
         return closestCell;
     }
+    public Cell[] GetCellsInRadius(Cell[] cells, Vector3 pos, float radius) 
+    {
+        List<Cell> selected = new List<Cell>();
+
+        foreach (Cell c in cells) 
+        {
+            float dist = Vector3.Distance(pos, c.position);
+            if (dist <= radius && !selected.Contains(c)) 
+                selected.Add(c);
+            
+        }
+        return selected.ToArray();
+    }
 
     public Mesh GenerateLevelMesh(Cell[] cells) 
     {
@@ -170,8 +183,6 @@ public class LevelGenerator
         return level;
     }
 }
-
-
 
 public class Cell
 {

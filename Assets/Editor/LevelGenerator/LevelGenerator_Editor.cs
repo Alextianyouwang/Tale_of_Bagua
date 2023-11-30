@@ -2,10 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using PlasticPipe.PlasticProtocol.Client.Proxies;
 using System.Linq;
-using static Cell;
-using Codice.Client.Common.FsNodeReaders;
 
 public class LevelGenerator_Editor : EditorWindow
 {
@@ -138,6 +135,8 @@ public class LevelGenerator_Editor : EditorWindow
                 _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5);
                 _levelVisual.UpdateSearchClosestSetup(_cells.Length);
                 _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+                _currentAction = null;
+                _commandStack = new LevelGenerator_CommandStack();
                 _canEditCells = false;
             }
 

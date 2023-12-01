@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Linq;
+using static Codice.Client.BaseCommands.Import.Commit;
 
 public class LevelGenerator_Editor : EditorWindow
 {
@@ -160,7 +161,20 @@ public class LevelGenerator_Editor : EditorWindow
             {
                 //Only Convex collider is supported... need optimization
                 //SaveMesh(_generator.GenerateLevelMesh(_cells), _path, _name + "_levelMesh");
-                _generator.GenerateLevelObject(_cells,_meshName + "_levelObject");
+                LevelGenerator_ChunkOptimizer optimizer = new LevelGenerator_ChunkOptimizer(_cells,_horizontalChunks,_verticalChunks);
+                optimizer.SetupUtilityCell();
+                /*foreach (UtilityCell c in optimizer.GetUtilityCell(1, 0).GetAllNeighbor())
+                {
+
+                    if (c != null)
+                    {
+                        Handles.DrawSolidDisc(c.GetCell().position, Vector3.up, 0.5f);
+                        Debug.Log(c.GetCell().position);
+                    }
+
+                }*/
+                _generator.GenerateLevelObject(optimizer.GetAllUtilityCells().Select(x => x != null? x.GetCell() : null).ToArray(),_meshName + "_levelObject");
+               // optimizer.PackCells();
             }
 
         GUILayout.FlexibleSpace();

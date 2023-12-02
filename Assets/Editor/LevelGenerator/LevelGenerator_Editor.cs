@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Linq;
-using static Codice.Client.BaseCommands.Import.Commit;
 
 public class LevelGenerator_Editor : EditorWindow
 {

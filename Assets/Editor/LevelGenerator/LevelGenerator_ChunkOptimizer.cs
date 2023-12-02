@@ -53,8 +53,6 @@ public class LevelGenerator_ChunkOptimizer
         {
             if (c == null)
                 continue;
-            if (c.GetVisitedState())
-                continue;
 
             CellPack newPack = new CellPacker(c, this).CreateCellPack();
             _cellPacks.Add(newPack);
@@ -82,16 +80,10 @@ public class CellPack
         _dimension = dimension;
         _origin = origin;
         _containedCells = containedCells;
-        SetVisitedToTrue();
     }
     public UtilityCell[] GetContainedCells() 
     {
         return _containedCells;
-    }
-    public void SetVisitedToTrue() 
-    {
-        foreach (UtilityCell c in _containedCells)
-            c.SetVisitedState(true);
     }
 
     public Vector3 GetLocalScale() 
@@ -217,7 +209,6 @@ public class CellPacker
 public class UtilityCell
 {
     private Cell _cell;
-    private bool hasBeenVisited = false;
     // 0,1,2,3 => Top,Right,Bottom,Left
     private UtilityCell[] neighbors;
 
@@ -239,15 +230,6 @@ public class UtilityCell
     public UtilityCell[] GetAllNeighbor() 
     {
         return neighbors;
-    }
-
-    public void SetVisitedState(bool value) 
-    {
-        hasBeenVisited = value;
-    }
-    public bool GetVisitedState() 
-    {
-        return hasBeenVisited;
     }
     public Cell GetCell() 
     {

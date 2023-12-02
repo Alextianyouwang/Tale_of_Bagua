@@ -30,19 +30,10 @@ public class LevelGenerator_ChunkOptimizer
                 UtilityCell currentUtilityCell = _utilityCells[x * _vertical + y];
                 if (currentUtilityCell == null)
                     continue;
-                UtilityCell topNeighbor = (y + 1) < _vertical? _utilityCells[x * _vertical + y + 1] : null;
-                UtilityCell rightNeighbor = (x + 1) < _horizontal ? _utilityCells[(x+1) * _vertical + y] : null;
-                UtilityCell botNeighbor = (y - 1) >= 0 ? _utilityCells[x * _vertical + y - 1] : null;
-                UtilityCell leftNeighbor = (x - 1) >= 0 ? _utilityCells[(x - 1) * _vertical + y] : null;
-                if (topNeighbor != null)
-                    currentUtilityCell.SetNeighbors(topNeighbor.GetCell().isActive ? topNeighbor : null, 0);
-                if (rightNeighbor != null)
-                    currentUtilityCell.SetNeighbors(rightNeighbor.GetCell().isActive ? rightNeighbor : null, 1);
-                if (botNeighbor != null)
-                    currentUtilityCell.SetNeighbors(botNeighbor.GetCell().isActive ? botNeighbor : null, 2);
-                if (leftNeighbor != null)
-                    currentUtilityCell.SetNeighbors(leftNeighbor.GetCell().isActive ? leftNeighbor : null, 3);
-              
+                currentUtilityCell.SetNeighbors((y + 1) < _vertical ? _utilityCells[x * _vertical + y + 1] : null, 0);
+                currentUtilityCell.SetNeighbors((x + 1) < _horizontal ? _utilityCells[(x + 1) * _vertical + y] : null, 1);
+                currentUtilityCell.SetNeighbors((y - 1) >= 0 ? _utilityCells[x * _vertical + y - 1] : null, 2);
+                currentUtilityCell.SetNeighbors((x - 1) >= 0 ? _utilityCells[(x - 1) * _vertical + y] : null, 3);
             }
         }
     }
@@ -99,15 +90,13 @@ public class CellPack
         Vector3 packedCellSize = new Vector3(size.x * _dimension.x, 0, size.z * _dimension.y);
         return _origin.GetCell().position - new Vector3(_origin.GetCell().size.x / 2, 0, _origin.GetCell().size.z / 2) + packedCellSize / 2 + Vector3.up * size.y/2;
     }
-    public Vector2Int GetDimension () { return _dimension; }
- 
 }
 public class CellPacker
 {
     public UtilityCell CrystalizationPoint;
     private Vector2Int _c_pointIndex;
     public LevelGenerator_ChunkOptimizer Optimizer;
-    public List<List<UtilityCell>> RightPropergatedCells = new List<List<UtilityCell>>();
+    public List<UtilityCell> RectPivots = new List<UtilityCell>();
 
     public CellPacker(UtilityCell point, LevelGenerator_ChunkOptimizer optimizer)
     {
@@ -116,48 +105,35 @@ public class CellPacker
         Optimizer = optimizer;
     }
 
-    public void PropergateToRight() 
+    public void FindingPotentialPivots() 
     {
         UtilityCell rightNeighbor = CrystalizationPoint;
         while (rightNeighbor != null)
         {
-            List<UtilityCell> topStackingCells = new List<UtilityCell>();
-            RightPropergatedCells.Add(topStackingCells);
             UtilityCell topNeighbor = rightNeighbor;
             while (topNeighbor != null)
             {
-                topStackingCells.Add(topNeighbor);
+                if (topNeighbor.GetNeighbor(0) == null)
+                    RectPivots.Add(topNeighbor);
                 topNeighbor = topNeighbor.GetNeighbor(0);
             }
             rightNeighbor = rightNeighbor.GetNeighbor(1);
-           
         }
     }
  
     public UtilityCell[] DefineRectCorners() 
-    {
-        List<UtilityCell> cornerCells = new List<UtilityCell>();
-        foreach (List<UtilityCell> cList in RightPropergatedCells)
-            cornerCells.Add(cList[cList.Count-1]);
-                         
-        for (int i = 0; i < cornerCells.Count; i++) 
-            while (CellHasEmptyOnBotLeft(cornerCells[i]) && cornerCells[i].GetCell().index.x != 0)
-                cornerCells[i] = cornerCells[i].GetNeighbor(2);
-
-        return cornerCells.Distinct().ToArray();
+    {  
+        for (int i = 0; i < RectPivots.Count; i++) 
+            while (CellHasEmptyOnBotLeft(RectPivots[i]) && RectPivots[i].GetCell().index.x != 0)
+                RectPivots[i] = RectPivots[i].GetNeighbor(2);
+        return RectPivots.Distinct().ToArray();
     }
     private bool CellHasEmptyOnBotLeft(UtilityCell uc)
     {
         for (int i = uc.GetCell().index.x; i >= _c_pointIndex.x; i--)
-        {
             for (int j = uc.GetCell().index.y; j >= _c_pointIndex.y; j--)
-            {
-                UtilityCell current = Optimizer.GetUtilityCell(i, j);
-                if (current == null)
+                if (Optimizer.GetUtilityCell(i, j) == null)
                     return true;
-            }
-        }
-
         return false;
     }
     public UtilityCell[] GetContainedCells(UtilityCell uc) 
@@ -197,11 +173,10 @@ public class CellPacker
     }
     public CellPack CreateCellPack() 
     {
-        PropergateToRight();
+        FindingPotentialPivots();
         UtilityCell[] corners = DefineRectCorners();
         UtilityCell largest = GetLargestCorner(corners);
         UtilityCell[] containedCells = GetContainedCells(largest);
-
         return new CellPack(GetDimension(largest), CrystalizationPoint, containedCells);
     }
 

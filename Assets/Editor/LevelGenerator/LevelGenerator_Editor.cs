@@ -163,18 +163,7 @@ public class LevelGenerator_Editor : EditorWindow
                 //SaveMesh(_generator.GenerateLevelMesh(_cells), _path, _name + "_levelMesh");
                 LevelGenerator_ChunkOptimizer optimizer = new LevelGenerator_ChunkOptimizer(_cells,_horizontalChunks,_verticalChunks);
                 optimizer.SetupUtilityCell();
-                /*foreach (UtilityCell c in optimizer.GetUtilityCell(1, 0).GetAllNeighbor())
-                {
-
-                    if (c != null)
-                    {
-                        Handles.DrawSolidDisc(c.GetCell().position, Vector3.up, 0.5f);
-                        Debug.Log(c.GetCell().position);
-                    }
-
-                }*/
-                //_generator.GenerateLevelObject(optimizer.GetAllUtilityCells().Select(x => x != null? x.GetCell() : null).ToArray(),_meshName + "_levelObject");
-               optimizer.PackCells();
+                _generator.GeneratePackedLevel(optimizer.PackCells(), _meshName + "_levelObject");
             }
 
         GUILayout.FlexibleSpace();

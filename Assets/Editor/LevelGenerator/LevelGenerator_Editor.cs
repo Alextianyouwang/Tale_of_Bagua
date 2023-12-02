@@ -161,10 +161,9 @@ public class LevelGenerator_Editor : EditorWindow
             {
                 //Only Convex collider is supported... need optimization
                 //SaveMesh(_generator.GenerateLevelMesh(_cells), _path, _name + "_levelMesh");
-               /* LevelGenerator_ChunkOptimizer optimizer = new LevelGenerator_ChunkOptimizer(_cells,_horizontalChunks,_verticalChunks);
+                LevelGenerator_ChunkOptimizer optimizer = new LevelGenerator_ChunkOptimizer(_cells, _horizontalChunks, _verticalChunks);
                 optimizer.SetupUtilityCell();
-                _generator.GeneratePackedLevel(optimizer.PackCells(), _meshName + "_levelObject");*/
-                _generator.GenerateLevelObject(_cells, _meshName + "_levelObject");
+                _generator.GeneratePackedLevel(optimizer.PackCells(), _meshName + "_levelObject");
             }
 
         GUILayout.FlexibleSpace();

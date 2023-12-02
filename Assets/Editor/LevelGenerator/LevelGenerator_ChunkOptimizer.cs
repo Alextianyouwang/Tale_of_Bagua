@@ -49,7 +49,7 @@ public class LevelGenerator_ChunkOptimizer
 
     public CellPack[] PackCells()
     {
-        foreach (UtilityCell c in _utilityCells) 
+        foreach (UtilityCell c in _utilityCells)
         {
             if (c == null)
                 continue;
@@ -64,6 +64,10 @@ public class LevelGenerator_ChunkOptimizer
     public UtilityCell GetUtilityCell(int xIndex, int yIndex) 
     {
         return _utilityCells[xIndex * _vertical + yIndex];
+    }
+    public void SetUtilityCell(int xIndex, int yIndex, UtilityCell value)
+    {
+        _utilityCells[xIndex * _vertical + yIndex] = value;
     }
 }
 
@@ -87,7 +91,7 @@ public class CellPack
     public void SetVisitedToTrue() 
     {
         foreach (UtilityCell c in _containedCells)
-            c?.SetVisitedState(true);
+            c.SetVisitedState(true);
     }
 
     public Vector3 GetLocalScale() 
@@ -145,32 +149,24 @@ public class CellPacker
             cornerCells.Add(cList[cList.Count-1]);
                          
         for (int i = 0; i < cornerCells.Count; i++) 
-        {
             while (CellHasEmptyOnBotLeft(cornerCells[i]) && cornerCells[i].GetCell().index.x != 0)
                 cornerCells[i] = cornerCells[i].GetNeighbor(2);
-            while (cornerCells[i].GetNeighbor(1) != null)
-                cornerCells[i] = cornerCells[i].GetNeighbor(1);
-        }
-        return cornerCells.Distinct().ToArray();
 
+        return cornerCells.Distinct().ToArray();
     }
     private bool CellHasEmptyOnBotLeft(UtilityCell uc)
     {
-        bool hasEmptyOnLeft = false;
         for (int i = uc.GetCell().index.x; i >= _c_pointIndex.x; i--)
         {
             for (int j = uc.GetCell().index.y; j >= _c_pointIndex.y; j--)
             {
                 UtilityCell current = Optimizer.GetUtilityCell(i, j);
                 if (current == null)
-                {
-                    hasEmptyOnLeft = true;
-                    continue;
-                }
+                    return true;
             }
         }
 
-        return hasEmptyOnLeft;
+        return false;
     }
     public UtilityCell[] GetContainedCells(UtilityCell uc) 
     {
@@ -181,7 +177,7 @@ public class CellPacker
             for (int j = uc.GetCell().index.y; j >= _c_pointIndex.y; j--)
             {
                 containedCells[index] =  Optimizer.GetUtilityCell(i, j);
-                
+                Optimizer.SetUtilityCell(i, j, null);
                 index++;
             }
         }

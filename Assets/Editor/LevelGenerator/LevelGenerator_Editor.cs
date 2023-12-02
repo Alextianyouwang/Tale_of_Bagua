@@ -173,8 +173,8 @@ public class LevelGenerator_Editor : EditorWindow
                     }
 
                 }*/
-                _generator.GenerateLevelObject(optimizer.GetAllUtilityCells().Select(x => x != null? x.GetCell() : null).ToArray(),_meshName + "_levelObject");
-               // optimizer.PackCells();
+                //_generator.GenerateLevelObject(optimizer.GetAllUtilityCells().Select(x => x != null? x.GetCell() : null).ToArray(),_meshName + "_levelObject");
+               optimizer.PackCells();
             }
 
         GUILayout.FlexibleSpace();

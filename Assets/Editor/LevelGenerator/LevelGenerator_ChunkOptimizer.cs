@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using UnityEngine;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class LevelGenerator_ChunkOptimizer
 {
@@ -59,9 +60,13 @@ public class LevelGenerator_ChunkOptimizer
 
             
         }
-        CellPacker newPack = new CellPacker(GetUtilityCell(1,1));
+        CellPacker newPack = new CellPacker(GetUtilityCell(0,0),this);
         newPack.PropergateToRight();
-        newPack.PropergateToTop();
+        UtilityCell[] corners =  newPack.DefineRectCorners();
+        foreach (UtilityCell c in corners) 
+        {
+            Debug.Log(c.GetCell().index);
+        }
         //newPack.CompareList();
       
     }
@@ -78,18 +83,19 @@ public class LevelGenerator_ChunkOptimizer
 
 public class CellPacker
 {
-    public UtilityCell crystalizationPoint;
+    public UtilityCell CrystalizationPoint;
+    public LevelGenerator_ChunkOptimizer Optimizer;
     public List<List<UtilityCell>> RightPropergatedCells = new List<List<UtilityCell>>();
-    public List<List<UtilityCell>> UpPropergatedCells = new List<List<UtilityCell>>();
 
-    public CellPacker(UtilityCell point) 
+    public CellPacker(UtilityCell point, LevelGenerator_ChunkOptimizer optimizer)
     {
-        crystalizationPoint = point;
+        CrystalizationPoint = point;
+        Optimizer = optimizer;
     }
 
     public void PropergateToRight() 
     {
-        UtilityCell rightNeighbor = crystalizationPoint.GetNeighbor(1);
+        UtilityCell rightNeighbor = CrystalizationPoint;
         while (rightNeighbor != null)
         {
             List<UtilityCell> topStackingCells = new List<UtilityCell>();
@@ -104,59 +110,48 @@ public class CellPacker
            
         }
     }
-    public void PropergateToTop()
+ 
+    public UtilityCell[] DefineRectCorners() 
     {
-        UtilityCell topNeighbor = crystalizationPoint.GetNeighbor(0);
-        while (topNeighbor != null)
+        List<UtilityCell> cornerCells = new List<UtilityCell>();
+        foreach (List<UtilityCell> cList in RightPropergatedCells)
+            cornerCells.Add(cList[cList.Count-1]);
+                    
+        
+        for (int i = 0; i < cornerCells.Count; i++) 
         {
-            List<UtilityCell> rightStackingCells = new List<UtilityCell>();
-            UpPropergatedCells.Add(rightStackingCells);
-            UtilityCell rightNeighbor = topNeighbor;
-            while (rightNeighbor != null)
-            {
-                rightStackingCells.Add(rightNeighbor);
-                rightNeighbor = rightNeighbor.GetNeighbor(1);
-            }
-            topNeighbor = topNeighbor.GetNeighbor(0);
+            if (cornerCells[i].GetCell().index.x == 0)
+                continue;
+            
+            while (CellHasEmptyOnBotLeft(cornerCells[i]))
+                cornerCells[i] = cornerCells[i].GetNeighbor(2);
+            while (cornerCells[i].GetNeighbor(1) != null)
+                cornerCells[i] = cornerCells[i].GetNeighbor(1);
 
         }
+        return cornerCells.Distinct().ToArray();
+
     }
-
-    public void CompareList() 
+    private bool CellHasEmptyOnBotLeft(UtilityCell uc) 
     {
-        int potentialWidth = RightPropergatedCells.Count + 1;
-        int potentialHeight = UpPropergatedCells.Count + 1;
-       
-        int longerListLength = Mathf.Max(RightPropergatedCells.Count, UpPropergatedCells.Count);
-        int horizontalCounter;
-        int verticalCounter;
-
-        for (int i = 0; i < longerListLength; i++) 
+        
+        bool hasEmptyOnLeft = false;
+        int xIndex = (int)uc.GetCell().index.x;
+        int yIndex = (int)uc.GetCell().index.y;
+        for (int i = xIndex; i >= 0; i--) 
         {
-            horizontalCounter = i;
-            verticalCounter = i;
-            if (horizontalCounter > RightPropergatedCells.Count-1) 
+            for (int j = yIndex; j >= 0; j--) 
             {
-                horizontalCounter = RightPropergatedCells.Count-1;
+                 UtilityCell current = Optimizer.GetUtilityCell(i, j);
+                if (current == null)
+                {
+                    hasEmptyOnLeft = true;
+                    continue;
+                }
             }
-            if (verticalCounter > UpPropergatedCells.Count-1)
-            {
-                verticalCounter = UpPropergatedCells.Count - 1;
-            }
-
-            bool verticalPassed =  RightPropergatedCells[horizontalCounter].Count >= i + 2;
-            bool horizontalPassed = UpPropergatedCells[verticalCounter].Count >= i + 2;
-
-            if (!verticalPassed) 
-                potentialHeight = Mathf.Min(potentialHeight, RightPropergatedCells[i].Count);
-            if (!horizontalPassed )
-                potentialWidth = Mathf.Min(potentialWidth, UpPropergatedCells[i].Count);
-
-
-
         }
-        Debug.Log(potentialWidth );
-        Debug.Log(potentialHeight );
+        
+        return hasEmptyOnLeft;
     }
 }
 public class UtilityCell

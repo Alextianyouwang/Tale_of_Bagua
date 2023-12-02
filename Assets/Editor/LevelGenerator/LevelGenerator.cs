@@ -190,10 +190,14 @@ public class LevelGenerator
         foreach (CellPack c in cellPacks) 
         {
             GameObject g = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            g.name = "Level Chunk";
+            g.name = "Level Chunk Visual Cue";
             g.transform.localScale = c.GetLocalScale();
             g.transform.position = c.GetWorldPosition();
             g.transform.parent = level.transform;
+            GameObject.DestroyImmediate(g.GetComponent<BoxCollider>());
+            BoxCollider collider = level.AddComponent<BoxCollider>();
+            collider.center = g.transform.position;
+            collider.size = g.transform.localScale;
         }
         return level;
     }

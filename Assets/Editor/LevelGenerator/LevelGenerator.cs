@@ -1,9 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Codice.Client.Common;
-using static UnityEngine.Rendering.HableCurve;
-using UnityEngine.UIElements;
-
 
 public class LevelGenerator
 {
@@ -83,6 +79,7 @@ public class LevelGenerator
                 Vector3 pos = offset + new Vector3(i * xLength, platform.bounds.center.y, j*yLength);
                 cells[i * y + j] = new Cell(pos,new Vector3 (xLength,height ,yLength));
                 cells[i * y + j].SetTexSpaceInfo(new Vector2(xSegment * i + xSegment / 2f, ySegment * j + ySegment / 2f), new Vector2(xSegment, ySegment));
+                cells[i * y + j].SetIndex(new Vector2Int(i, j));
 
                 cells[i * y + j].SetActive(j % 2 == 0 ? true : false);
                 cells[i * y + j].SetActive(i % 2 == 0 ? cells[i * y + j].isActive : !cells[i * y + j].isActive);
@@ -125,6 +122,19 @@ public class LevelGenerator
         }
         return closestCell;
     }
+    public Cell[] GetCellsInRadius(Cell[] cells, Vector3 pos, float radius) 
+    {
+        List<Cell> selected = new List<Cell>();
+
+        foreach (Cell c in cells) 
+        {
+            float dist = Vector3.Distance(pos, c.position);
+            if (dist <= radius && !selected.Contains(c)) 
+                selected.Add(c);
+            
+        }
+        return selected.ToArray();
+    }
 
     public Mesh GenerateLevelMesh(Cell[] cells) 
     {
@@ -158,6 +168,8 @@ public class LevelGenerator
         level.transform.position = Vector3.zero;
         foreach (Cell c in cells)
         {
+            if (c == null)
+                continue;
             if (!c.isActive)
                 continue;
 
@@ -169,12 +181,35 @@ public class LevelGenerator
         }
         return level;
     }
+
+    public GameObject GeneratePackedLevel(CellPack[] cellPacks, string name) 
+    {
+        GameObject level = new GameObject();
+        level.name = name;
+        level.transform.position = Vector3.zero;
+        foreach (CellPack c in cellPacks) 
+        {
+            GameObject g = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            g.name = "Level Chunk Visual Cue";
+            g.transform.localScale = c.GetLocalScale();
+            g.transform.position = c.GetWorldPosition();
+            g.transform.parent = level.transform;
+            GameObject.DestroyImmediate(g.GetComponent<BoxCollider>());
+            BoxCollider collider = level.AddComponent<BoxCollider>();
+            collider.center = g.transform.position;
+            collider.size = g.transform.localScale;
+        }
+        return level;
+    }
 }
-
-
 
 public class Cell
 {
+    public Vector2Int index { get; private set; }
+    public void SetIndex(Vector2Int _index) 
+    {
+        index = _index;
+    }
     public Vector3 position { get; private set; } = Vector3.zero;
     public Vector3 size { get; private set; } = Vector3.zero;
     public bool isActive = false;

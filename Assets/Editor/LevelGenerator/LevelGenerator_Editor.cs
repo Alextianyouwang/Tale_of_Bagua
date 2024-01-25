@@ -101,9 +101,11 @@ public class LevelGenerator_Editor : EditorWindow
         if (!_levelObj)
         if (GUILayout.Button("Create Level From Camera View"))
         {
+            _generator.SetupCamera();
             _levelMesh = _generator.CreateQuad(_generator.GetScreenInWorldSpace(_levelDepth));
             _levelObj = _generator.CreatePlaneLevel(_meshName + "_foundation", _levelMesh, _levelMat);
             SaveMesh(_levelMesh, _path, _meshName + "_mesh");
+            
         }
         if (_prev_levelDepth != _levelDepth && _levelObj != null) 
         {
@@ -131,6 +133,7 @@ public class LevelGenerator_Editor : EditorWindow
 
             if (GUILayout.Button("Create Cells"))
             {
+                _generator.SetupCamera();
                 _cells = _generator.CreateChunks(_levelMesh, _horizontalChunks, _verticalChunks, 1f);
                 _levelVisual.UpdateVisualSetup(_cells, sizeof(float) * 5);
                 _levelVisual.UpdateSearchClosestSetup(_cells.Length);
@@ -138,6 +141,7 @@ public class LevelGenerator_Editor : EditorWindow
                 _currentAction = null;
                 _commandStack = new LevelGenerator_CommandStack();
                 _canEditCells = false;
+                
             }
 
         }

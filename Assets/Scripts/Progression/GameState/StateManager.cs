@@ -1,6 +1,8 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
+using System.Collections;
 
 public class StateManager : MonoBehaviour
 {
@@ -8,9 +10,12 @@ public class StateManager : MonoBehaviour
     [SerializeField]
     private SceneDataObject[] _sceneDatas;
     private int _currentScene = 0;
+    [SerializeField] private TextMeshProUGUI _sceneName;
+    [SerializeField] private TextMeshProUGUI _levelCount;
     private void Awake()
     {
         CreateSingleton();
+        UpdateSceneInfo();
     }
 
     void CreateSingleton() 
@@ -36,7 +41,7 @@ public class StateManager : MonoBehaviour
         }
            
         _currentScene++;
-        LoadScene(_sceneDatas[_currentScene].Name);
+        StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
     }
     public void PreviousScene() 
     {
@@ -51,17 +56,29 @@ public class StateManager : MonoBehaviour
             return;
         }
         _currentScene--;
-        LoadScene(_sceneDatas[_currentScene].Name);
+       StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name)) ;
     }
 
-    private void LoadScene(string name) 
+    private IEnumerator LoadLevel(string sceneName)
     {
-        if (!Application.CanStreamedLevelBeLoaded(name) )
+        var asyncLoadLevel = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        while (!asyncLoadLevel.isDone)
         {
-            Debug.LogWarning($"Scene at Index {_currentScene} has invalid name");
-            return;
+            Debug.Log("Loading the Scene");
+            yield return null;
         }
-            SceneManager.LoadScene(name,LoadSceneMode.Single);
+        UpdateSceneInfo();
+    }
+    private void UpdateSceneInfo() 
+    {
+        if (!_sceneName) return;
+        if (!_levelCount) return;
+
+        LevelInfoAnnouncer announcer = FindObjectOfType<LevelInfoAnnouncer>();
+        announcer?.GetLayerNumber();
+        SceneDataObject data = _sceneDatas[_currentScene];
+        _sceneName.text = data.Name;
+        _levelCount.text = announcer?.GetLayerNumber().ToString();
     }
     void Start()
     {

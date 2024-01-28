@@ -30,6 +30,8 @@ public class Mirror : MonoBehaviour
     }
     private void OnEnable()
     {
+        crossCollider.GetColliders();
+        boxCollider.GetColliders();
         GetBoxs();
     }
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 877225996}
-  m_IndirectSpecularColor: {r: 0.44709772, g: 0.4970023, b: 0.57511187, a: 1}
+  m_IndirectSpecularColor: {r: 0.43869016, g: 0.48682928, b: 0.5671022, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8290,14 +8290,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877225993}
-  m_LocalRotation: {x: 0.8173281, y: -0.24122226, z: -0.1481124, w: 0.50184596}
+  m_LocalRotation: {x: 0.5977732, y: 0.10716524, z: -0.2055517, w: 0.7674186}
   m_LocalPosition: {x: 1.36, y: 5.35, z: 0.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 192403887}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 131.506, y: 46.944, z: 55.018997}
+  m_LocalEulerAnglesHint: {x: 105.942, y: -197.20999, z: -223.014}
 --- !u!114 &877225995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8329,7 +8329,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.9704694, b: 0.6650944, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -8742,6 +8742,74 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 909952308}
   m_Mesh: {fileID: -2943078631724464917, guid: ba91ffb4dd33cfc40a83cb34213e12ba, type: 3}
+--- !u!1 &931001722
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 931001723}
+  - component: {fileID: 931001724}
+  m_Layer: 0
+  m_Name: Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &931001723
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931001722}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &931001724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931001722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68319a8c1ac22144c99c787a88faf443, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  darkLightmapDir:
+  - {fileID: 2800000, guid: 24ce30925a0ecf44f9f0437b13a60a88, type: 3}
+  - {fileID: 2800000, guid: f9ca7d2679574da4c8bb43e5b831ea43, type: 3}
+  - {fileID: 2800000, guid: ef743d179fc0a4e459f882f445a6d3af, type: 3}
+  - {fileID: 2800000, guid: 3062aef9d7ba35c42a96a15f195c7070, type: 3}
+  - {fileID: 2800000, guid: 17befbe2924ceee49a58c21532a369be, type: 3}
+  darkLightmapColor:
+  - {fileID: 2800000, guid: d99c0c504544dad44b5e2b23fd26d291, type: 3}
+  - {fileID: 2800000, guid: 74847722a3014cb44b14221c1d7d57d8, type: 3}
+  - {fileID: 2800000, guid: 57bf4f43f2e93e14d9dc204038750e26, type: 3}
+  - {fileID: 2800000, guid: fd3966c8d65cf7545a539687faea18c0, type: 3}
+  - {fileID: 2800000, guid: 790717d9a7d0aa54e9a9f90d19720745, type: 3}
+  brightLightmapDir:
+  - {fileID: 2800000, guid: e9ccbf5504ac73548b89d992f33a8c03, type: 3}
+  - {fileID: 2800000, guid: ac6a11c997c6d1041883887568c2c323, type: 3}
+  - {fileID: 2800000, guid: f63fb61388d15e141bb3be42e189d43f, type: 3}
+  - {fileID: 2800000, guid: f83a6e74e6068be4ab20fe18b22ef8e5, type: 3}
+  - {fileID: 2800000, guid: b6ea9e9631e2ff94db45fe8e01a64c84, type: 3}
+  brightLightmapColor:
+  - {fileID: 2800000, guid: f0f69584ec385de488edd0dcb2e1091e, type: 3}
+  - {fileID: 2800000, guid: bda1548266c4ff04f856c8be751fe4c7, type: 3}
+  - {fileID: 2800000, guid: 149fa04ecbf696147b2d2d5e72a4c7ef, type: 3}
+  - {fileID: 2800000, guid: 68f114f571b7d25408417982156d0b73, type: 3}
+  - {fileID: 2800000, guid: ecafac5061f07254598a1c73999684fe, type: 3}
 --- !u!1 &933399736
 GameObject:
   m_ObjectHideFlags: 0

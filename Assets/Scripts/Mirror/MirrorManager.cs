@@ -83,7 +83,7 @@ public class MirrorManager : MonoBehaviour
         Vector3 mirrorCenter = m.transform.position - offset;
         Vector3 direction = Vector3.Normalize(target - mirrorCenter);
         float distance = (finalWorldPos - mirrorCenter).magnitude;
-        m.RigidBodyAddForce(direction, Mathf.Min(distance * speed, 6));
+        m.RigidBodyAddForce(direction, Mathf.Min(distance * speed, 15));
      
     }
 
@@ -112,9 +112,9 @@ public class MirrorManager : MonoBehaviour
  
         if (isCollapsed && hoodMirrors.Contains(currentMirror))
             for (int i = 0; i < hoodMirrors.Length; i++)
-                MoveMirrorTo(hoodMirrors[i], finalWorldPos, 4);
+                MoveMirrorTo(hoodMirrors[i], finalWorldPos, 7);
         else
-             MoveMirrorTo(currentMirror, finalWorldPos, 4);
+             MoveMirrorTo(currentMirror, finalWorldPos, 7);
     }
 
     public void CollapseHoodMirror()

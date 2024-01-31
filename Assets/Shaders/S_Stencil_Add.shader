@@ -17,6 +17,7 @@ Shader "Custom/Stencil_Add"
         {
 			Blend One Zero
 			ZWrite Off
+			ZTest Off
 			ColorMask 0
 
 			Stencil

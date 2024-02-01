@@ -3,29 +3,38 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
-public class Main : MonoBehaviour
+public class Main : MonoBehaviour , IDataPersistence
 {
     public static Main instance;
     [SerializeField]
     private SceneDataObject[] _sceneDatas;
-    private SceneInfo[] _sceneInfo;
+    private IDataPersistence[] _dataPersistenceObjects;
+    private GameData _gameData;
     private int _currentScene = 0;
     [SerializeField] private TextMeshProUGUI _sceneName;
     [SerializeField] private TextMeshProUGUI _levelCount;
     private void Awake()
     {
-        Initialize();
+        NewGame();
+        LoadCurrentSceneInfo();
         CreateSingleton();
         UpdateSceneInfoText();
     }
-    private void Initialize() 
+    private void OnEnable()
     {
-        _sceneInfo = new SceneInfo[_sceneDatas.Length];
-        for (int i = 0; i< _sceneInfo.Length; i++)
-            _sceneInfo[i] = new SceneInfo();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
-
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) 
+    {
+        _dataPersistenceObjects = FindAllDataPersistenceObjects();
+    }
     void CreateSingleton() 
     {
         if (instance == null)
@@ -34,6 +43,55 @@ public class Main : MonoBehaviour
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject); 
     }
+    private IDataPersistence[] FindAllDataPersistenceObjects()
+    {
+        IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>(true)
+            .OfType<IDataPersistence>();
+
+        return new List<IDataPersistence>(dataPersistenceObjects).ToArray();
+    }
+    private void NewGame() 
+    {
+        _gameData = new GameData();
+
+        SceneInfo[] _sceneInfo = new SceneInfo[_sceneDatas.Length];
+
+        _gameData.SetSceneInfos(_sceneInfo);
+    }
+
+    public void SaveGame() 
+    {
+        foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
+        {
+            dataPersistenceObj.SaveData(_gameData);
+        }
+    }
+
+    public void LoadGame() 
+    {
+        foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
+        {
+            dataPersistenceObj.LoadData(_gameData);
+        }
+    }
+    public void SaveData(GameData data)
+    {
+        SceneDataCommunicator announcer = FindObjectOfType<SceneDataCommunicator>();
+        if (announcer == null)
+            return;
+        data.SceneInfos[_currentScene].SetPlayerPos(announcer.GetPlayerPosition());
+        data.SceneInfos[_currentScene].SetMirrorPos(announcer.GetMirrorPositions());
+    }
+
+    public void LoadData(GameData data) 
+    {
+        SceneDataCommunicator announcer = FindObjectOfType<SceneDataCommunicator>();
+        if (announcer == null)
+            return;
+        announcer.SetPlayerPosition(data.SceneInfos[_currentScene].PlayerPos);
+        announcer.SetMirrorPositions(data.SceneInfos[_currentScene].MirrorPos);
+    }
+
 
     public void NextScene() 
     {
@@ -65,7 +123,7 @@ public class Main : MonoBehaviour
         }
         SaveCurrentSceneInfo();
         _currentScene--;
-       StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name)) ;
+        StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
     }
 
     private IEnumerator LoadLevel(string sceneName)
@@ -84,16 +142,29 @@ public class Main : MonoBehaviour
         SceneDataCommunicator announcer = FindObjectOfType<SceneDataCommunicator>();
         if (announcer == null)
             return;
-        _sceneInfo[_currentScene].SetPlayerPos(announcer.GetPlayerPosition());
-        _sceneInfo[_currentScene].SetMirrorPos(announcer.GetMirrorPositions());
+        if (_gameData.SceneInfos[_currentScene] == null)
+            _gameData.SceneInfos[_currentScene] = new SceneInfo();
+        else 
+        {
+            _gameData.SceneInfos[_currentScene].SetPlayerPos(announcer.GetPlayerPosition());
+            _gameData.SceneInfos[_currentScene].SetMirrorPos(announcer.GetMirrorPositions());
+        }
+     
+
     }
     private void LoadCurrentSceneInfo() 
     {
         SceneDataCommunicator announcer = FindObjectOfType<SceneDataCommunicator>();
         if (announcer == null)
             return;
-        announcer.SetMirrorPositions(_sceneInfo[_currentScene].MirrorPos);
-        announcer.SetPlayerPosition(_sceneInfo[_currentScene].PlayerPos);
+        if (_gameData.SceneInfos[_currentScene] == null)
+            _gameData.SceneInfos[_currentScene] = new SceneInfo();
+        else 
+        {
+            announcer.SetMirrorPositions(_gameData.SceneInfos[_currentScene].MirrorPos);
+            announcer.SetPlayerPosition(_gameData.SceneInfos[_currentScene].PlayerPos);
+        }
+    
     }
     private void UpdateSceneInfoText() 
     {

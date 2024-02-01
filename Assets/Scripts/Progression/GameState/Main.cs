@@ -14,14 +14,21 @@ public class Main : MonoBehaviour , IDataPersistence
     private IDataPersistence[] _dataPersistenceObjects;
     private GameData _gameData;
     private int _currentScene = 0;
+    private FileDataHandler _fileDataHandler;
     [SerializeField] private TextMeshProUGUI _sceneName;
     [SerializeField] private TextMeshProUGUI _levelCount;
     private void Awake()
     {
-        NewGame();
-        LoadCurrentSceneInfo();
         CreateSingleton();
+        _fileDataHandler = new FileDataHandler(Application.persistentDataPath, "Game.json", false);
+
+    }
+    private void Start() 
+    {
+        LoadGame();
+        LoadCurrentSceneInfo();
         UpdateSceneInfoText();
+
     }
     private void OnEnable()
     {
@@ -50,46 +57,46 @@ public class Main : MonoBehaviour , IDataPersistence
 
         return new List<IDataPersistence>(dataPersistenceObjects).ToArray();
     }
-    private void NewGame() 
+    public void NewGame() 
     {
         _gameData = new GameData();
 
         SceneInfo[] _sceneInfo = new SceneInfo[_sceneDatas.Length];
 
         _gameData.SetSceneInfos(_sceneInfo);
+        StartCoroutine(LoadLevel(_sceneDatas[0].Name));
     }
 
     public void SaveGame() 
     {
-        foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
+        /*foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
         {
             dataPersistenceObj.SaveData(_gameData);
         }
+        _fileDataHandler.Save(_gameData,null);*/
     }
 
     public void LoadGame() 
     {
-        foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
+        //_gameData = _fileDataHandler.Load(null,false);
+        if (_gameData == null)
+            NewGame();
+        /*foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
         {
             dataPersistenceObj.LoadData(_gameData);
-        }
+        }*/
+
+     
     }
     public void SaveData(GameData data)
     {
-        SceneDataCommunicator announcer = FindObjectOfType<SceneDataCommunicator>();
-        if (announcer == null)
-            return;
-        data.SceneInfos[_currentScene].SetPlayerPos(announcer.GetPlayerPosition());
-        data.SceneInfos[_currentScene].SetMirrorPos(announcer.GetMirrorPositions());
+        //SaveCurrentSceneInfo();
+        data.SetCurrentScene(_currentScene);
     }
 
     public void LoadData(GameData data) 
     {
-        SceneDataCommunicator announcer = FindObjectOfType<SceneDataCommunicator>();
-        if (announcer == null)
-            return;
-        announcer.SetPlayerPosition(data.SceneInfos[_currentScene].PlayerPos);
-        announcer.SetMirrorPositions(data.SceneInfos[_currentScene].MirrorPos);
+        StartCoroutine(LoadLevel(_sceneDatas[data.CurrentScene].Name));
     }
 
 
@@ -176,10 +183,6 @@ public class Main : MonoBehaviour , IDataPersistence
         SceneDataObject data = _sceneDatas[_currentScene];
         _sceneName.text = data.Name;
         _levelCount.text = announcer?.GetLayerNumber().ToString();
-    }
-    void Start()
-    {
-        
     }
     void Update()
     {

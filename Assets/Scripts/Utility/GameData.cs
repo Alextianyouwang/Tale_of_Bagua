@@ -9,6 +9,9 @@ public class GameData
     {
         SceneInfos = value;
     }
+
+    public int CurrentScene { get; private set; }
+    public void SetCurrentScene(int value) { CurrentScene = value; }
 }
 public class SceneInfo
 {

@@ -4,18 +4,26 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
 
-public class StateManager : MonoBehaviour
+public class Main : MonoBehaviour
 {
-    public static StateManager instance;
+    public static Main instance;
     [SerializeField]
     private SceneDataObject[] _sceneDatas;
+    private SceneInfo[] _sceneInfo;
     private int _currentScene = 0;
     [SerializeField] private TextMeshProUGUI _sceneName;
     [SerializeField] private TextMeshProUGUI _levelCount;
     private void Awake()
     {
+        Initialize();
         CreateSingleton();
-        UpdateSceneInfo();
+        UpdateSceneInfoText();
+    }
+    private void Initialize() 
+    {
+        _sceneInfo = new SceneInfo[_sceneDatas.Length];
+        for (int i = 0; i< _sceneInfo.Length; i++)
+            _sceneInfo[i] = new SceneInfo();
     }
 
     void CreateSingleton() 
@@ -39,7 +47,7 @@ public class StateManager : MonoBehaviour
             Debug.LogWarning("All Scenes Have Been Played Through");
             return;
         }
-           
+        SaveCurrentSceneInfo();
         _currentScene++;
         StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
     }
@@ -55,6 +63,7 @@ public class StateManager : MonoBehaviour
             Debug.LogWarning("This Is The Very First Scene");
             return;
         }
+        SaveCurrentSceneInfo();
         _currentScene--;
        StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name)) ;
     }
@@ -67,14 +76,31 @@ public class StateManager : MonoBehaviour
             Debug.Log("Loading the Scene");
             yield return null;
         }
-        UpdateSceneInfo();
+        LoadCurrentSceneInfo();
+        UpdateSceneInfoText();
     }
-    private void UpdateSceneInfo() 
+    private void SaveCurrentSceneInfo() 
+    {
+        SceneDataCommunicator announcer = FindObjectOfType<SceneDataCommunicator>();
+        if (announcer == null)
+            return;
+        _sceneInfo[_currentScene].SetPlayerPos(announcer.GetPlayerPosition());
+        _sceneInfo[_currentScene].SetMirrorPos(announcer.GetMirrorPositions());
+    }
+    private void LoadCurrentSceneInfo() 
+    {
+        SceneDataCommunicator announcer = FindObjectOfType<SceneDataCommunicator>();
+        if (announcer == null)
+            return;
+        announcer.SetMirrorPositions(_sceneInfo[_currentScene].MirrorPos);
+        announcer.SetPlayerPosition(_sceneInfo[_currentScene].PlayerPos);
+    }
+    private void UpdateSceneInfoText() 
     {
         if (!_sceneName) return;
         if (!_levelCount) return;
 
-        LevelInfoAnnouncer announcer = FindObjectOfType<LevelInfoAnnouncer>();
+        SceneDataCommunicator announcer = FindObjectOfType<SceneDataCommunicator>();
         announcer?.GetLayerNumber();
         SceneDataObject data = _sceneDatas[_currentScene];
         _sceneName.text = data.Name;

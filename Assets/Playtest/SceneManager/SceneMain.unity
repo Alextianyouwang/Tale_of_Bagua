@@ -4546,7 +4546,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -12.799988, y: 89}
+  m_AnchoredPosition: {x: -12.800049, y: 89}
   m_SizeDelta: {x: -53.800007, y: -972.1499}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &232377893
@@ -4593,8 +4593,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2027986394}
-        m_TargetAssemblyTypeName: StateManager, Assembly-CSharp
+      - m_Target: {fileID: 2027986395}
+        m_TargetAssemblyTypeName: SceneDataManager, Assembly-CSharp
         m_MethodName: PreviousScene
         m_Mode: 1
         m_Arguments:
@@ -14014,7 +14014,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -98.01503, y: 276}
+  m_AnchoredPosition: {x: -98.01514, y: 276}
   m_SizeDelta: {x: -221.96994, y: -673.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &809412110
@@ -20100,7 +20100,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -12.799988, y: -472}
+  m_AnchoredPosition: {x: -12.800049, y: -472.00012}
   m_SizeDelta: {x: -53.800007, y: -972.1499}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1206760043
@@ -20911,7 +20911,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -98.01503, y: 321.7}
+  m_AnchoredPosition: {x: -98.01514, y: 321.70007}
   m_SizeDelta: {x: -221.96994, y: -673.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1246661369
@@ -28503,7 +28503,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -12.799988, y: -424}
+  m_AnchoredPosition: {x: -12.800049, y: -424}
   m_SizeDelta: {x: -53.800007, y: -972.1499}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1739553569
@@ -32614,7 +32614,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -12.799988, y: 39}
+  m_AnchoredPosition: {x: -12.800049, y: 39}
   m_SizeDelta: {x: -53.800007, y: -972.1499}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1974145679
@@ -32661,8 +32661,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2027986394}
-        m_TargetAssemblyTypeName: Main, Assembly-CSharp
+      - m_Target: {fileID: 2027986395}
+        m_TargetAssemblyTypeName: SceneDataManager, Assembly-CSharp
         m_MethodName: NextScene
         m_Mode: 1
         m_Arguments:
@@ -33271,7 +33271,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -12.799988, y: -376}
+  m_AnchoredPosition: {x: -12.800049, y: -376}
   m_SizeDelta: {x: -53.800007, y: -974.2999}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2020784099
@@ -33572,6 +33572,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2027986393}
   - component: {fileID: 2027986394}
+  - component: {fileID: 2027986395}
+  - component: {fileID: 2027986396}
   m_Layer: 0
   m_Name: ======FlowManager======
   m_TagString: Untagged
@@ -33608,10 +33610,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6f64860a5018914a9971c2a749a4652, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2027986395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027986392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09d397b323951ce41815158f7b39c713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _sceneDatas:
   - {fileID: 11400000, guid: 3df860d2bac54d54f81cc3521036c738, type: 2}
   - {fileID: 11400000, guid: b4c23625a8986c34d9c9bf623e777571, type: 2}
   - {fileID: 11400000, guid: 52385b697e865fd4392cf19720847700, type: 2}
+--- !u!114 &2027986396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027986392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7209c24bac1d83649be6aeb1f241f66e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _sceneName: {fileID: 1294018169}
   _levelCount: {fileID: 1634906862}
 --- !u!1 &2041933657

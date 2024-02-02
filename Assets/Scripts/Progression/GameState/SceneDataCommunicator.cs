@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneDataCommunicator : MonoBehaviour
 {
@@ -42,4 +43,10 @@ public class SceneDataCommunicator : MonoBehaviour
             return;
         player.transform.position = position; 
     }
+
+    public string GetSceneName() 
+    {
+        return SceneManager.GetActiveScene().name;
+    }
+
 }

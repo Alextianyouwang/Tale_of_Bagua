@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,10 +8,11 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
     [SerializeField]
     private SceneDataObject[] _sceneDatas;
     private SceneInfo[] _tempSceneInfo;
-    private int _currentScene = 0;
     private SceneDataCommunicator _currentCommunicator;
+    private int _currentScene = 0;
 
     public static Action<SceneDataCommunicator> OnUpdateSceneInfoText;
+
     public void Awake()
     {
         InitializeTempSceneInfo();
@@ -42,19 +42,6 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
    
         data.SetSceneInfos(_tempSceneInfo);
         data.SetCurrentScene(_currentScene);
-     
-        /*  foreach (SceneInfo s in data.SceneInfos)
-          {
-              if (s == null)
-                  continue;
-
-              foreach (Vector3 p in s.MirrorPos)
-              {
-                  if (p == null)
-                      continue;
-                  print(p);
-              }
-          }*/
     }
 
     public void LoadData(GameData data) 
@@ -62,7 +49,8 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
  
         _tempSceneInfo = data.SceneInfos;
         _currentScene = data.CurrentScene;
-        Main.instance.StartCoroutine(ImplementAllScenes(data));
+        if (Main.instance.LoadingGame_co == null)
+            Main.instance.LoadingGame_co = Main.instance.StartCoroutine(ImplementAllScenes(data));
     }
     public void GetCommunicator() 
     {
@@ -79,6 +67,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
         _currentScene = tempCurrentScene;
 
         yield return Main.instance.StartCoroutine(LoadLevel(_sceneDatas[data.CurrentScene].Name));
+        Main.instance.LoadingGame_co = null;
     }
    
     public void NextScene()
@@ -93,9 +82,8 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
             Debug.LogWarning("All Scenes Have Been Played Through");
             return;
         }
-        //GetCurrentSceneData();
         _currentScene++;
-        StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
+        Main.instance.StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
     }
     public void PreviousScene()
     {
@@ -109,18 +97,16 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
             Debug.LogWarning("This Is The Very First Scene");
             return;
         }
-        //GetCurrentSceneData();
         _currentScene--;
-        StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
+        Main.instance.StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
     }
 
     private IEnumerator LoadLevel(string sceneName)
     {
-        var asyncLoadLevel = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         while (!asyncLoadLevel.isDone)
             yield return null;
         ImplementCurrentSceneWithData();
- 
         OnUpdateSceneInfoText?.Invoke(_currentCommunicator);
     }
     private void GetCurrentSceneData()

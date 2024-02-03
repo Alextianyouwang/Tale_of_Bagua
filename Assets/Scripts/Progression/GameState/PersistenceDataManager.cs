@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +8,7 @@ public class PersistenceDataManager : MonoBehaviour
 {
     private IDataPersistence[] _dataPersistenceObjects;
     private GameData _gameData;
+    public bool EnableSaveLoad = true; 
     public static Func<SceneInfo[]> OnRequestSceneInfo;
     private void OnEnable()
     {
@@ -37,13 +36,18 @@ public class PersistenceDataManager : MonoBehaviour
         return dataPersistenceObjects;
     }
 
-    public void NewGame() 
+    public void NewGame()
     {
-        
+        if (!EnableSaveLoad)
+            return;
+        _gameData = null;
+        LoadGame();
     }
 
     public void SaveGame()
     {
+        if (!EnableSaveLoad)
+            return;
         foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
         {
             dataPersistenceObj.SaveData(ref _gameData);
@@ -52,18 +56,17 @@ public class PersistenceDataManager : MonoBehaviour
 
     public void LoadGame()
     {
+        if (!EnableSaveLoad)
+            return;
+
         if (_gameData == null) 
         {
             _gameData = new GameData();
             _gameData.SetSceneInfos(OnRequestSceneInfo.Invoke());
         }
-            
-        else 
+        foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
         {
-            foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
-            {
-                dataPersistenceObj.LoadData(_gameData);
-            }
+            dataPersistenceObj.LoadData(_gameData);
         }
       
     }

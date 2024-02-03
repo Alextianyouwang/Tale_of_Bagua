@@ -5,14 +5,14 @@ public class SceneDataCommunicator : MonoBehaviour
 {
     public int GetLayerNumber() 
     {
-        Level[] levels = FindObjectsOfType<Level>();
+        Level[] levels = FindObjectsOfType<Level>(false);
         if (levels.Length != 0)
             return levels.Length;
         else return 0;
     }
     public Vector3[] GetMirrorPositions() 
     {
-        Mirror[] mirrors = FindObjectsOfType<Mirror>();
+        Mirror[] mirrors = FindObjectsOfType<Mirror>(false);
         Vector3[] positions = new Vector3[mirrors.Length];
         for (int  i = 0; i < mirrors.Length; i++) 
         {
@@ -22,15 +22,19 @@ public class SceneDataCommunicator : MonoBehaviour
     }
     public void SetMirrorPositions(Vector3[] positions) 
     {
-        Mirror[] mirrors = FindObjectsOfType<Mirror>();
+        Mirror[] mirrors = FindObjectsOfType<Mirror>(false);
+        if (positions == null || positions.Length == 0)
+            return;
         for (int i = 0; i < mirrors.Length; i++)
         {
+            if (positions[i] == null)
+                continue;
             mirrors[i].transform.position = positions[i];
         }
     }
     public Vector3 GetPlayerPosition() 
     {
-        PlayerMove player = FindObjectOfType<PlayerMove>();
+        PlayerMove player = FindObjectOfType<PlayerMove>(false);
         if (player != null)
             return player.transform.position;
         else return Vector3.zero;
@@ -38,7 +42,7 @@ public class SceneDataCommunicator : MonoBehaviour
 
     public void SetPlayerPosition(Vector3 position) 
     {
-        PlayerMove player = FindObjectOfType<PlayerMove>();
+        PlayerMove player = FindObjectOfType<PlayerMove>(false);
         if (player == null)
             return;
         player.transform.position = position; 

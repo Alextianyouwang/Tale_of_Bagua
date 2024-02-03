@@ -1,21 +1,24 @@
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
-
 public class Main : MonoBehaviour
 {
     public static Main instance;
-
     private void Awake()
     {
         CreateSingleton();
+    }
+    private void OnEnable()
+    {
+ 
+    }
+    private void OnDisable()
+    {
 
     }
     void CreateSingleton()
     {
         if (instance == null)
-            instance = this;
+            instance = FindObjectOfType<Main>();
         else
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);

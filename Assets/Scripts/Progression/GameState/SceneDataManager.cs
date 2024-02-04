@@ -25,7 +25,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
     }
     public void OnDisable()
     {
-        PersistenceDataManager.OnRequestSceneInfo -= GetInitialSceneInfo    ;
+        PersistenceDataManager.OnRequestSceneInfo -= GetInitialSceneInfo;
     }
     public void InitializeTempSceneInfo()
     {
@@ -40,8 +40,8 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
     {
         GetCurrentSceneData();
    
-        data.SetSceneInfos(_tempSceneInfo);
-        data.SetCurrentScene(_currentScene);
+        data.SceneInfos = _tempSceneInfo;
+        data.CurrentScene = _currentScene;
     }
 
     public void LoadData(GameData data) 
@@ -116,8 +116,8 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
             return;
         if (_tempSceneInfo[_currentScene] == null) 
             _tempSceneInfo[_currentScene] = new SceneInfo();
-        _tempSceneInfo[_currentScene].SetPlayerPos(_currentCommunicator.GetPlayerPosition());
-        _tempSceneInfo[_currentScene].SetMirrorPos(_currentCommunicator.GetMirrorPositions());
+        _tempSceneInfo[_currentScene].PlayerPos = _currentCommunicator.GetPlayerPosition();
+        _tempSceneInfo[_currentScene].MirrorPos = _currentCommunicator.GetMirrorPositions();
 
     }
     private void ImplementCurrentSceneWithData()
@@ -128,8 +128,8 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
         if (_tempSceneInfo[_currentScene] == null)
         {
             _tempSceneInfo[_currentScene] = new SceneInfo();
-            _tempSceneInfo[_currentScene].SetPlayerPos(_currentCommunicator.GetPlayerPosition());
-            _tempSceneInfo[_currentScene].SetMirrorPos(_currentCommunicator.GetMirrorPositions());
+            _tempSceneInfo[_currentScene].PlayerPos = _currentCommunicator.GetPlayerPosition();
+            _tempSceneInfo[_currentScene].MirrorPos = _currentCommunicator.GetMirrorPositions();
         }
         else
         {

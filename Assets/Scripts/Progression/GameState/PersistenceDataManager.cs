@@ -10,6 +10,8 @@ public class PersistenceDataManager : MonoBehaviour
     private GameData _gameData;
     public bool EnableSaveLoad = true; 
     public static Func<SceneInfo[]> OnRequestSceneInfo;
+    private FileDataHandler _fileDataHandler;
+    public string FileName = "";
     private void OnEnable()
     {
         SceneManager.activeSceneChanged += OnSceneLoaded;
@@ -21,7 +23,9 @@ public class PersistenceDataManager : MonoBehaviour
  
     public void Start()
     {
+        _fileDataHandler = new FileDataHandler(Application.persistentDataPath, FileName);
         LoadGame();
+      
     }
 
     void OnSceneLoaded(Scene scene, Scene current)
@@ -41,6 +45,7 @@ public class PersistenceDataManager : MonoBehaviour
         if (!EnableSaveLoad)
             return;
         _gameData = null;
+        _fileDataHandler.Delete();
         LoadGame();
     }
 
@@ -52,6 +57,8 @@ public class PersistenceDataManager : MonoBehaviour
         {
             dataPersistenceObj.SaveData(ref _gameData);
         }
+
+        _fileDataHandler.Save(_gameData);
     }
 
     public void LoadGame()
@@ -59,10 +66,12 @@ public class PersistenceDataManager : MonoBehaviour
         if (!EnableSaveLoad)
             return;
 
+        _gameData = _fileDataHandler.Load();
+
         if (_gameData == null) 
         {
             _gameData = new GameData();
-            _gameData.SetSceneInfos(OnRequestSceneInfo.Invoke());
+            _gameData.SceneInfos = OnRequestSceneInfo.Invoke();
         }
         foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
         {

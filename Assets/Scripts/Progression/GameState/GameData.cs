@@ -4,27 +4,15 @@ using UnityEngine;
 [System.Serializable]
 public class GameData 
 {
-    public SceneInfo[] SceneInfos { get; private set; }
-    public void SetSceneInfos(SceneInfo[] value) 
-    {
-        SceneInfos = value;
-    }
-
-    public int CurrentScene { get; private set; }
-    public void SetCurrentScene(int value) { CurrentScene = value; }
+    [SerializeField] public SceneInfo[] SceneInfos { get; set; }
+    [SerializeField] public int CurrentScene { get;  set; }
 }
+[System.Serializable]
 public class SceneInfo
 {
-    public Vector3 PlayerPos { get; private set; }
-    public void SetPlayerPos(Vector3 value) 
-    {
-        PlayerPos = value;
-    }
-    public Vector3[] MirrorPos { get; private set; }
-    public void SetMirrorPos(Vector3[] value) 
-    {
-        MirrorPos = value;
-    }
+    [SerializeField] public Vector3 PlayerPos { get; set; }
+    [SerializeField] public Vector3[] MirrorPos { get; set; }
+
     public SceneInfo() {
         MirrorPos = new Vector3[4];
     }

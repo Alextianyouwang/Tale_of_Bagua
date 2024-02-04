@@ -6,7 +6,6 @@ public class Esc : MonoBehaviour
 {
 
     private bool hasPaused = false;
-    private bool canUseEsc = true;
     public GameObject pauseCanvas;
 
     public GameObject[] panels;

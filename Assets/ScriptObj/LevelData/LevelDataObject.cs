@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CreateAssetMenu (menuName = "TTOBG/LevelObject")]
 public class LevelDataObject : ScriptableObject
 {
@@ -21,3 +22,4 @@ public class LevelDataObject : ScriptableObject
         EditorUtility.SetDirty(this);
     }
 }
+#endif

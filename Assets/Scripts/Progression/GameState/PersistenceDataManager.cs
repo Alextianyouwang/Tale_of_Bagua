@@ -24,8 +24,6 @@ public class PersistenceDataManager : MonoBehaviour
     public void Start()
     {
         _fileDataHandler = new FileDataHandler(Application.persistentDataPath, FileName);
-        LoadGame();
-      
     }
 
     void OnSceneLoaded(Scene scene, Scene current)

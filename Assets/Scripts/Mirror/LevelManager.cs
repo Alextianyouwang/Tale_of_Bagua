@@ -14,7 +14,8 @@ public class LevelManager : MonoBehaviour
     public Mirror[] allMirrors;
     private Collider[] overlapping;
     
-    RaycastHit[] allHitsMirrors;
+    RaycastHit[] allHitsMirrors, circularRayCasts;
+    
     public static int allMirrorOnTop;
 
     public static Action<Mirror[]> OnShareHoodMirror;
@@ -24,6 +25,7 @@ public class LevelManager : MonoBehaviour
     private void OnEnable()
     {
         allMirrorOnTop = 0;
+        
     }
     private void Start()
     {
@@ -62,7 +64,7 @@ public class LevelManager : MonoBehaviour
 
     void UpdateLevelInfo() 
     {
-        overlapping = Physics.OverlapSphere(transform.position, 0.1f, obstacleMask);
+        overlapping = Physics.OverlapSphere(transform.position, 0.4f * transform.localScale.x, obstacleMask);
         allHitsMirrors = Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, mirrorMask);
         RaycastHit[] mirrorHits = allHitsMirrors.Where(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
         hoodMirrors = new Mirror[mirrorHits.Length];
@@ -112,4 +114,35 @@ public class LevelManager : MonoBehaviour
         }
         return false;
     }
+
+
+   /* private bool IsPlayerUnderMirror(int rayCount, float radius, float passThreshold)
+    {
+        circularRayCasts = new RaycastHit[rayCount];
+        int notPassed = 0;
+        float incement = (Mathf.PI * 2) / rayCount;
+        for (int i = 0; i < rayCount; i++)
+        {
+            float x = Mathf.Cos(i * incement) * radius;
+            float y = Mathf.Sin(i * incement) * radius;
+            Vector3 castingPos = transform.position - Vector3.up * 3f + new Vector3(x, 0, y);
+            RaycastHit[] hits = Physics.RaycastAll(castingPos, Vector3.up, 20f, mirrorMask);
+            foreach (RaycastHit h in hits)
+                if (h.collider.tag.Equals("Mirror"))
+                    circularRayCasts[i] = h;
+        }
+        foreach (RaycastHit hit in circularRayCasts)
+            if (hit.collider == null)
+                notPassed++;
+
+        return (notPassed / (float)rayCount) < 1 - passThreshold;
+    }
+    private void OnDrawGizmos()
+    {
+        if (circularRayCasts != null)
+            foreach (RaycastHit r in circularRayCasts)
+            {
+                Gizmos.DrawSphere(r.point, 0.01f);
+            }
+    }*/
 }

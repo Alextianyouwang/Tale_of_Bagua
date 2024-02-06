@@ -45,5 +45,12 @@ public class PlayerMove : MonoBehaviour
         Vector3 force = (horizontal + vertical).normalized * moveIncrement;
         rb.AddForce(  force,ForceMode.Force);
     }
+/*    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag.Equals("Mirror")) 
+        {
+            collision.gameObject.GetComponent<Rigidbody>().AddForce((horizontal + vertical).normalized * 0.1f, ForceMode.Impulse);
+        }
+    }*/
 
 }

@@ -39,8 +39,8 @@ public class Mirror : MonoBehaviour
     {
         if (enlarge)
         {
-            crossCollider.transform.localScale = Vector3.one * 1.02f;
-            boxCollider.transform.localScale = Vector3.one * 1.02f;
+            crossCollider.transform.localScale = Vector3.one * 1.01f;
+            boxCollider.transform.localScale = Vector3.one * 1.01f;
         }
         else 
         {

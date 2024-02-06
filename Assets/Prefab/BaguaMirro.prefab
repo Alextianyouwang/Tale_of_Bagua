@@ -117,7 +117,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!64 &6053864251673688049
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -315,7 +315,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.01, y: 15, z: 4.5}
-  m_Center: {x: 13.4, y: -6, z: 0}
+  m_Center: {x: 13.5, y: -6, z: 0}
 --- !u!65 &9098386252382394543
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -328,7 +328,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.01, y: 15, z: 4.5}
-  m_Center: {x: -13.4, y: -6, z: 0}
+  m_Center: {x: -13.5, y: -6, z: 0}
 --- !u!65 &7340729189601311397
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -341,7 +341,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 4.5, y: 15, z: 0.01}
-  m_Center: {x: 0, y: -6, z: 13.4}
+  m_Center: {x: 0, y: -6, z: 13.5}
 --- !u!65 &5695339708168592080
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -354,7 +354,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 4.5, y: 15, z: 0.01}
-  m_Center: {x: 0, y: -6, z: -13.4}
+  m_Center: {x: 0, y: -6, z: -13.5}
 --- !u!114 &1650861003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,7 +416,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 15.5, y: 15, z: 0.01}
-  m_Center: {x: 0, y: -6, z: 11.1}
+  m_Center: {x: 0, y: -6, z: 11.2}
 --- !u!65 &1421519196956390640
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -429,7 +429,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 15.5, y: 15, z: 0.01}
-  m_Center: {x: 0, y: -6, z: -11.1}
+  m_Center: {x: 0, y: -6, z: -11.2}
 --- !u!65 &4318291962761166689
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -442,7 +442,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.01, y: 15, z: 15.5}
-  m_Center: {x: -11.1, y: -6, z: 0}
+  m_Center: {x: -11.2, y: -6, z: 0}
 --- !u!65 &6714485838381717215
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -455,7 +455,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.01, y: 15, z: 15.5}
-  m_Center: {x: 11.1, y: -6, z: 0}
+  m_Center: {x: 11.2, y: -6, z: 0}
 --- !u!114 &3696355005944275707
 MonoBehaviour:
   m_ObjectHideFlags: 0

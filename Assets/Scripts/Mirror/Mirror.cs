@@ -26,13 +26,27 @@ public class Mirror : MonoBehaviour
         if (material == null)
             Debug.LogWarning("Emissive Material for Mirror not found");
         rb = GetComponent<Rigidbody>();
-       
+
     }
     private void OnEnable()
     {
         crossCollider.GetColliders();
         boxCollider.GetColliders();
         GetBoxs();
+    }
+
+    public void ToggleColliderSize(bool enlarge) 
+    {
+        if (enlarge)
+        {
+            crossCollider.transform.localScale = Vector3.one * 1.02f;
+            boxCollider.transform.localScale = Vector3.one * 1.02f;
+        }
+        else 
+        {
+            crossCollider.transform.localScale = Vector3.one * 0.99f;
+            boxCollider.transform.localScale = Vector3.one * 0.99f;
+        }
     }
 
 

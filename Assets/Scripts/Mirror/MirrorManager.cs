@@ -100,12 +100,21 @@ public class MirrorManager : MonoBehaviour
                 m.ToggleBoxesRigidCollider(true);
     }
 
+    private void AdjustMirrorColliderSize() 
+    {
+        foreach (Mirror m in hoodMirrors)
+            m.ToggleColliderSize(true);
+        foreach (Mirror m in allMirrors.Where(x => !hoodMirrors.Contains(x))) 
+            m.ToggleColliderSize(false);
+    }
+
 
     private void FollowFixUpdate() 
     {
         UpdateMirrorPhysics();
         SetMirrorYPos();
         CageMirrorWhenCollapsed();
+        AdjustMirrorColliderSize();
 
         if (!currentMirror || !firstMirrorHasBeenClicked) 
             return;

@@ -1,14 +1,31 @@
 using UnityEngine;
 
+
 public class Spawner : MonoBehaviour
 {
-    public GameObject Obj;
+    [System.Serializable]
+    public class SpawnData 
+    {
+        public GameObject Obj;
+        public bool OnlySpawnOnceTheEntireGame = true;
+    }
+    private static bool HasBeenSpawned = false;
+    public SpawnData ObjectToSpawn;
     private void Awake()
     {
-        if (!Obj)
+        if (ObjectToSpawn == null)
             return;
-        Instantiate(Obj, Vector3.zero, Quaternion.identity);
+        if (ObjectToSpawn.OnlySpawnOnceTheEntireGame)
+            if (!HasBeenSpawned) 
+            {
+                Instantiate(ObjectToSpawn.Obj, Vector3.zero, Quaternion.identity);
+                HasBeenSpawned =true;
+            }
     }
 
+    private void OnDisable()
+    {
+        HasBeenSpawned=false;
+    }
 
 }

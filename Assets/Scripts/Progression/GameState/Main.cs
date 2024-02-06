@@ -1,6 +1,7 @@
 
 using System;
 using UnityEngine;
+[DefaultExecutionOrder(-10000)]
 public class Main : MonoBehaviour
 {
     public static Main instance;

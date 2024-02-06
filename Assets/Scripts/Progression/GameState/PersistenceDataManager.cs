@@ -24,6 +24,15 @@ public class PersistenceDataManager : MonoBehaviour
     public void Start()
     {
         _fileDataHandler = new FileDataHandler(Application.persistentDataPath, FileName);
+        CreateNewGameDataIfNull();
+    }
+    private void CreateNewGameDataIfNull() 
+    {
+        if (_gameData == null)
+        {
+            _gameData = new GameData();
+            _gameData.SceneInfos = OnRequestSceneInfo.Invoke();
+        }
     }
 
     void OnSceneLoaded(Scene scene, Scene current)
@@ -66,11 +75,7 @@ public class PersistenceDataManager : MonoBehaviour
 
         _gameData = _fileDataHandler.Load();
 
-        if (_gameData == null) 
-        {
-            _gameData = new GameData();
-            _gameData.SceneInfos = OnRequestSceneInfo.Invoke();
-        }
+        CreateNewGameDataIfNull();
         foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
         {
             dataPersistenceObj.LoadData(_gameData);

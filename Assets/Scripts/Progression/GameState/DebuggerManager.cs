@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class MainGameDebuggerManager : MonoBehaviour
+public class DebuggerManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _sceneName;
     [SerializeField] private TextMeshProUGUI _levelCount;

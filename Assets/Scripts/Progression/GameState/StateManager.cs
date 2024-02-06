@@ -1,25 +1,31 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class StateManager : MonoBehaviour
 {
     [SerializeField]private StateDataObject[] _stateData;
-    private int _currentState = 2;
+    [SerializeField] private int _startState;
+    private int _currentState = 0;
     public static StateDataObject CurrentState;
 
     public static Action<string> OnSetCurrentStateName;
     public static Action<bool> OnToggleGameDebugPanel;
 
-    private void ExecuteSelectedState(string name) 
+    private void OnEnable()
     {
-        StateDataObject state = _stateData.ToList().Find(x => x.Name == name);
-        CurrentState = state;
-        state.LoadState();
-        OnSetCurrentStateName?.Invoke(CurrentState.Name);
+        Main.instance.OnStartTicked += OnSingletonStarted;
     }
+    private void OnDisable()
+    {
+        
+    }
+
+    private void OnSingletonStarted() 
+    {
+        _currentState = _startState;
+        ExecuteCurrentState();
+    }
+
 
     private void ExecuteCurrentState() 
     {

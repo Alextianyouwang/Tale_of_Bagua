@@ -1,9 +1,11 @@
 
+using System;
 using UnityEngine;
 public class Main : MonoBehaviour
 {
     public static Main instance;
     public Coroutine LoadingGame_co;
+    public Action OnStartTicked;
     private void Awake()
     {
         CreateSingleton();
@@ -26,7 +28,8 @@ public class Main : MonoBehaviour
     }
     private void Start() 
     {
-
+     
+        OnStartTicked?.Invoke();
     }
 
  

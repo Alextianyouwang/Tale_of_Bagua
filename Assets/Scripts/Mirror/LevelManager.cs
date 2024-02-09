@@ -14,12 +14,13 @@ public class LevelManager : MonoBehaviour
     public Mirror[] allMirrors;
     private Collider[] overlapping;
     
-    RaycastHit[] allHitsMirrors, circularRayCasts;
+    RaycastHit[] allHitsMirrors;
     
     public static int allMirrorOnTop;
 
     public static Action<Mirror[]> OnShareHoodMirror;
     public static Action<Mirror[]> OnShareAllMirror;
+    public static Action<Level[]> OnShareAllLevels;
     public static Action OnFixUpdate;
 
     private void OnEnable()
@@ -35,6 +36,7 @@ public class LevelManager : MonoBehaviour
             mirror.gameObject.SetActive(enableMirrorAtStart);
          }
         OnShareAllMirror?.Invoke(allMirrors);
+        OnShareAllLevels?.Invoke(levels.ToArray());
     }
 
     void DisableOtherLevels(Level current) 

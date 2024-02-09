@@ -7,7 +7,7 @@ public class LazerEmitter : MonoBehaviour
     public enum Oriantations { Top, Bot, Left, Right}
     public Oriantations OriantationOptions;
     public LayerMask ObstacleMask, MirrorMask;
-    public Material RayVisualMaterial;
+    public Material[] RayVisualMaterial;
     private bool _hasBeenActivated;
     private Level[] _levels;
     private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
@@ -20,15 +20,30 @@ public class LazerEmitter : MonoBehaviour
     private Collider[]_overlappingColliders;
     private RaycastHit[] _allHitsMirrors;
     private RaycastHit _hitReceiverObject;
-    private LineRenderer _rayVisual;
+    private LineRenderer[] _rayVisual;
     [SerializeField] private int _levelIndex = 0;
 
     private void Awake()
     {
-        gameObject.AddComponent<LineRenderer>();
-        _rayVisual = GetComponent<LineRenderer>();
-        _rayVisual.material = RayVisualMaterial;
-        _rayVisual.enabled = false;
+        PrepareLineVisual();
+    }
+
+    private void PrepareLineVisual() 
+    {
+        _rayVisual = new LineRenderer[5];
+       
+       
+        for (int i = 0; i < _rayVisual.Length; i++) 
+        {
+            GameObject g = new GameObject();
+            g.transform.parent = transform;
+            g.layer = 6 + i;
+            g.AddComponent<LineRenderer>();
+            _rayVisual[i] = g.GetComponent<LineRenderer>();
+            _rayVisual[i].material = RayVisualMaterial[i];
+            _rayVisual[i].enabled = false;
+        }
+        
     }
     private void OnEnable()
     {
@@ -49,7 +64,15 @@ public class LazerEmitter : MonoBehaviour
     
     private void ReceiveShootCommand() 
     {
-        ShootLazer(20, 0.5f);
+        ShootLazer(40, 0.47f);
+    }
+    private void ReceiveStopCommand() 
+    {
+        foreach (LineRenderer r in _rayVisual)
+        {
+            r.enabled = false;
+        }
+
     }
     private void FixUpdate() 
     {
@@ -95,17 +118,23 @@ public class LazerEmitter : MonoBehaviour
             }    
             currentPosition += increment * direction;
         }
-        _rayVisual.enabled = true;
-        _rayVisual.SetPosition(0, transform.position);
-        _rayVisual.SetPosition(1, _hitReceiverObject.transform == null? currentPosition : _hitReceiverObject.point);
-        _rayVisual.startWidth = 0.1f;
-        _rayVisual.endWidth = 0.1f;
+        foreach (LineRenderer r in _rayVisual) 
+        {
+            r.enabled = true;
+            r.SetPosition(0, transform.position);
+            r.SetPosition(1, _hitReceiverObject.transform == null ? currentPosition : _hitReceiverObject.point);
+            r.startWidth = 0.1f;
+            r.endWidth = 0.1f;
+        }
+      
     }
 
     private bool FreeToProceed(Vector3 position, float objectRadius) 
     {
         _overlappingColliders = Physics.OverlapSphere(position, objectRadius, ObstacleMask);
         _allHitsMirrors = Physics.RaycastAll(position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask);
+        if (_allHitsMirrors.Length == 0)
+            return false;
         Level currentLevel = _levels[_allHitsMirrors.Length - 1];
         if (_overlappingColliders.Length == 0)
             return true;
@@ -161,6 +190,10 @@ public class LazerEmitter : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space)) 
         {
             ReceiveShootCommand();
+        }
+        if (Input.GetKeyUp(KeyCode.Space)) 
+        {
+            ReceiveStopCommand();
         }
     }
 }

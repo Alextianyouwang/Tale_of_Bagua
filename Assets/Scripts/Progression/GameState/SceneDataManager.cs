@@ -49,8 +49,8 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
  
         _tempSceneInfo = data.SceneInfos;
         _currentScene = data.CurrentScene;
-        if (Main.instance.LoadingGame_co == null)
-            Main.instance.LoadingGame_co = Main.instance.StartCoroutine(ImplementAllScenes(data));
+        if (Main.Instance.LoadingGame_co == null)
+            Main.Instance.LoadingGame_co = Main.Instance.StartCoroutine(ImplementAllScenes(data));
     }
     public void GetCommunicator() 
     {
@@ -62,12 +62,12 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
         for (int i = 0; i < _sceneDatas.Length; i++) 
         {
             _currentScene = i;
-            yield return Main.instance.StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
+            yield return Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
         }
         _currentScene = tempCurrentScene;
 
-        yield return Main.instance.StartCoroutine(LoadLevel(_sceneDatas[data.CurrentScene].Name));
-        Main.instance.LoadingGame_co = null;
+        yield return Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[data.CurrentScene].Name));
+        Main.Instance.LoadingGame_co = null;
     }
    
     public void NextScene()
@@ -83,7 +83,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
             return;
         }
         _currentScene++;
-        Main.instance.StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
+        Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
     }
     public void PreviousScene()
     {
@@ -98,7 +98,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
             return;
         }
         _currentScene--;
-        Main.instance.StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
+        Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
     }
 
     private IEnumerator LoadLevel(string sceneName)

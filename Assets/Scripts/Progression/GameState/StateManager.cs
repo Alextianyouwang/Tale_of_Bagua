@@ -13,7 +13,7 @@ public class StateManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Main.instance.OnStartTicked += OnSingletonStarted;
+        Main.Instance.OnStartTicked += OnSingletonStarted;
     }
     private void OnDisable()
     {

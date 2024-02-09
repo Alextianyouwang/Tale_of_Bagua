@@ -146,8 +146,15 @@ public class LazerEmitter : MonoBehaviour
         Gizmos.color = Color.yellow;
         foreach (Vector3 v in _rayCastPositionTracker)
             Gizmos.DrawSphere(v,0.1f);
-        Gizmos.color = (_hitReceiverObject.transform?.GetComponent<LazerReceiver>() ? Color.green: Color.red);
-        Gizmos.DrawSphere(_hitReceiverObject.point, 0.2f);
+        if (_hitReceiverObject.transform?.GetComponent<LazerReceiver>()) 
+        {
+            if (_hitReceiverObject.transform.GetComponent<LazerReceiver>().tag.Equals("LazerReceiver")) 
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(_hitReceiverObject.point, 0.2f);
+            }
+        }
+     
     }
     void Update()
     {

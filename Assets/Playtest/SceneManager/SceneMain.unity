@@ -7369,6 +7369,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95bafac83e87dfb409f0883c49181c1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MirrorMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  _levelIndex: 0
 --- !u!135 &419235545
 SphereCollider:
   m_ObjectHideFlags: 0

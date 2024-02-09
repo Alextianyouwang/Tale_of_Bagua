@@ -7,6 +7,7 @@ public class LazerEmitter : MonoBehaviour
     public enum Oriantations { Top, Bot, Left, Right}
     public Oriantations OriantationOptions;
     public LayerMask ObstacleMask, MirrorMask;
+    public Material RayVisualMaterial;
     private bool _hasBeenActivated;
     private Level[] _levels;
     private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
@@ -19,8 +20,16 @@ public class LazerEmitter : MonoBehaviour
     private Collider[]_overlappingColliders;
     private RaycastHit[] _allHitsMirrors;
     private RaycastHit _hitReceiverObject;
+    private LineRenderer _rayVisual;
     [SerializeField] private int _levelIndex = 0;
 
+    private void Awake()
+    {
+        gameObject.AddComponent<LineRenderer>();
+        _rayVisual = GetComponent<LineRenderer>();
+        _rayVisual.material = RayVisualMaterial;
+        _rayVisual.enabled = false;
+    }
     private void OnEnable()
     {
         LevelManager.OnFixUpdate += FixUpdate;
@@ -77,12 +86,20 @@ public class LazerEmitter : MonoBehaviour
             {
                 if (HandShake(currentPosition, increment * direction, out _hitReceiverObject)) 
                 {
-                    Connect(_hitReceiverObject);
-                    break;
+                    if (CheckVisibility(_hitReceiverObject)) 
+                    {
+                        Connect(_hitReceiverObject);
+                        break;
+                    }
                 }
             }    
             currentPosition += increment * direction;
         }
+        _rayVisual.enabled = true;
+        _rayVisual.SetPosition(0, transform.position);
+        _rayVisual.SetPosition(1, _hitReceiverObject.transform == null? currentPosition : _hitReceiverObject.point);
+        _rayVisual.startWidth = 0.1f;
+        _rayVisual.endWidth = 0.1f;
     }
 
     private bool FreeToProceed(Vector3 position, float objectRadius) 
@@ -113,10 +130,16 @@ public class LazerEmitter : MonoBehaviour
             return false;
     }
 
-    private void Connect(RaycastHit hit) 
+    private bool CheckVisibility(RaycastHit hit) 
     {
         if (hit.transform.GetComponent<LazerReceiver>())
-            hit.transform.GetComponent<LazerReceiver>().Receive();
+            return hit.transform.GetComponent<LazerReceiver>().IsObjectVisible();
+        return false;
+    }
+
+    private void Connect(RaycastHit hit) 
+    {
+        hit.transform.GetComponent<LazerReceiver>().Receive();
     }
     private void OnDrawGizmos()
     {

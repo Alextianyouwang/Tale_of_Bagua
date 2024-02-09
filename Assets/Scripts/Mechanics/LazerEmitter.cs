@@ -9,7 +9,6 @@ public class LazerEmitter : MonoBehaviour
     public LayerMask ObstacleMask, MirrorMask;
     private bool _hasBeenActivated;
     private Level[] _levels;
-    private Level _nextLevel;
     private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
     public bool HasBeenActivated 
     {
@@ -17,8 +16,9 @@ public class LazerEmitter : MonoBehaviour
         set { _hasBeenActivated = value; }
     }
 
-    private List<Collider>  _overlappingColliders = new List<Collider>();
+    private Collider[]_overlappingColliders;
     private RaycastHit[] _allHitsMirrors;
+    private RaycastHit _hitReceiverObject;
     [SerializeField] private int _levelIndex = 0;
 
     private void OnEnable()
@@ -49,6 +49,7 @@ public class LazerEmitter : MonoBehaviour
     private void ShootLazer(int steps, float increment) 
     {
         _rayCastPositionTracker.Clear();
+
         Vector3 currentPosition = transform.position;
         Vector3 direction = Vector3.zero;
         switch (OriantationOptions) 
@@ -66,24 +67,30 @@ public class LazerEmitter : MonoBehaviour
                 direction = Vector3.right;
                 break;
         }
-      
+        
         for (int i = 0; i < steps; i++) 
         {
             _rayCastPositionTracker.Add(currentPosition);
             if (!FreeToProceed(currentPosition, 0.01f))
                 break;
-            else
-                HandShake();
+            else 
+            {
+                if (HandShake(currentPosition, increment * direction, out _hitReceiverObject)) 
+                {
+                    Connect(_hitReceiverObject);
+                    break;
+                }
+            }    
             currentPosition += increment * direction;
         }
     }
 
     private bool FreeToProceed(Vector3 position, float objectRadius) 
     {
-        _overlappingColliders = Physics.OverlapSphere(position, objectRadius, ObstacleMask).ToList();
+        _overlappingColliders = Physics.OverlapSphere(position, objectRadius, ObstacleMask);
         _allHitsMirrors = Physics.RaycastAll(position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask);
         Level currentLevel = _levels[_allHitsMirrors.Length - 1];
-        if (_overlappingColliders.Count == 0)
+        if (_overlappingColliders.Length == 0)
             return true;
         foreach (Collider c in _overlappingColliders)
         {
@@ -96,15 +103,28 @@ public class LazerEmitter : MonoBehaviour
         return true;
     }
 
-    private void HandShake() 
+    private bool HandShake(Vector3 position,Vector3 increment, out RaycastHit hit) 
     {
-        
+        Ray handshake = new Ray(position, increment.normalized);
+        Physics.Raycast(handshake, out hit, increment.magnitude);
+        if (hit.transform != null && hit.transform.tag.Equals("LazerReceiver"))
+            return true;
+        else
+            return false;
+    }
+
+    private void Connect(RaycastHit hit) 
+    {
+        if (hit.transform.GetComponent<LazerReceiver>())
+            hit.transform.GetComponent<LazerReceiver>().Receive();
     }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         foreach (Vector3 v in _rayCastPositionTracker)
             Gizmos.DrawSphere(v,0.1f);
+        Gizmos.color = (_hitReceiverObject.transform?.GetComponent<LazerReceiver>() ? Color.green: Color.red);
+        Gizmos.DrawSphere(_hitReceiverObject.point, 0.2f);
     }
     void Update()
     {

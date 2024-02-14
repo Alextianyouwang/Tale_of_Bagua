@@ -71,9 +71,7 @@ public class LevelManager : MonoBehaviour
         overlapping = Physics.OverlapSphere(transform.position, 0.4f * transform.localScale.x, obstacleMask);
         allHitsMirrors = Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, mirrorMask);
         RaycastHit[] mirrorHits = allHitsMirrors.Where(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
-        hoodMirrors = new Mirror[mirrorHits.Length];
-        for (int i = 0; i < hoodMirrors.Length; i++)
-            hoodMirrors[i] = mirrorHits[i].transform.gameObject.GetComponent<Mirror>();
+        hoodMirrors = mirrorHits.Select(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
         OnShareHoodMirror?.Invoke(hoodMirrors);
 
         allMirrorOnTop = hoodMirrors.Length;

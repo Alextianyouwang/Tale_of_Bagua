@@ -17,10 +17,12 @@ public class LevelManager : MonoBehaviour
     RaycastHit[] allHitsMirrors;
     
     public static int allMirrorOnTop;
+    private int previousAllMirrorOnTop;
 
     public static Action<Mirror[]> OnShareHoodMirror;
     public static Action<Mirror[]> OnShareAllMirror;
     public static Action<Level[]> OnShareAllLevels;
+    public static Action OnPlayerSwitchLevel;
     public static Action OnFixUpdate;
 
     private void OnEnable()
@@ -78,6 +80,9 @@ public class LevelManager : MonoBehaviour
         currentLevel = levels[allHitsMirrors.Length - 1];
         lastLevel = levels[allHitsMirrors.Length - 2 <= 0 ? 0 : allHitsMirrors.Length - 2];
         nextLevel = levels[allHitsMirrors.Length >= levels.Count - 1 ? levels.Count - 1 : allHitsMirrors.Length];
+        if (allMirrorOnTop != previousAllMirrorOnTop)
+            OnPlayerSwitchLevel?.Invoke();
+        previousAllMirrorOnTop = allMirrorOnTop;
 
     }
 

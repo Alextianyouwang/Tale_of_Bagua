@@ -1,14 +1,12 @@
 using UnityEngine;
-using System;
 
 public class NPC_Manager : MonoBehaviour
 {
     public static NPC_Controller currentNPC;
     private GameObject exclamationIcon_prefab;
     private GameObject exclamationIcon_instance;
-    public static Action<TextAsset,Sprite> OnReadyToPlayDialogue;
     public GameObject[] NPC_Levels;
-    GameObject currentNPCLevel, previousNPCLevel;
+    private GameObject currentNPCLevel;
 
     private void Awake()
     {
@@ -21,17 +19,11 @@ public class NPC_Manager : MonoBehaviour
     private void OnEnable()
     {
         LevelManager.OnFixUpdate += CheckNPCLevel;
-        PlayerInteract.OnDetactPlayer += DisplayIcon;
-        PlayerInteract.OnLostPlayer += HideIcon;
     }
 
     private void OnDisable()
     {
         LevelManager.OnFixUpdate -= CheckNPCLevel;
-        PlayerInteract.OnDetactPlayer -= DisplayIcon;
-        PlayerInteract.OnLostPlayer -= HideIcon;
-
-
     }
     void CheckNPCLevel() 
     {
@@ -40,21 +32,8 @@ public class NPC_Manager : MonoBehaviour
         foreach (GameObject level in NPC_Levels)
             if (level != currentNPCLevel)
                 Utility.ToggleChildGameobjectColliderActivation(false, level);
-        if (previousNPCLevel != currentNPCLevel)
-            HideIcon();
-        previousNPCLevel = currentNPCLevel;
+ 
     }
 
-   
-    void DisplayIcon(Vector3 pos) 
-    {
-        exclamationIcon_instance.transform.position = pos;
-        exclamationIcon_instance.SetActive(true);
-    }
-
-    void HideIcon()
-    {
-        exclamationIcon_instance.SetActive(false);
-    }
 
 }

@@ -1,27 +1,15 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class LazerEmitter : MonoBehaviour
+public class LazerEmitter : RationalObject
 {
     public enum Oriantations { Top, Bot, Left, Right}
     public Oriantations OriantationOptions;
-    public LayerMask ObstacleMask, MirrorMask;
-    public Material[] RayVisualMaterial;
-    private bool _hasBeenActivated;
-    private Level[] _levels;
-    private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
-    public bool HasBeenActivated 
-    {
-        get { return _hasBeenActivated; }
-        set { _hasBeenActivated = value; }
-    }
 
-    private Collider[]_overlappingColliders;
-    private RaycastHit[] _allHitsMirrors;
+    public Material[] RayVisualMaterial;
+    private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
     private RaycastHit _hitReceiverObject;
     private LineRenderer[] _rayVisual;
-    [SerializeField] private int _levelIndex = 0;
 
     private void Awake()
     {
@@ -45,22 +33,6 @@ public class LazerEmitter : MonoBehaviour
         }
         
     }
-    private void OnEnable()
-    {
-        LevelManager.OnFixUpdate += FixUpdate;
-        LevelManager.OnShareAllLevels += ReceiveAllLevels;
-    }
-    private void OnDisable()
-    {
-        LevelManager.OnFixUpdate -= FixUpdate;
-        LevelManager.OnShareAllLevels -= ReceiveAllLevels;
-
-    }
-    private void ReceiveAllLevels(Level[] level) 
-    {
-        _levels = level;
-    }
-
     
     private void ReceiveShootCommand() 
     {
@@ -72,11 +44,6 @@ public class LazerEmitter : MonoBehaviour
         {
             r.enabled = false;
         }
-
-    }
-    private void FixUpdate() 
-    {
-        
     }
     private void ShootLazer(int steps, float increment) 
     {
@@ -107,7 +74,7 @@ public class LazerEmitter : MonoBehaviour
                 break;
             else 
             {
-                if (HandShake(currentPosition, increment * direction, out _hitReceiverObject)) 
+                if (HandShake("LazerReceiver",currentPosition, increment * direction, out _hitReceiverObject)) 
                 {
                     if (CheckVisibility(_hitReceiverObject)) 
                     {
@@ -129,47 +96,6 @@ public class LazerEmitter : MonoBehaviour
       
     }
 
-    private bool FreeToProceed(Vector3 position, float objectRadius) 
-    {
-        _overlappingColliders = Physics.OverlapSphere(position, objectRadius, ObstacleMask);
-        _allHitsMirrors = Physics.RaycastAll(position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask);
-        if (_allHitsMirrors.Length == 0)
-            return false;
-        Level currentLevel = _levels[_allHitsMirrors.Length - 1];
-        if (_overlappingColliders.Length == 0)
-            return true;
-        foreach (Collider c in _overlappingColliders)
-        {
-            Level level = c.gameObject.GetComponentInParent<Level>();
-            if (level == null || c == GetComponent<Collider>())
-                continue;
-            if (level == currentLevel)
-                return false;
-        }
-        return true;
-    }
-
-    private bool HandShake(Vector3 position,Vector3 increment, out RaycastHit hit) 
-    {
-        Ray handshake = new Ray(position, increment.normalized);
-        Physics.Raycast(handshake, out hit, increment.magnitude);
-        if (hit.transform != null && hit.transform.tag.Equals("LazerReceiver"))
-            return true;
-        else
-            return false;
-    }
-
-    private bool CheckVisibility(RaycastHit hit) 
-    {
-        if (hit.transform.GetComponent<LazerReceiver>())
-            return hit.transform.GetComponent<LazerReceiver>().IsObjectVisible();
-        return false;
-    }
-
-    private void Connect(RaycastHit hit) 
-    {
-        hit.transform.GetComponent<LazerReceiver>().Receive();
-    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

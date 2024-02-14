@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 public class LazerEmitter : RationalObject,IInteractable
 {
     public enum Oriantations { Top, Bot, Left, Right}
@@ -11,6 +10,7 @@ public class LazerEmitter : RationalObject,IInteractable
     private RaycastHit _hitReceiverObject;
     private LineRenderer[] _rayVisual;
 
+    public GameObject VisualCueUI;
 
     private void Awake()
     {
@@ -116,7 +116,28 @@ public class LazerEmitter : RationalObject,IInteractable
         }
       
     }
-
+    public void Editor_ChangeOriantationUI() 
+    {
+        if (!VisualCueUI)
+            return;
+        Vector3 eularAngle = Vector3.zero;
+        switch (OriantationOptions)
+        {
+            case Oriantations.Top:
+                eularAngle = new Vector3(90, 180, 0);
+                break;
+            case Oriantations.Bot:
+                eularAngle = new Vector3(90, 0, 0);
+                break;
+            case Oriantations.Left:
+                eularAngle = new Vector3(90, 90, 0);
+                break;
+            case Oriantations.Right:
+                eularAngle = new Vector3(90, 270, 0);
+                break;
+        }
+        VisualCueUI.transform.eulerAngles = eularAngle;
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

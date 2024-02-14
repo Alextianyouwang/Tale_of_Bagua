@@ -19,6 +19,7 @@ public class PlayerInteract : MonoBehaviour
             currentInteract.Hold();
         else if (Input.GetKeyUp(KeyCode.Space))
             currentInteract.Disengage();
+      
     }
     void CheckObjectSelection()
     {
@@ -29,11 +30,20 @@ public class PlayerInteract : MonoBehaviour
 
 
         if (currentInteract == null && previousInteract != null)
+        {
             OnLostPlayer?.Invoke();
-        else if (currentInteract != null && !currentInteract.IsVisible())
+            previousInteract.Disengage();
+        }
+        else if (currentInteract != null && !currentInteract.IsVisible()) 
+        {
             OnLostPlayer?.Invoke();
-        else if (currentInteract != previousInteract && currentInteract != null && previousInteract != null)
+            currentInteract.Disengage();
+        }
+        else if (currentInteract != previousInteract && currentInteract != null && previousInteract != null) 
+        {
             OnLostPlayer?.Invoke();
+            previousInteract.Disengage();
+        }
         previousInteract = currentInteract;
     }
 

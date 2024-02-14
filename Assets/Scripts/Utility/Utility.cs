@@ -27,4 +27,13 @@ public static class Utility
         }
         return dirs;
     }
+    public static void ToggleChildGameobjectColliderActivation(bool value, GameObject target)
+    {
+        if (target.transform.childCount == 0)
+            return;
+        foreach (Transform t in target.transform)
+            if (t.GetComponent<Collider>())
+                t.GetComponent<Collider>().enabled = value;
+    }
+
 }

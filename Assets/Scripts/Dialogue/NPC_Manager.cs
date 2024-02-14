@@ -36,24 +36,16 @@ public class NPC_Manager : MonoBehaviour
     void CheckNPCLevel() 
     {
         currentNPCLevel = NPC_Levels[LevelManager.allMirrorOnTop];
-        ToggleChildGameobjectColliderActivation(true, currentNPCLevel);
+        Utility.ToggleChildGameobjectColliderActivation(true, currentNPCLevel);
         foreach (GameObject level in NPC_Levels)
-            if (level != currentNPCLevel) 
-                ToggleChildGameobjectColliderActivation(false, level);
+            if (level != currentNPCLevel)
+                Utility.ToggleChildGameobjectColliderActivation(false, level);
         if (previousNPCLevel != currentNPCLevel)
             HideIcon();
         previousNPCLevel = currentNPCLevel;
     }
 
-    void ToggleChildGameobjectColliderActivation(bool value, GameObject target) 
-    {
-        if (target.transform.childCount == 0)
-            return;
-        foreach (Transform t in target.transform) 
-            if (t.GetComponent<Collider>())
-                t.GetComponent<Collider>().enabled = value;     
-    }
-
+   
     void DisplayIcon(Vector3 pos) 
     {
         exclamationIcon_instance.transform.position = pos;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LazerEmitter : RationalObject
+public class LazerEmitter : RationalObject,IInteractable
 {
     public enum Oriantations { Top, Bot, Left, Right}
     public Oriantations OriantationOptions;
@@ -10,6 +10,7 @@ public class LazerEmitter : RationalObject
     private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
     private RaycastHit _hitReceiverObject;
     private LineRenderer[] _rayVisual;
+
 
     private void Awake()
     {
@@ -33,7 +34,26 @@ public class LazerEmitter : RationalObject
         }
         
     }
-    
+    public void Interact() 
+    {
+
+        ReceiveShootCommand();
+    }
+    public void Hold() { }
+
+    public void Disengage() 
+    {
+        ReceiveStopCommand();
+    }
+    public bool IsVisible()
+    {
+        return IsObjectVisibleAndSameLevelWithPlayer();
+    }
+
+    public IconType GetIconType() 
+    {
+        return IconType.kavaii;
+    }
     private void ReceiveShootCommand() 
     {
         ShootLazer(40, 0.47f);
@@ -44,6 +64,7 @@ public class LazerEmitter : RationalObject
         {
             r.enabled = false;
         }
+        _rayCastPositionTracker.Clear();
     }
     private void ShootLazer(int steps, float increment) 
     {
@@ -110,16 +131,5 @@ public class LazerEmitter : RationalObject
             }
         }
      
-    }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space)) 
-        {
-            ReceiveShootCommand();
-        }
-        if (Input.GetKeyUp(KeyCode.Space)) 
-        {
-            ReceiveStopCommand();
-        }
     }
 }

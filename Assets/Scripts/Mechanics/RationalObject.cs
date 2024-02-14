@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class RationalObject : MonoBehaviour
 {
@@ -52,16 +53,22 @@ public class RationalObject : MonoBehaviour
             return false;
     }
 
-    public bool IsObjectVisible()
+    public bool IsObjectVisibleAndSameLevelWithPlayer()
     {
-        _allHitsMirrors = Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask);
-        return _allHitsMirrors.Length - 1 == _levelIndex;
+        return
+            LevelManager.allMirrorOnTop == Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask).Length - 1
+            &&
+            LevelManager.allMirrorOnTop == _levelIndex;
+    }
+    public bool IsObjectAtCorrectLevel() 
+    {
+        return Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask).Length - 1 == _levelIndex;
     }
 
     protected bool CheckVisibility(RaycastHit hit)
     {
         if (hit.transform.GetComponent<RationalObject>())
-            return hit.transform.GetComponent<RationalObject>().IsObjectVisible();
+            return hit.transform.GetComponent<RationalObject>().IsObjectAtCorrectLevel();
         return false;
     }
 

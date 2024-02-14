@@ -11,22 +11,32 @@ public class PlayerInteract : MonoBehaviour
     private void Update()
     {
         CheckObjectSelection();
-        if (currentInteract != null)
-        {
-            if (Input.GetKeyDown(KeyCode.Space)) 
-                currentInteract.Interact();
-        }
+        if (currentInteract == null || !currentInteract.IsVisible())
+            return;
+        if (Input.GetKeyDown(KeyCode.Space))
+            currentInteract.Interact();
+        else if (Input.GetKey(KeyCode.Space))
+            currentInteract.Hold();
+        else if (Input.GetKeyUp(KeyCode.Space))
+            currentInteract.Disengage();
     }
     void CheckObjectSelection()
     {
         currentInteract = GetCurrentInteractiveObject();
-        if (currentInteract != null)
-            OnDetactPlayer?.Invoke((currentInteract as MonoBehaviour).transform.position + Vector3.forward * 0.5f,currentInteract.GetIconType());
+
+        if (currentInteract != null && currentInteract.IsVisible())
+            OnDetactPlayer?.Invoke((currentInteract as MonoBehaviour).transform.position + Vector3.forward * 0.5f, currentInteract.GetIconType());
+
+
         if (currentInteract == null && previousInteract != null)
             OnLostPlayer?.Invoke();
-        else if (currentInteract != previousInteract && currentInteract  != null && previousInteract != null)
+        else if (currentInteract != null && !currentInteract.IsVisible())
             OnLostPlayer?.Invoke();
+        else if (currentInteract != previousInteract && currentInteract != null && previousInteract != null)
+            OnLostPlayer?.Invoke();
+        previousInteract = currentInteract;
     }
+
     IInteractable GetCurrentInteractiveObject() 
     {
         Collider[] objs = Physics.OverlapSphere(transform.position, InteractionDistance);

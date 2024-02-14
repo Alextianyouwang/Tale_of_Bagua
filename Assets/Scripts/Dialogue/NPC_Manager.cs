@@ -3,18 +3,9 @@ using UnityEngine;
 public class NPC_Manager : MonoBehaviour
 {
     public static NPC_Controller currentNPC;
-    private GameObject exclamationIcon_prefab;
-    private GameObject exclamationIcon_instance;
     public GameObject[] NPC_Levels;
     private GameObject currentNPCLevel;
 
-    private void Awake()
-    {
-        
-        exclamationIcon_prefab = Resources.Load<GameObject>("UI/P_ExclamationIcon");
-        exclamationIcon_instance = Instantiate(exclamationIcon_prefab);
-        exclamationIcon_instance.SetActive(false);
-    }
 
     private void OnEnable()
     {
@@ -34,6 +25,4 @@ public class NPC_Manager : MonoBehaviour
                 Utility.ToggleChildGameobjectColliderActivation(false, level);
  
     }
-
-
 }

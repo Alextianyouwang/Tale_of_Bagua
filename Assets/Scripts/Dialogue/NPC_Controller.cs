@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 
-public class NPC_Controller : MonoBehaviour,IInteractable
+public class NPC_Controller : RationalObject,IInteractable
 { 
     public Action<Vector3, TextAsset, Sprite> OnDetactPlayer;
     public Action OnLostPlayer;
@@ -39,6 +39,14 @@ public class NPC_Controller : MonoBehaviour,IInteractable
         NPC_Manager.currentNPC = this;
         OnPlayDialogue?.Invoke(InkDialogueAsset, IconImage);
     }
+    public void Hold() { }
+
+    public void Disengage() { }
+    public bool IsVisible() 
+    {
+        return IsObjectVisibleAndSameLevelWithPlayer();
+    }
+
     public IconType GetIconType() 
     {
         return IconType.exclamation;

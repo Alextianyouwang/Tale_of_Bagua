@@ -31,12 +31,12 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Animator iconAnimator;
     private void OnEnable()
     {
-        PlayerInteract.OnPlayDialogue += EnterDialogueMode;
+        NPC_Controller.OnPlayDialogue += EnterDialogueMode;
         OnGeneralEventCalled += ReceiveGeneralEvent;
     }
     private void OnDisable()
     {
-        PlayerInteract.OnPlayDialogue -= EnterDialogueMode;
+        NPC_Controller.OnPlayDialogue -= EnterDialogueMode;
     }
     public void Awake()
     {
@@ -94,11 +94,11 @@ public class DialogueManager : MonoBehaviour
             MirrorManager.canUseRightClick = false;
             currentDialogue_NPC = new Story(inkJson_NPC.text);
             currentDialogue_NPC.BindExternalFunction("GeneralEvent",  OnGeneralEventCalled);
-            PlayerInteract.currentNPC.UpdateInteractionBeforePrint();
-            print("Current dialogue:" + PlayerInteract.currentNPC.name + " interaction " + PlayerInteract.currentNPC.interactionCounter);
+            NPC_Manager.currentNPC.UpdateInteractionBeforePrint();
+            print("Current dialogue:" + NPC_Manager.currentNPC.name + " interaction " + NPC_Manager.currentNPC.interactionCounter);
             try
             {
-                currentDialogue_NPC.ChoosePathString($"{PlayerInteract.currentNPC.interactionCounter}Interaction");
+                currentDialogue_NPC.ChoosePathString($"{NPC_Manager.currentNPC.interactionCounter}Interaction");
             }
             catch (StoryException)
             {
@@ -157,7 +157,7 @@ public class DialogueManager : MonoBehaviour
         MirrorManager.canUseRightClick = true;
         dialogueText.text = null;
         dialogueIcon.sprite = null;
-        PlayerInteract.currentNPC.UpdateInteractionAfterPrint();
+        NPC_Manager.currentNPC.UpdateInteractionAfterPrint();
 
     }
 

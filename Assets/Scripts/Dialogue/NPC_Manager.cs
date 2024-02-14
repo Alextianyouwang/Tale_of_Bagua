@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 
 public class NPC_Manager : MonoBehaviour
 {
-    private NPC_Controller[] npcs;
+    public static NPC_Controller currentNPC;
     private GameObject exclamationIcon_prefab;
     private GameObject exclamationIcon_instance;
     public static Action<TextAsset,Sprite> OnReadyToPlayDialogue;
@@ -15,7 +13,6 @@ public class NPC_Manager : MonoBehaviour
     private void Awake()
     {
         
-        npcs = FindObjectsOfType<NPC_Controller>();
         exclamationIcon_prefab = Resources.Load<GameObject>("UI/P_ExclamationIcon");
         exclamationIcon_instance = Instantiate(exclamationIcon_prefab);
         exclamationIcon_instance.SetActive(false);

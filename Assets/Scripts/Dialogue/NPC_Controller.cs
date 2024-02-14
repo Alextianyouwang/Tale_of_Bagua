@@ -2,13 +2,13 @@
 using UnityEngine;
 using System;
 
-public class NPC_Controller : MonoBehaviour
-{
+public class NPC_Controller : MonoBehaviour,IInteractable
+{ 
     public Action<Vector3, TextAsset, Sprite> OnDetactPlayer;
     public Action OnLostPlayer;
     public TextAsset InkDialogueAsset;
     public Sprite IconImage;
-    
+    public static Action<TextAsset, Sprite> OnPlayDialogue;
 
     public int interactionCounter { get; private set; } = 0;
     public DialogueProgressionSetting[] ProgressionSettings;
@@ -33,6 +33,11 @@ public class NPC_Controller : MonoBehaviour
     private void OnDisable()
     {
         DialogueManager.OnGeneralEventCalledGlobal-= ReceiveGeneralEvent;
+    }
+    public void Interact() 
+    {
+        NPC_Manager.currentNPC = this;
+        OnPlayDialogue?.Invoke(InkDialogueAsset, IconImage);
     }
     void ReceiveGeneralEvent(string value) 
     {

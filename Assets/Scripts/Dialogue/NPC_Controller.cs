@@ -39,6 +39,10 @@ public class NPC_Controller : MonoBehaviour,IInteractable
         NPC_Manager.currentNPC = this;
         OnPlayDialogue?.Invoke(InkDialogueAsset, IconImage);
     }
+    public IconType GetIconType() 
+    {
+        return IconType.exclamation;
+    }
     void ReceiveGeneralEvent(string value) 
     {
         var stage = ProgressionSettings[interactionCounter <= ProgressionSettings.Length - 1 ? interactionCounter : ProgressionSettings.Length - 1];

@@ -1,9 +1,12 @@
 using UnityEngine;
+public enum IconType { exclamation }
 
 public class WorldUIManager : MonoBehaviour
 {
     private GameObject exclamationIcon_prefab;
     private GameObject exclamationIcon_instance;
+
+  
     private void Awake()
     {
         exclamationIcon_prefab = Resources.Load<GameObject>("UI/P_ExclamationIcon");
@@ -25,10 +28,21 @@ public class WorldUIManager : MonoBehaviour
         LevelManager.OnPlayerSwitchLevel -= HideIcon;
 
     }
-    void DisplayIcon(Vector3 pos)
+    void DisplayIcon(Vector3 pos, IconType type)
     {
-        exclamationIcon_instance.transform.position = pos;
-        exclamationIcon_instance.SetActive(true);
+        switch (type) 
+        {
+            case IconType.exclamation:
+                exclamationIcon_instance.transform.position = pos;
+                exclamationIcon_instance.SetActive(true);
+                break;
+
+            default:
+                exclamationIcon_instance.transform.position = pos;
+                exclamationIcon_instance.SetActive(true);
+                break;
+        }
+  
     }
 
     void HideIcon()

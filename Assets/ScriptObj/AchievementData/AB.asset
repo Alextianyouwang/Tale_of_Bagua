@@ -15,5 +15,9 @@ MonoBehaviour:
   RequiredAchievementsToUnlock:
   - {fileID: 11400000, guid: 3e4ab574f1afd1b4188c41d823629035, type: 2}
   - {fileID: 11400000, guid: 7398f213a9e3ab0498a32f6645b9ae84, type: 2}
-  isAccomplished: 0
+  EventToRaiseWhenUnlocked:
+  - {fileID: 11400000, guid: cabb55baa661c3d4bac62a96477d7ce2, type: 2}
   isUnlocked: 0
+  EventToRaiseWhenAccomplished:
+  - {fileID: 11400000, guid: 21b41cc2fbd129c448e676b01cf78cac, type: 2}
+  isAccomplished: 0

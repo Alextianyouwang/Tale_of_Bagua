@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: A
   m_EditorClassIdentifier: 
   RequiredAchievementsToUnlock: []
-  isAccomplished: 0
+  EventToRaiseWhenUnlocked:
+  - {fileID: 11400000, guid: a66729d1b9ac0ee459e223374e1d1754, type: 2}
   isUnlocked: 0
+  EventToRaiseWhenAccomplished:
+  - {fileID: 11400000, guid: 83c69a24118777b47a232105e9bafa74, type: 2}
+  isAccomplished: 0

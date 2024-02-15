@@ -5686,6 +5686,9 @@ GameObject:
   - component: {fileID: 322707028}
   - component: {fileID: 322707027}
   - component: {fileID: 322707026}
+  - component: {fileID: 322707033}
+  - component: {fileID: 322707032}
+  - component: {fileID: 322707031}
   m_Layer: 6
   m_Name: AB
   m_TagString: Untagged
@@ -5746,7 +5749,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9b39cf59eba836e4d919dfb535e9d70f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5791,6 +5794,74 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &322707031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322707025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 322707033}
+        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+        m_MethodName: ChangeToGreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: 21b41cc2fbd129c448e676b01cf78cac, type: 2}
+--- !u!114 &322707032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322707025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 322707033}
+        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+        m_MethodName: ChangeToYellow
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: cabb55baa661c3d4bac62a96477d7ce2, type: 2}
+--- !u!114 &322707033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322707025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647cfcc12b71a114f9978816971188d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &325346387
 GameObject:
   m_ObjectHideFlags: 0
@@ -13558,6 +13629,9 @@ GameObject:
   - component: {fileID: 795905559}
   - component: {fileID: 795905558}
   - component: {fileID: 795905557}
+  - component: {fileID: 795905564}
+  - component: {fileID: 795905563}
+  - component: {fileID: 795905562}
   m_Layer: 6
   m_Name: B
   m_TagString: Untagged
@@ -13618,7 +13692,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9b39cf59eba836e4d919dfb535e9d70f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13663,6 +13737,74 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &795905562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795905556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647cfcc12b71a114f9978816971188d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &795905563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795905556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 795905562}
+        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+        m_MethodName: ChangeToGreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: bbde087beb3c7ea4699b324864ec6b7d, type: 2}
+--- !u!114 &795905564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795905556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 795905562}
+        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+        m_MethodName: ChangeToYellow
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: c989720c411f754428f341533cab311c, type: 2}
 --- !u!1 &804447871
 GameObject:
   m_ObjectHideFlags: 0
@@ -21048,6 +21190,9 @@ GameObject:
   - component: {fileID: 1275496053}
   - component: {fileID: 1275496056}
   - component: {fileID: 1275496052}
+  - component: {fileID: 1275496059}
+  - component: {fileID: 1275496058}
+  - component: {fileID: 1275496057}
   m_Layer: 6
   m_Name: A
   m_TagString: Untagged
@@ -21088,7 +21233,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9b39cf59eba836e4d919dfb535e9d70f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -21153,6 +21298,74 @@ MonoBehaviour:
     m_Bits: 2048
   _levelIndex: 0
   Achievement: {fileID: 11400000, guid: 3e4ab574f1afd1b4188c41d823629035, type: 2}
+--- !u!114 &1275496057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275496051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647cfcc12b71a114f9978816971188d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1275496058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275496051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1275496057}
+        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+        m_MethodName: ChangeToYellow
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: a66729d1b9ac0ee459e223374e1d1754, type: 2}
+--- !u!114 &1275496059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275496051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1275496057}
+        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+        m_MethodName: ChangeToGreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: 83c69a24118777b47a232105e9bafa74, type: 2}
 --- !u!1 &1297091313
 GameObject:
   m_ObjectHideFlags: 0

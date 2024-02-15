@@ -11,7 +11,7 @@ public class PlayerInteract : MonoBehaviour
     private void Update()
     {
         CheckObjectSelection();
-        if (currentInteract == null || !currentInteract.IsVisible())
+        if (currentInteract == null || !currentInteract.IsVisible() || !currentInteract.IsActive())
             return;
         if (Input.GetKeyDown(KeyCode.Space))
             currentInteract.Interact();
@@ -25,7 +25,7 @@ public class PlayerInteract : MonoBehaviour
     {
         currentInteract = GetCurrentInteractiveObject();
 
-        if (currentInteract != null && currentInteract.IsVisible())
+        if (currentInteract != null && currentInteract.IsVisible() && currentInteract.IsActive())
             OnDetactPlayer?.Invoke((currentInteract as MonoBehaviour).transform.position + Vector3.forward * 0.5f, currentInteract.GetIconType());
 
 

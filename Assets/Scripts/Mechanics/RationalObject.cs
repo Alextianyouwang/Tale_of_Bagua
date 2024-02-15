@@ -1,6 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.UIElements;
-
 public class RationalObject : MonoBehaviour
 {
     protected Collider[] _overlappingColliders;
@@ -9,11 +8,12 @@ public class RationalObject : MonoBehaviour
     public LayerMask ObstacleMask, MirrorMask;
     public int _levelIndex = 0;
 
-    private void OnEnable()
+    public Action OnReceive;
+    protected virtual void OnEnable()
     {
         LevelManager.OnShareAllLevels += ReceiveAllLevels;
     }
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         LevelManager.OnShareAllLevels -= ReceiveAllLevels;
 
@@ -43,11 +43,11 @@ public class RationalObject : MonoBehaviour
         return true;
     }
 
-    protected bool HandShake(string tagName, Vector3 position, Vector3 distance, out RaycastHit hit)
+    protected bool HandShake( Vector3 position, Vector3 distance, out RaycastHit hit)
     {
         Ray handshake = new Ray(position, distance.normalized);
         Physics.Raycast(handshake, out hit, distance.magnitude);
-        if (hit.transform != null && hit.transform.tag.Equals(tagName))
+        if (hit.transform != null && hit.transform.GetComponent<RationalObject>())
             return true;
         else
             return false;
@@ -72,15 +72,9 @@ public class RationalObject : MonoBehaviour
         return false;
     }
 
-
-    protected void Connect(RaycastHit hit)
+    public void Receive()
     {
-        hit.transform.GetComponent<RationalObject>().Receive();
-    }
-
-    protected void Receive()
-    {
-        print(name);
+        OnReceive?.Invoke();
     }
 
 }

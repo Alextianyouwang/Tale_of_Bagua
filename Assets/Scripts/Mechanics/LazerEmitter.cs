@@ -4,6 +4,7 @@ public class LazerEmitter : RationalObject,IInteractable
 {
     public enum Oriantations { Top, Bot, Left, Right}
     public Oriantations OriantationOptions;
+    public bool Reflector = false;
 
     public Material[] RayVisualMaterial;
     private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
@@ -11,12 +12,22 @@ public class LazerEmitter : RationalObject,IInteractable
     private LineRenderer[] _rayVisual;
 
     public GameObject VisualCueUI;
+    private LazerEmitter _chainedEmitter = null;
 
     private void Awake()
     {
         PrepareLineVisual();
     }
-
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        OnReceive += BranchReceived;
+        
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+    }
     private void PrepareLineVisual() 
     {
         _rayVisual = new LineRenderer[5];
@@ -36,14 +47,14 @@ public class LazerEmitter : RationalObject,IInteractable
     }
     public void Interact() 
     {
-
+   
         ReceiveShootCommand();
     }
     public void Hold() { }
 
     public void Disengage() 
     {
-        ReceiveStopCommand();
+        RecursivelyStop();
     }
     public bool IsVisible()
     {
@@ -58,12 +69,23 @@ public class LazerEmitter : RationalObject,IInteractable
     {
         ShootLazer(40, 0.47f);
     }
+    public bool IsActive() 
+    {
+        return !Reflector;
+    }
+    private void RecursivelyStop() 
+    {
+        LazerEmitter current = this;
+        while (current != null)
+        {
+            current.ReceiveStopCommand();
+            current = current._chainedEmitter;
+        }
+    }
     private void ReceiveStopCommand() 
     {
         foreach (LineRenderer r in _rayVisual)
-        {
             r.enabled = false;
-        }
         _rayCastPositionTracker.Clear();
     }
     private void ShootLazer(int steps, float increment) 
@@ -93,17 +115,20 @@ public class LazerEmitter : RationalObject,IInteractable
             _rayCastPositionTracker.Add(currentPosition);
             if (!FreeToProceed(currentPosition, 0.01f))
                 break;
-            else 
+
+            if (HandShake(currentPosition, increment * direction, out _hitReceiverObject))
             {
-                if (HandShake("LazerReceiver",currentPosition, increment * direction, out _hitReceiverObject)) 
+                if (CheckVisibility(_hitReceiverObject))
                 {
-                    if (CheckVisibility(_hitReceiverObject)) 
-                    {
-                        Connect(_hitReceiverObject);
-                        break;
-                    }
+                    LazerEmitter chain = _hitReceiverObject.transform.GetComponent<LazerEmitter>();
+                    if (chain != null && chain.Reflector)
+                        _chainedEmitter = chain;
+
+                    _hitReceiverObject.transform.GetComponent<RationalObject>().Receive();
+                    break;
                 }
-            }    
+            }
+
             currentPosition += increment * direction;
         }
         foreach (LineRenderer r in _rayVisual) 
@@ -116,7 +141,13 @@ public class LazerEmitter : RationalObject,IInteractable
         }
       
     }
-    public void Editor_ChangeOriantationUI() 
+    public void BranchReceived()
+    {
+        if (Reflector)
+            ReceiveShootCommand();
+    }
+
+public void Editor_ChangeOriantationUI() 
     {
         if (!VisualCueUI)
             return;
@@ -137,6 +168,7 @@ public class LazerEmitter : RationalObject,IInteractable
                 break;
         }
         VisualCueUI.transform.eulerAngles = eularAngle;
+        VisualCueUI.transform.localScale = Reflector? Vector3.one * 0.5f : Vector3.one;
     }
     private void OnDrawGizmos()
     {

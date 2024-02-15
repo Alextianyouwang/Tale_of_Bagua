@@ -51,6 +51,10 @@ public class NPC_Controller : RationalObject,IInteractable
     {
         return IconType.exclamation;
     }
+    public bool IsActive() 
+    {
+        return true;
+    }
     void ReceiveGeneralEvent(string value) 
     {
         var stage = ProgressionSettings[interactionCounter <= ProgressionSettings.Length - 1 ? interactionCounter : ProgressionSettings.Length - 1];

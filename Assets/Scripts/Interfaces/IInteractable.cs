@@ -7,6 +7,7 @@ public interface IInteractable
     public void Disengage();
 
     public bool IsVisible();
+    public bool IsActive();
     public IconType GetIconType();
 }
 

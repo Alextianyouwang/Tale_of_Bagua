@@ -113,9 +113,6 @@ public class LazerEmitter : RationalObject,IInteractable
         for (int i = 0; i < steps; i++) 
         {
             _rayCastPositionTracker.Add(currentPosition);
-            if (!FreeToProceed(currentPosition, 0.01f))
-                break;
-
             if (HandShake(currentPosition, increment * direction, out _hitReceiverObject))
             {
                 if (CheckVisibility(_hitReceiverObject))
@@ -128,6 +125,8 @@ public class LazerEmitter : RationalObject,IInteractable
                     break;
                 }
             }
+            if (!FreeToProceed(currentPosition, 0.01f))
+                break;
 
             currentPosition += increment * direction;
         }

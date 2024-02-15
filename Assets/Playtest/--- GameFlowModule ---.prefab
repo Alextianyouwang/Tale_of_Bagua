@@ -1952,6 +1952,7 @@ GameObject:
   - component: {fileID: 5454782119941218940}
   - component: {fileID: 5454782119941218939}
   - component: {fileID: 8090359114256657969}
+  - component: {fileID: 2596340824182202600}
   m_Layer: 0
   m_Name: --- GameFlowModule ---
   m_TagString: Untagged
@@ -2053,6 +2054,22 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7c9df1202c7db4949a32573cf9849738, type: 2}
   - {fileID: 11400000, guid: 5d64c880e7044c245839db79bfbb57a0, type: 2}
   _startState: 2
+--- !u!114 &2596340824182202600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5454782119941218938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cf8451c3b712214d8cb7fd48c31128e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Achievements:
+  - {fileID: 11400000, guid: 3e4ab574f1afd1b4188c41d823629035, type: 2}
+  - {fileID: 11400000, guid: 7398f213a9e3ab0498a32f6645b9ae84, type: 2}
+  - {fileID: 11400000, guid: cd42058b2040bbc439b9ab22669dbe1a, type: 2}
 --- !u!1 &5454782119984303974
 GameObject:
   m_ObjectHideFlags: 0

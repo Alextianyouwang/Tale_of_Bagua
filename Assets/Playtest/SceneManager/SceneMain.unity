@@ -5686,7 +5686,6 @@ GameObject:
   - component: {fileID: 322707028}
   - component: {fileID: 322707027}
   - component: {fileID: 322707026}
-  - component: {fileID: 322707033}
   - component: {fileID: 322707032}
   - component: {fileID: 322707031}
   m_Layer: 6
@@ -5729,6 +5728,7 @@ MonoBehaviour:
     m_Bits: 2048
   _levelIndex: 0
   Achievement: {fileID: 11400000, guid: cd42058b2040bbc439b9ab22669dbe1a, type: 2}
+  key: 123546342fghfdj
 --- !u!23 &322707028
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5809,8 +5809,8 @@ MonoBehaviour:
   EventResponser:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 322707033}
-        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+      - m_Target: {fileID: 322707027}
+        m_TargetAssemblyTypeName: AchievementTest, Assembly-CSharp
         m_MethodName: ChangeToGreen
         m_Mode: 1
         m_Arguments:
@@ -5837,8 +5837,8 @@ MonoBehaviour:
   EventResponser:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 322707033}
-        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+      - m_Target: {fileID: 322707027}
+        m_TargetAssemblyTypeName: AchievementTest, Assembly-CSharp
         m_MethodName: ChangeToYellow
         m_Mode: 1
         m_Arguments:
@@ -5850,18 +5850,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   Event: {fileID: 11400000, guid: cabb55baa661c3d4bac62a96477d7ce2, type: 2}
---- !u!114 &322707033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 322707025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 647cfcc12b71a114f9978816971188d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &325346387
 GameObject:
   m_ObjectHideFlags: 0
@@ -13631,7 +13619,6 @@ GameObject:
   - component: {fileID: 795905557}
   - component: {fileID: 795905564}
   - component: {fileID: 795905563}
-  - component: {fileID: 795905562}
   m_Layer: 6
   m_Name: B
   m_TagString: Untagged
@@ -13672,6 +13659,7 @@ MonoBehaviour:
     m_Bits: 2048
   _levelIndex: 0
   Achievement: {fileID: 11400000, guid: 7398f213a9e3ab0498a32f6645b9ae84, type: 2}
+  key: 6436243h45673
 --- !u!23 &795905559
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13737,18 +13725,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &795905562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 795905556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 647cfcc12b71a114f9978816971188d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &795905563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13764,8 +13740,8 @@ MonoBehaviour:
   EventResponser:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 795905562}
-        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+      - m_Target: {fileID: 795905558}
+        m_TargetAssemblyTypeName: AchievementTest, Assembly-CSharp
         m_MethodName: ChangeToGreen
         m_Mode: 1
         m_Arguments:
@@ -13792,8 +13768,8 @@ MonoBehaviour:
   EventResponser:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 795905562}
-        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+      - m_Target: {fileID: 795905558}
+        m_TargetAssemblyTypeName: AchievementTest, Assembly-CSharp
         m_MethodName: ChangeToYellow
         m_Mode: 1
         m_Arguments:
@@ -21192,7 +21168,6 @@ GameObject:
   - component: {fileID: 1275496052}
   - component: {fileID: 1275496059}
   - component: {fileID: 1275496058}
-  - component: {fileID: 1275496057}
   m_Layer: 6
   m_Name: A
   m_TagString: Untagged
@@ -21298,18 +21273,7 @@ MonoBehaviour:
     m_Bits: 2048
   _levelIndex: 0
   Achievement: {fileID: 11400000, guid: 3e4ab574f1afd1b4188c41d823629035, type: 2}
---- !u!114 &1275496057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1275496051}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 647cfcc12b71a114f9978816971188d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  key: 234579dfdwsf
 --- !u!114 &1275496058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21325,8 +21289,8 @@ MonoBehaviour:
   EventResponser:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275496057}
-        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+      - m_Target: {fileID: 1275496056}
+        m_TargetAssemblyTypeName: AchievementTest, Assembly-CSharp
         m_MethodName: ChangeToYellow
         m_Mode: 1
         m_Arguments:
@@ -21353,8 +21317,8 @@ MonoBehaviour:
   EventResponser:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275496057}
-        m_TargetAssemblyTypeName: MaterialColorChanger, Assembly-CSharp
+      - m_Target: {fileID: 1275496056}
+        m_TargetAssemblyTypeName: AchievementTest, Assembly-CSharp
         m_MethodName: ChangeToGreen
         m_Mode: 1
         m_Arguments:

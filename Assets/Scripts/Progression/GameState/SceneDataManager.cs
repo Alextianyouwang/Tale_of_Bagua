@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneDataManager : MonoBehaviour, IDataPersistence
+public class SceneDataManager : MonoBehaviour
 {
     [SerializeField]
     private SceneDataObject[] _sceneDatas;
@@ -12,6 +12,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
     private int _currentScene = 0;
 
     public static Action<SceneDataCommunicator> OnUpdateSceneInfoText;
+    public static Action OnFinishLoadingAllScenes;
 
     public void Awake()
     {
@@ -56,7 +57,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
     {
         _currentCommunicator = FindObjectOfType<SceneDataCommunicator>();
     }
-    IEnumerator ImplementAllScenes(GameData data)
+    public IEnumerator ImplementAllScenes(GameData data)
     {
         int tempCurrentScene = _currentScene;
         for (int i = 0; i < _sceneDatas.Length; i++) 
@@ -68,6 +69,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
 
         yield return Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[data.CurrentScene].Name));
         Main.Instance.LoadingGame_co = null;
+        OnFinishLoadingAllScenes?.Invoke();
     }
    
     public void NextScene()

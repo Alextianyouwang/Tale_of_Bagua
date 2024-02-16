@@ -15,7 +15,6 @@ MonoBehaviour:
   RequiredAchievementsToUnlock: []
   EventToRaiseWhenUnlocked:
   - {fileID: 11400000, guid: c989720c411f754428f341533cab311c, type: 2}
-  isUnlocked: 0
   EventToRaiseWhenAccomplished:
   - {fileID: 11400000, guid: bbde087beb3c7ea4699b324864ec6b7d, type: 2}
-  isAccomplished: 0
+  State: 1

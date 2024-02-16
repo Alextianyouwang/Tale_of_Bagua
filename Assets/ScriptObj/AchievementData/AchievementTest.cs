@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class AchievementTest : RationalObject, IInteractable, IDataPersistence
@@ -12,7 +11,8 @@ public class AchievementTest : RationalObject, IInteractable, IDataPersistence
     }
     public void SaveData(ref GameData data)
     {
-        data.TestObjectStates.Clear();
+        if (data.TestObjectStates.ContainsKey(key))
+            data.TestObjectStates.Remove(key);
         data.TestObjectStates.Add(key, (int)Achievement.State);
     }
 

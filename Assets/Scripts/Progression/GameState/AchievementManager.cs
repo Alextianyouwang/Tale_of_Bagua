@@ -34,6 +34,9 @@ public class AchievementManager : MonoBehaviour,IDataPersistence
         for (int i = 0; i < Achievements.Length; i++) 
         {
             newState[i] = new AchievementObject.AchievementStates();
+            newState[i] = Achievements[i].RequiredAchievementsToUnlock.Length == 0 ?
+                AchievementObject.AchievementStates.Unlocked :
+                AchievementObject.AchievementStates.Locked;
         }
         return newState;
     }

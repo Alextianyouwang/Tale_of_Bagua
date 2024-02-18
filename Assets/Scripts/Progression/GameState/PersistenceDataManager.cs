@@ -14,6 +14,7 @@ public class PersistenceDataManager : MonoBehaviour
     public static Func<SceneInfo[]> OnRequestSceneInfo;
     public static Func<AchievementObject.AchievementStates[]> OnRequestAchievementObjectStates;
     public static Action<int> OnChangeSaveSlot;
+    public static Action<AchievementObject.AchievementStates[][]> OnShareAchievementsProgresses;
     private FileDataHandler _fileDataHandler;
     public string FileName = "";
     private void OnEnable()
@@ -88,6 +89,8 @@ public class PersistenceDataManager : MonoBehaviour
         GetComponent<SceneDataManager>().SaveData(ref _gameData[_gameDataIndex]);
         _fileDataHandler.Save(_gameData);
         LogManager.Log($"Game Saved to slot: {_gameDataIndex}");
+
+        OnShareAchievementsProgresses?.Invoke(_gameData.Select(x => x.AchievementStates).ToArray());
     }
 
     public void LoadGame()
@@ -102,6 +105,8 @@ public class PersistenceDataManager : MonoBehaviour
         GetComponent<SceneDataManager>().LoadData(_gameData[_gameDataIndex]);
         _fileDataHandler.Save(_gameData);
         LogManager.Log($"Game Loaded from slot: {_gameDataIndex}");
+
+        OnShareAchievementsProgresses?.Invoke(_gameData.Select(x => x.AchievementStates).ToArray());
 
     }
     // Make sure type like dictionary are correctly initialized with values.

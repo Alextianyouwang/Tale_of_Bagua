@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -22,6 +24,7 @@ public class DebuggerManager : MonoBehaviour
         StateManager.OnToggleGameDebugPanel += ToggleGameSessionDebugPanel;
         AchievementManager.OnUpdateAchievementStats += SetAchievementProgress;
         PersistenceDataManager.OnChangeSaveSlot += ChangeButtonColor;
+        PersistenceDataManager.OnShareAchievementsProgresses += SetSlotButtonProgression;
 
         
     }
@@ -32,6 +35,8 @@ public class DebuggerManager : MonoBehaviour
         StateManager.OnToggleGameDebugPanel -= ToggleGameSessionDebugPanel;
         AchievementManager.OnUpdateAchievementStats -= SetAchievementProgress;
         PersistenceDataManager.OnChangeSaveSlot -= ChangeButtonColor;
+        PersistenceDataManager.OnShareAchievementsProgresses -= SetSlotButtonProgression;
+
 
     }
     private void ToggleGameSessionDebugPanel(bool value) 
@@ -75,7 +80,7 @@ public class DebuggerManager : MonoBehaviour
             return;
         for (int i = 0; i < _slotButtons.Length; i++)
         {
-            if (_slotButtons[index] == null)
+            if (_slotButtons[index] == null || _slotButtons[i] == null)
                 continue;
 
             ColorBlock c = _slotButtons[i].colors;
@@ -84,5 +89,20 @@ public class DebuggerManager : MonoBehaviour
         }
     }
 
+    public void SetSlotButtonProgression(AchievementObject.AchievementStates[][] states) 
+    {
+        if (_slotButtons == null)
+            return;
+        for (int i = 0; i < _slotButtons.Length; i++)
+        {
+            if ( _slotButtons[i] == null)
+                continue;
+
+            _slotButtons[i].transform.GetChild(0).GetComponent<Image>().fillAmount =
+                 (float)states[i].Where(x => x == AchievementObject.AchievementStates.Accomplished).Count() / (float)states[i].Length;
+        }
+    }
+
+    
 
 }

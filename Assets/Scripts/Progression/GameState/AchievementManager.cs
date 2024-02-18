@@ -38,6 +38,8 @@ public class AchievementManager : MonoBehaviour,IDataPersistence
 
     public void SaveData(ref GameData data) 
     {
+        if (Achievements.Length != data.AchievementStates.Length)
+            data.AchievementStates = new AchievementObject.AchievementStates[Achievements.Length];
         for (int i = 0; i < Achievements.Length; i++)
         {
             data.AchievementStates[i]= Achievements[i].State;
@@ -47,6 +49,8 @@ public class AchievementManager : MonoBehaviour,IDataPersistence
     {
         for (int i = 0; i < Achievements.Length; i++)
         {
+            if (i >= data.AchievementStates.Length)
+                continue;
             Achievements[i].State = data.AchievementStates[i];
         }
     }

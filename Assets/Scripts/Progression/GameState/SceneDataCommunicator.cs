@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -48,6 +49,15 @@ public class SceneDataCommunicator : MonoBehaviour
         player.transform.position = position; 
     }
 
+    public void TrySetTestObjectState(Dictionary<string, int> data) 
+    {
+        AchievementTest[] objs = FindObjectsOfType<AchievementTest>();
+        if (objs.Length == 0) return;
+        foreach (AchievementTest obj in objs) 
+        {
+            obj.ChangeState(data);
+        }
+    }
     public string GetSceneName() 
     {
         return SceneManager.GetActiveScene().name;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,18 +9,19 @@ public class SceneDataManager : MonoBehaviour
     [SerializeField]
     private SceneDataObject[] _sceneDatas;
     private SceneInfo[] _tempSceneInfo;
+    private Dictionary<string, int> _tempTestObjectStates = new Dictionary<string, int>();
+
     private SceneDataCommunicator _currentCommunicator;
     private int _currentScene = 0;
 
     public static Action<SceneDataCommunicator> OnUpdateSceneInfoText;
-    public static Action OnFinishLoadingAllScenes;
-
+    public static Action OnSceneFinishedLoading;
     public void Awake()
     {
         InitializeTempSceneInfo();
         GetCurrentSceneData();
     }
-  
+
     public void OnEnable()
     {
         PersistenceDataManager.OnRequestSceneInfo += GetInitialSceneInfo;
@@ -50,6 +52,7 @@ public class SceneDataManager : MonoBehaviour
  
         _tempSceneInfo = data.SceneInfos;
         _currentScene = data.CurrentScene;
+        _tempTestObjectStates = data.TestObjectStates;
         if (Main.Instance.LoadingGame_co == null)
             Main.Instance.LoadingGame_co = Main.Instance.StartCoroutine(ImplementAllScenes(data));
     }
@@ -69,7 +72,6 @@ public class SceneDataManager : MonoBehaviour
 
         yield return Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[data.CurrentScene].Name));
         Main.Instance.LoadingGame_co = null;
-        OnFinishLoadingAllScenes?.Invoke();
     }
    
     public void NextScene()
@@ -108,6 +110,7 @@ public class SceneDataManager : MonoBehaviour
         AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         while (!asyncLoadLevel.isDone)
             yield return null;
+        OnSceneFinishedLoading?.Invoke();
         ImplementCurrentSceneWithData();
         OnUpdateSceneInfoText?.Invoke(_currentCommunicator);
     }
@@ -138,6 +141,7 @@ public class SceneDataManager : MonoBehaviour
             _currentCommunicator.SetMirrorPositions(_tempSceneInfo[_currentScene].MirrorPos);
             _currentCommunicator.SetPlayerPosition(_tempSceneInfo[_currentScene].PlayerPos);
         }
+        _currentCommunicator.TrySetTestObjectState(_tempTestObjectStates);
        
     }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -18,11 +19,13 @@ public class AchievementTest : RationalObject, IInteractable, IDataPersistence
 
     public void LoadData(GameData data)
     {
+    }
+    public void ChangeState(Dictionary<string,int> data) 
+    {
         int value = 0;
-        if (data.TestObjectStates.Keys.Contains(key))
-            value = data.TestObjectStates[key];
-
-        switch (value) 
+        if (data.Keys.Contains(key))
+            value = data[key];
+        switch (value)
         {
             case 0:
                 break;
@@ -32,15 +35,12 @@ public class AchievementTest : RationalObject, IInteractable, IDataPersistence
                 ChangeToYellow();
                 break;
 
-            
+
             case 2:
                 ChangeToGreen();
                 break;
         }
-        print(value);
-
     }
-
     public void ChangeToYellow()
     {
         GetComponent<MeshRenderer>().material.SetColor("_BaseColor", Color.yellow);

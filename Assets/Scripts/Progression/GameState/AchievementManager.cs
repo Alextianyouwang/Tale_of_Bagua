@@ -19,15 +19,6 @@ public class AchievementManager : MonoBehaviour,IDataPersistence
         PersistenceDataManager.OnRequestAchievementObjectStates -= GetAchievementObjectStates;
 
     }
-    private void Awake()
-    {
-       
-    }
-    private void Start()
-    {
-      
-
-    }
     private AchievementObject.AchievementStates[] GetAchievementObjectStates() 
     {
         AchievementObject.AchievementStates[] newState = new AchievementObject.AchievementStates[Achievements.Length];
@@ -48,7 +39,6 @@ public class AchievementManager : MonoBehaviour,IDataPersistence
             data.AchievementStates[i]= Achievements[i].State;
         }
     }
-
     public void LoadData(GameData data) 
     {
         for (int i = 0; i < Achievements.Length; i++)
@@ -69,14 +59,9 @@ public class AchievementManager : MonoBehaviour,IDataPersistence
 
     private void ResetAllAchievements() 
     {
-
         foreach (AchievementObject a in Achievements) 
-        {
-            a.State = a.RequiredAchievementsToUnlock.Length == 0?
-                AchievementObject.AchievementStates.Unlocked :
-                AchievementObject.AchievementStates.Locked;
-        }
-            
+            a.State = AchievementObject.AchievementStates.Locked;
+   
     }
 
 }

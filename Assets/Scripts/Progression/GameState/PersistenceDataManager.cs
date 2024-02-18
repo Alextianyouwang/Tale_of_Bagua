@@ -12,24 +12,25 @@ public class PersistenceDataManager : MonoBehaviour
     public bool EnableSaveLoad = true; 
     public static Func<SceneInfo[]> OnRequestSceneInfo;
     public static Func<AchievementObject.AchievementStates[]> OnRequestAchievementObjectStates;
+    public static Dictionary<string, int> OnRequestTestObjectState;
     private FileDataHandler _fileDataHandler;
     public string FileName = "";
     private void OnEnable()
     {
         SceneManager.activeSceneChanged += OnSceneLoaded;
-        SceneDataManager.OnFinishLoadingAllScenes += LoadNonSceneSensitiveData;
+        SceneDataManager.OnSceneFinishedLoading += SaveDataPersistentObject;
     }
     private void OnDisable()
     {
         SceneManager.activeSceneChanged -= OnSceneLoaded;
-        SceneDataManager.OnFinishLoadingAllScenes -= LoadNonSceneSensitiveData;
+        SceneDataManager.OnSceneFinishedLoading -= SaveDataPersistentObject;
 
     }
 
     public void Start()
     {
         _fileDataHandler = new FileDataHandler(Application.persistentDataPath, FileName);
-        CreateNewGameDataIfNull();
+        LoadGame();
     }
     private void CreateNewGameDataIfNull() 
     {
@@ -67,11 +68,9 @@ public class PersistenceDataManager : MonoBehaviour
     {
         if (!EnableSaveLoad)
             return;
-        foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
-        {
-            dataPersistenceObj.SaveData(ref _gameData);
-        }
-        FindObjectOfType<SceneDataManager>().SaveData(ref _gameData);
+
+        _dataPersistenceObjects.ToList().ForEach(x => x.SaveData(ref _gameData));
+        GetComponent<SceneDataManager>().SaveData(ref _gameData);
         _fileDataHandler.Save(_gameData);
     }
 
@@ -81,18 +80,14 @@ public class PersistenceDataManager : MonoBehaviour
             return;
 
         _gameData = _fileDataHandler.Load();
-
         CreateNewGameDataIfNull();
-        FindObjectOfType<SceneDataManager>().LoadData(_gameData);
-        
-    }
+        _dataPersistenceObjects.ToList().ForEach(x => x.LoadData(_gameData));
+        GetComponent<SceneDataManager>().LoadData(_gameData);
 
-    public void LoadNonSceneSensitiveData() 
+    }
+    // Make sure type like dictionary are correctly initialized with values.
+    public void SaveDataPersistentObject() 
     {
-        foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
-        {
-            dataPersistenceObj.LoadData(_gameData);
-        }
+        _dataPersistenceObjects.ToList().ForEach(x => x.SaveData(ref _gameData));
     }
-
 }

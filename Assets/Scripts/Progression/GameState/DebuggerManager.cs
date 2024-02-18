@@ -1,5 +1,7 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class DebuggerManager : MonoBehaviour
@@ -10,6 +12,8 @@ public class DebuggerManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _achievementProgress;
     [SerializeField] private GameObject _gameSessionDebugPanel;
     [SerializeField] private Image _achievementFillBar;
+    [SerializeField] private Button[] _slotButtons;
+
 
     private void OnEnable()
     {
@@ -17,14 +21,18 @@ public class DebuggerManager : MonoBehaviour
         StateManager.OnSetCurrentStateName += SetCurrentStateName;
         StateManager.OnToggleGameDebugPanel += ToggleGameSessionDebugPanel;
         AchievementManager.OnUpdateAchievementStats += SetAchievementProgress;
+        PersistenceDataManager.OnChangeSaveSlot += ChangeButtonColor;
 
+        
     }
     private void OnDisable()
     {
         SceneDataManager.OnUpdateSceneInfoText -= UpdateSceneInfoText;
         StateManager.OnSetCurrentStateName -= SetCurrentStateName;
         StateManager.OnToggleGameDebugPanel -= ToggleGameSessionDebugPanel;
-        AchievementManager.OnUpdateAchievementStats += SetAchievementProgress;
+        AchievementManager.OnUpdateAchievementStats -= SetAchievementProgress;
+        PersistenceDataManager.OnChangeSaveSlot -= ChangeButtonColor;
+
     }
     private void ToggleGameSessionDebugPanel(bool value) 
     {
@@ -60,4 +68,21 @@ public class DebuggerManager : MonoBehaviour
         if (_achievementProgress == null) return;
         _achievementProgress.text = current.ToString() + "/" + total.ToString();
     }
+
+    public void ChangeButtonColor(int index) 
+    {
+        if (_slotButtons == null)
+            return;
+        for (int i = 0; i < _slotButtons.Length; i++)
+        {
+            if (_slotButtons[index] == null)
+                continue;
+
+            ColorBlock c = _slotButtons[i].colors;
+            c.normalColor = index == i ? Color.green : Color.white;
+            _slotButtons[i].colors = c;
+        }
+    }
+
+
 }

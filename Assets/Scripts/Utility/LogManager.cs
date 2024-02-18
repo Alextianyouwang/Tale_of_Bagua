@@ -5,7 +5,7 @@ using UnityEngine;
 public class LogManager : MonoBehaviour
 {
     public GameObject LogText;
-    static int maxLines = 11;
+    static int maxLines = 9;
 
     static int lineCount = 0;
 

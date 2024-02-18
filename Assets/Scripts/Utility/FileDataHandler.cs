@@ -14,15 +14,15 @@ public class FileDataHandler
         dataFileName = _dataFileName;
     }
 
-    public GameData Load() 
+    public GameData[] Load() 
     {
         string fullPath = Path.Combine(dataDirPath, dataFileName);
-        GameData loadedData = null;
+        GameData[] loadedData = null;
         if (File.Exists(fullPath)) 
         {
             try
             {
-                loadedData = JsonConvert.DeserializeObject<GameData>(File.ReadAllText(fullPath));
+                loadedData = JsonConvert.DeserializeObject<GameData[]>(File.ReadAllText(fullPath));
                 return loadedData;
             }
             catch (Exception e)
@@ -35,7 +35,7 @@ public class FileDataHandler
         return loadedData;
     }
 
-    public void Save(GameData data) 
+    public void Save(GameData[] data) 
     { 
         string fullPath = Path.Combine(dataDirPath, dataFileName);
         if (File.Exists(fullPath)) 

@@ -72,6 +72,7 @@ public class PersistenceDataManager : MonoBehaviour
         _dataPersistenceObjects.ToList().ForEach(x => x.SaveData(ref _gameData));
         GetComponent<SceneDataManager>().SaveData(ref _gameData);
         _fileDataHandler.Save(_gameData);
+        LogManager.Log("Game Saved");
     }
 
     public void LoadGame()
@@ -83,6 +84,7 @@ public class PersistenceDataManager : MonoBehaviour
         CreateNewGameDataIfNull();
         _dataPersistenceObjects.ToList().ForEach(x => x.LoadData(_gameData));
         GetComponent<SceneDataManager>().LoadData(_gameData);
+        LogManager.Log("Game Loaded");
 
     }
     // Make sure type like dictionary are correctly initialized with values.

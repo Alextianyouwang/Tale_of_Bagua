@@ -9,6 +9,7 @@ public class AchievementTest : RationalObject, IInteractable, IDataPersistence
     public void Interact() 
     {
         Achievement.Accomplish();
+
     }
     public void SaveData(ref GameData data)
     {

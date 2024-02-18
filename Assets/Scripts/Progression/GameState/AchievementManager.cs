@@ -61,6 +61,7 @@ public class AchievementManager : MonoBehaviour,IDataPersistence
     {
         TryUnlockAllAchievements();
         UpdateAchievementStatistics();
+        LogManager.Log( $"Achievement: '{target.name}' is Accomplished!");
     }
     private void TryUnlockAllAchievements() 
     {

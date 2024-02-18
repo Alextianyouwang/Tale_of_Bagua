@@ -1,20 +1,24 @@
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class AchievementManager : MonoBehaviour,IDataPersistence
 {
     public AchievementObject[] Achievements;
 
+    public static Action<int, int> OnUpdateAchievementStats;
+
     private void OnEnable()
     {
         
-        AchievementObject.OnAchievementAccomplished += TryUnlockAllAchievements;
+        AchievementObject.OnAchievementAccomplished += AchievementUnlocked;
         SceneManager.activeSceneChanged += OnSceneLoaded;
         PersistenceDataManager.OnRequestAchievementObjectStates += GetAchievementObjectStates;
     }
     private void OnDisable()
     {
         ResetAllAchievements();
-        AchievementObject.OnAchievementAccomplished -= TryUnlockAllAchievements;
+        AchievementObject.OnAchievementAccomplished -= AchievementUnlocked;
         SceneManager.activeSceneChanged -= OnSceneLoaded;
         PersistenceDataManager.OnRequestAchievementObjectStates -= GetAchievementObjectStates;
 
@@ -48,13 +52,25 @@ public class AchievementManager : MonoBehaviour,IDataPersistence
     }
     private void OnSceneLoaded(Scene s1, Scene s2) 
     {
-        TryUnlockAllAchievements(null);
+        UpdateAchievementStatistics();
+        TryUnlockAllAchievements();
     }
 
-    private void TryUnlockAllAchievements(AchievementObject target) 
+
+    private void AchievementUnlocked(AchievementObject target) 
+    {
+        TryUnlockAllAchievements();
+        UpdateAchievementStatistics();
+    }
+    private void TryUnlockAllAchievements() 
     {
         foreach (AchievementObject a in Achievements) 
             a.TryUnlock();
+    }
+
+    private void UpdateAchievementStatistics() 
+    {
+        OnUpdateAchievementStats?.Invoke(Achievements.Where(a => a.State == AchievementObject.AchievementStates.Accomplished).Count(), Achievements.Length);
     }
 
     private void ResetAllAchievements() 

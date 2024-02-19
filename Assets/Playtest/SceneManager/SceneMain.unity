@@ -19651,6 +19651,50 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1157368016}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1183565560 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5454782119941218938, guid: d19fd2087b7e39c4e84e70a5baaeca10, type: 3}
+  m_PrefabInstance: {fileID: 2110700554}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1183565565 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5454782119941218941, guid: d19fd2087b7e39c4e84e70a5baaeca10, type: 3}
+  m_PrefabInstance: {fileID: 2110700554}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183565560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09d397b323951ce41815158f7b39c713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1183565568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183565560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1183565565}
+        m_TargetAssemblyTypeName: SceneDataManager, Assembly-CSharp
+        m_MethodName: NextScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: d7c7223927dd5224a9ca3de158e7c0d5, type: 2}
 --- !u!1 &1183669793
 GameObject:
   m_ObjectHideFlags: 0

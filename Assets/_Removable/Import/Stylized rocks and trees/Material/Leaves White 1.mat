@@ -23,19 +23,17 @@ Material:
   m_Name: Leaves White 1
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_ValidKeywords:
-  - _SURFACE_TYPE_TRANSPARENT
+  - _ALPHATEST_ON
   m_InvalidKeywords:
   - TVE_ALPHA_CLIP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 2450
   stringTagMap:
     NatureRendererInstancing: true
-    RenderType: Transparent
-  disabledShaderPasses:
-  - DepthOnly
-  - SHADOWCASTER
+    RenderType: TransparentCutout
+  disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -138,7 +136,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AdvancedCat: 0
-    - _AlphaClip: 0
+    - _AlphaClip: 1
     - _AlphaVariationValue: 0
     - _Banner: 0
     - _BatchingMessage: 0
@@ -154,7 +152,7 @@ Material:
     - _ColorsMaskMinValue: 0
     - _Cull: 2
     - _CullMode: 0
-    - _Cutoff: 0.178
+    - _Cutoff: 0.485
     - _DetailAlbedoMapScale: 1
     - _DetailCat: 0
     - _DetailMapsMode: 0
@@ -164,7 +162,7 @@ Material:
     - _DetailSpace: 0
     - _DetailTypeMode: 0
     - _DoubleSidedNormalMode: 2
-    - _DstBlend: 10
+    - _DstBlend: 0
     - _EmissiveCat: 0
     - _EnvironmentReflections: 1
     - _GlobalAlpha: 1
@@ -264,7 +262,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SquashAmount: 1
-    - _SrcBlend: 5
+    - _SrcBlend: 1
     - _SubsurfaceAngleValue: 3.96
     - _SubsurfaceCat: 0
     - _SubsurfaceDiffusion: 3.5648174
@@ -273,7 +271,7 @@ Material:
     - _SubsurfaceMaskValue: 1
     - _SubsurfaceValue: 1
     - _SubsurfaceViewValue: 1.72
-    - _Surface: 1
+    - _Surface: 0
     - _ToonStyle: 1
     - _TransAmbient: 0.2
     - _TransDirect: 1
@@ -294,7 +292,7 @@ Material:
     - _VertexVariationMode: 0
     - _WindModeLeaves: 0
     - _WorkflowMode: 1
-    - _ZWrite: 0
+    - _ZWrite: 1
     - __dirty: 1
     - _material_batching: 0
     - _render_blend: 0

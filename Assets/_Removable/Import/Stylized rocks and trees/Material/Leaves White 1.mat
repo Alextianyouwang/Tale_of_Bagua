@@ -23,7 +23,6 @@ Material:
   m_Name: Leaves White 1
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_ValidKeywords:
-  - _ALPHATEST_ON
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords:
   - TVE_ALPHA_CLIP
@@ -139,7 +138,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AdvancedCat: 0
-    - _AlphaClip: 1
+    - _AlphaClip: 0
     - _AlphaVariationValue: 0
     - _Banner: 0
     - _BatchingMessage: 0

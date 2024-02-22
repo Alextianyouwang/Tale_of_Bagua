@@ -25,7 +25,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 300}
   m_MaxSize: {x: 32384, y: 24288}
   vertical: 0
-  controlID: 11819
+  controlID: 21795
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 300}
   m_MaxSize: {x: 8096, y: 24288}
   vertical: 1
-  controlID: 11800
+  controlID: 21664
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -201,9 +201,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: d6bdf7ff
-      m_LastClickedID: -541226
-      m_ExpandedIDs: dabdf7ffdebdf7ffe0bdf7ffcac2f7ff2cfbffff30fbffff32fbffff
+      m_SelectedIDs: 4a220300
+      m_LastClickedID: 0
+      m_ExpandedIDs: 1eaaf4ffdec0f4ff62fbf4ff1a6af5fffa85f5ffdabdf7ffdebdf7ffe0bdf7ffcac2f7ff2cfbffff30fbffff32fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -246,8 +246,8 @@ MonoBehaviour:
     y: 570
     width: 475
     height: 597
-  m_MinSize: {x: 600, y: 800}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 601, y: 821}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 7}
   m_Panes:
   - {fileID: 7}
@@ -359,7 +359,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 11820
+  controlID: 21796
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -379,8 +379,8 @@ MonoBehaviour:
     y: 0
     width: 1620
     height: 783
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 12}
@@ -617,9 +617,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.36047134, y: -8.418706, z: 0.8459332}
+    m_Target: {x: 0, y: 0.4999981, z: 0}
     speed: 2
-    m_Value: {x: 0.36047134, y: -8.418706, z: 0.8459332}
+    m_Value: {x: 0, y: 0.4999981, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -668,11 +668,11 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: 0.683377, y: 0.0010945017, z: -0.0010258774, w: 0.73003817}
     speed: 2
-    m_Value: {x: 0.6822949, y: -0.00000055527823, z: -0.0000008118455, w: 0.7310771}
+    m_Value: {x: 0.68338996, y: 0.0010945224, z: -0.0010258969, w: 0.730052}
   m_Size:
-    m_Target: 9.611783
+    m_Target: 9.367221
     speed: 2
-    m_Value: 9.611783
+    m_Value: 9.367221
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -3216,7 +3216,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 11762
+  controlID: 21739
 --- !u!114 &20
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -3285,21 +3285,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Playtest/PlaytestLevelData
+    - Assets/Playtest/SceneManager
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Playtest/PlaytestLevelData
+  - Assets/Playtest/SceneManager
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\ducon\Documents\GitHub\TheTaleOfBagua
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 62}
-    m_SelectedIDs: 5a950000
-    m_LastClickedID: 38234
+    m_SelectedIDs: 48220300
+    m_LastClickedID: 205384
     m_ExpandedIDs: 00000000829300008493000086930000889300008a9300005895000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -3353,8 +3353,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: d6bdf7ff
-    m_LastClickedInstanceID: -541226
+    m_SelectedInstanceIDs: 4a220300
+    m_LastClickedInstanceID: 205386
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000242e0000daca00002ad40000f22f0000861f0200540a0100940a0100d07e0200d6c701007a1e0500d4100700b02e0000308101001ec900009add0000ac300100c07c000000000000
     m_RenameOverlay:

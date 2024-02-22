@@ -1213,7 +1213,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2787905703578981757}
-  - component: {fileID: 2787905703578981756}
   - component: {fileID: 2787905703578981759}
   - component: {fileID: 2787905703578981758}
   m_Layer: 0
@@ -1245,24 +1244,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2787905703578981756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2787905703578981754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73337f5b9f5968d4395d3f14d7545b55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPC_Levels:
-  - {fileID: 2787905702571000473}
-  - {fileID: 2787905703623600963}
-  - {fileID: 2787905703249898885}
-  - {fileID: 2787905703187765740}
-  - {fileID: 2787905703710928268}
 --- !u!114 &2787905703578981759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1677,6 +1658,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 2787905702571000472}
     m_Modifications:
     - target: {fileID: 4567491356563867837, guid: 2bfa11c495ffe3f4180d37faa1643f04, type: 3}
+      propertyPath: MirrorMask.m_Bits
+      value: 2048
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567491356563867837, guid: 2bfa11c495ffe3f4180d37faa1643f04, type: 3}
+      propertyPath: ObstacleMask.m_Bits
+      value: 1984
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567491356563867837, guid: 2bfa11c495ffe3f4180d37faa1643f04, type: 3}
       propertyPath: ProgressionSettings.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -1746,7 +1735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7386155971985928363, guid: 2bfa11c495ffe3f4180d37faa1643f04, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.64272213
+      value: -0.054277807
       objectReference: {fileID: 0}
     - target: {fileID: 7386155971985928363, guid: 2bfa11c495ffe3f4180d37faa1643f04, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1806,6 +1795,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 2787905702571000472}
     m_Modifications:
     - target: {fileID: 4034777547052062567, guid: d2d5b463e3936c643b2ba3e9cb898c8b, type: 3}
+      propertyPath: MirrorMask.m_Bits
+      value: 2048
+      objectReference: {fileID: 0}
+    - target: {fileID: 4034777547052062567, guid: d2d5b463e3936c643b2ba3e9cb898c8b, type: 3}
+      propertyPath: ObstacleMask.m_Bits
+      value: 1984
+      objectReference: {fileID: 0}
+    - target: {fileID: 4034777547052062567, guid: d2d5b463e3936c643b2ba3e9cb898c8b, type: 3}
       propertyPath: ProgressionSettings.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -1851,7 +1848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7934340081898450801, guid: d2d5b463e3936c643b2ba3e9cb898c8b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.657
+      value: -0.03999996
       objectReference: {fileID: 0}
     - target: {fileID: 7934340081898450801, guid: d2d5b463e3936c643b2ba3e9cb898c8b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1911,6 +1908,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 2787905702571000472}
     m_Modifications:
     - target: {fileID: 3939080357963625707, guid: 5109fe23e3b307f47b23208f7acd6aef, type: 3}
+      propertyPath: MirrorMask.m_Bits
+      value: 2048
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939080357963625707, guid: 5109fe23e3b307f47b23208f7acd6aef, type: 3}
+      propertyPath: ObstacleMask.m_Bits
+      value: 1984
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939080357963625707, guid: 5109fe23e3b307f47b23208f7acd6aef, type: 3}
       propertyPath: ProgressionSettings.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -1948,7 +1953,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8018786947735620861, guid: 5109fe23e3b307f47b23208f7acd6aef, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.64272213
+      value: -0.054277807
       objectReference: {fileID: 0}
     - target: {fileID: 8018786947735620861, guid: 5109fe23e3b307f47b23208f7acd6aef, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2008,6 +2013,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 2787905703623600962}
     m_Modifications:
     - target: {fileID: 2173770117691253435, guid: bcdf0d9ec8ce34d4cac562393527076a, type: 3}
+      propertyPath: _levelIndex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2173770117691253435, guid: bcdf0d9ec8ce34d4cac562393527076a, type: 3}
+      propertyPath: MirrorMask.m_Bits
+      value: 2048
+      objectReference: {fileID: 0}
+    - target: {fileID: 2173770117691253435, guid: bcdf0d9ec8ce34d4cac562393527076a, type: 3}
+      propertyPath: ObstacleMask.m_Bits
+      value: 1984
+      objectReference: {fileID: 0}
+    - target: {fileID: 2173770117691253435, guid: bcdf0d9ec8ce34d4cac562393527076a, type: 3}
       propertyPath: ProgressionSettings.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -2057,7 +2074,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5172613896198511277, guid: bcdf0d9ec8ce34d4cac562393527076a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.65699995
+      value: -0.04
       objectReference: {fileID: 0}
     - target: {fileID: 5172613896198511277, guid: bcdf0d9ec8ce34d4cac562393527076a, type: 3}
       propertyPath: m_LocalPosition.z

@@ -56796,10 +56796,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2374428718107878785, guid: eb8c43d30b0fe4944afeac9b49442bb2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.04
-      objectReference: {fileID: 0}
     - target: {fileID: 2787905703578981754, guid: eb8c43d30b0fe4944afeac9b49442bb2, type: 3}
       propertyPath: m_Name
       value: --- NPCs & Dialogue (WIP) ---
@@ -56847,18 +56843,6 @@ PrefabInstance:
     - target: {fileID: 2787905703578981757, guid: eb8c43d30b0fe4944afeac9b49442bb2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4625272470262364871, guid: eb8c43d30b0fe4944afeac9b49442bb2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.054277807
-      objectReference: {fileID: 0}
-    - target: {fileID: 5236790485507806302, guid: eb8c43d30b0fe4944afeac9b49442bb2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.03999996
-      objectReference: {fileID: 0}
-    - target: {fileID: 7889904719267379780, guid: eb8c43d30b0fe4944afeac9b49442bb2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.054277807
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb8c43d30b0fe4944afeac9b49442bb2, type: 3}

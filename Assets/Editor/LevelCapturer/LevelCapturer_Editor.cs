@@ -71,35 +71,35 @@ public class LevelCapturer_Editor : EditorWindow
         if (GUILayout.Button("Capture Scene"))
         {
             _urp_cam.renderPostProcessing = false;
-            _colSceneTex = _capturer.CaptureCameraToTexture(_mask << 1);
+            _colSceneTex = _capturer.CaptureCameraToTexture(_mask);
             _urp_cam.renderPostProcessing = true;
 
             SaveTexture(_colSceneTex, _path, _name);
         }
         EditorUtil.DrawSeparator();
 
-        _renderDepth = EditorGUILayout.Toggle("Render Depth (URP)", _renderDepth);
+        _renderDepth = EditorGUILayout.Toggle("Render Alternate (URP)", _renderDepth);
 
         if (_renderDepth)
         {
             _rendererData = (UniversalRendererData)EditorGUILayout.ObjectField("URP Renderer", _rendererData, typeof(UniversalRendererData), false);
             _featureName = EditorGUILayout.TextField("Featrue Name", _featureName);
-            _depthMask = EditorGUILayout.MaskField("Depth Capture Mask", _depthMask, UnityEditorInternal.InternalEditorUtility.layers);
+            _depthMask = EditorGUILayout.MaskField("Capture Mask", _depthMask, UnityEditorInternal.InternalEditorUtility.layers);
 
             if (_feature) 
             {
                 RenderObjects ro = _feature as RenderObjects;
-                ro.settings.filterSettings.LayerMask = _depthMask << 1;
+                ro.settings.filterSettings.LayerMask = _depthMask;
                 ro.Create();
             }
         
-            if (GUILayout.Button("Capture Depth")) {
+            if (GUILayout.Button("Capture")) {
                 if (TryGetFeature(out _feature))
                     _feature.SetActive(true);
                 _urp_cam.renderPostProcessing = false;
-                _depthSceneTex = _capturer.CaptureCameraToTexture(_depthMask << 1);
+                _depthSceneTex = _capturer.CaptureCameraToTexture(_depthMask);
                 _urp_cam.renderPostProcessing = true;
-                SaveTexture(_depthSceneTex, _path, _name + "_depth");
+                SaveTexture(_depthSceneTex, _path, _name + "_alternate");
                 if (TryGetFeature(out _feature))
                     _feature.SetActive(false);
             }
@@ -113,6 +113,7 @@ public class LevelCapturer_Editor : EditorWindow
   
         if (_colSceneTex && _depthSceneTex) 
         {
+            EditorGUILayout.LabelField("Merge Alternate Texture 'r' to Scene Texture 'a'");
             if (GUILayout.Button("Merge"))
                 SaveTexture(_capturer.MergeTextures(_colSceneTex,_depthSceneTex), _path, _name + "_comp");
         }

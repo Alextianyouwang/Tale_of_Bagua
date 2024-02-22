@@ -1,24 +1,27 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneDataManager : MonoBehaviour, IDataPersistence
+public class SceneDataManager : MonoBehaviour
 {
     [SerializeField]
     private SceneDataObject[] _sceneDatas;
     private SceneInfo[] _tempSceneInfo;
+    private Dictionary<string, int> _tempTestObjectStates = new Dictionary<string, int>();
+
     private SceneDataCommunicator _currentCommunicator;
     private int _currentScene = 0;
 
     public static Action<SceneDataCommunicator> OnUpdateSceneInfoText;
-
+    public static Action OnSceneFinishedLoading;
     public void Awake()
     {
         InitializeTempSceneInfo();
         GetCurrentSceneData();
     }
-  
+
     public void OnEnable()
     {
         PersistenceDataManager.OnRequestSceneInfo += GetInitialSceneInfo;
@@ -49,6 +52,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
  
         _tempSceneInfo = data.SceneInfos;
         _currentScene = data.CurrentScene;
+        _tempTestObjectStates = data.TestObjectStates;
         if (Main.Instance.LoadingGame_co == null)
             Main.Instance.LoadingGame_co = Main.Instance.StartCoroutine(ImplementAllScenes(data));
     }
@@ -56,7 +60,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
     {
         _currentCommunicator = FindObjectOfType<SceneDataCommunicator>();
     }
-    IEnumerator ImplementAllScenes(GameData data)
+    public IEnumerator ImplementAllScenes(GameData data)
     {
         int tempCurrentScene = _currentScene;
         for (int i = 0; i < _sceneDatas.Length; i++) 
@@ -106,6 +110,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
         AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         while (!asyncLoadLevel.isDone)
             yield return null;
+        OnSceneFinishedLoading?.Invoke();
         ImplementCurrentSceneWithData();
         OnUpdateSceneInfoText?.Invoke(_currentCommunicator);
     }
@@ -136,6 +141,7 @@ public class SceneDataManager : MonoBehaviour, IDataPersistence
             _currentCommunicator.SetMirrorPositions(_tempSceneInfo[_currentScene].MirrorPos);
             _currentCommunicator.SetPlayerPosition(_tempSceneInfo[_currentScene].PlayerPos);
         }
+        _currentCommunicator.TrySetTestObjectState(_tempTestObjectStates);
        
     }
 

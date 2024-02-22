@@ -1,51 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
 public class PlayerInteract : MonoBehaviour
 {
     public float InteractionDistance = 0.5f;
-    public static NPC_Controller currentNPC,previousNPC;
-    public static Action<Vector3> OnDetactPlayer;
+    public static Action<Vector3,IconType> OnDetactPlayer;
     public static Action OnLostPlayer;
-    public static Action<TextAsset, Sprite> OnPlayDialogue;
+    private IInteractable currentInteract, previousInteract;
 
     private void Update()
     {
         CheckObjectSelection();
-        if (currentNPC)
-        {
-            if (Input.GetKeyDown(KeyCode.Space)) 
-            {
-                OnPlayDialogue?.Invoke(currentNPC.InkDialogueAsset, currentNPC.IconImage);
-                
-            }
-               
-        }
+        if (currentInteract == null || !currentInteract.IsVisible() || !currentInteract.IsActive())
+            return;
+        if (Input.GetKeyDown(KeyCode.Space))
+            currentInteract.Interact();
+        else if (Input.GetKey(KeyCode.Space))
+            currentInteract.Hold();
+        else if (Input.GetKeyUp(KeyCode.Space))
+            currentInteract.Disengage();
+      
     }
     void CheckObjectSelection()
     {
-        currentNPC = GetCurrentNPC();
-        if (currentNPC)
-            OnDetactPlayer?.Invoke(currentNPC.transform.position + Vector3.forward * 0.5f);
-        if (currentNPC == null && previousNPC != null)
+        currentInteract = GetCurrentInteractiveObject();
+
+        if (currentInteract != null && currentInteract.IsVisible() && currentInteract.IsActive())
+            OnDetactPlayer?.Invoke((currentInteract as MonoBehaviour).transform.position + Vector3.forward * 0.5f, currentInteract.GetIconType());
+
+
+        if (currentInteract == null && previousInteract != null)
+        {
             OnLostPlayer?.Invoke();
-        else if (currentNPC != previousNPC && currentNPC != null && previousNPC != null)
+            previousInteract.Disengage();
+        }
+        else if (currentInteract != null && !currentInteract.IsVisible()) 
+        {
             OnLostPlayer?.Invoke();
-        previousNPC = currentNPC;
+            currentInteract.Disengage();
+        }
+        else if (currentInteract != previousInteract && currentInteract != null && previousInteract != null) 
+        {
+            OnLostPlayer?.Invoke();
+            previousInteract.Disengage();
+        }
+        previousInteract = currentInteract;
     }
-    NPC_Controller GetCurrentNPC()
+
+    IInteractable GetCurrentInteractiveObject() 
     {
         Collider[] objs = Physics.OverlapSphere(transform.position, InteractionDistance);
-        NPC_Controller[] npcs = objs.Where(x => x.tag.Equals("NPC")).Select(x => x.GetComponent<NPC_Controller>()).ToArray();
-        if (npcs.Length == 0)
-            return null;
+        IInteractable[] interactables = objs.Select(x => x.GetComponent<IInteractable>()).Where(x => x != null).ToArray();
+        if  (interactables.Length == 0) return null;
+
         float dist = float.MaxValue;
-        NPC_Controller selected = null;
-        foreach (NPC_Controller m in npcs)
+        IInteractable selected = null;
+        foreach (IInteractable m in interactables)
         {
-            float current = Vector3.Distance(transform.position, m.transform.position);
+            float current = Vector3.Distance(transform.position, (m as MonoBehaviour).transform.position);
             if (current < dist)
             {
                 dist = current;
@@ -54,4 +66,5 @@ public class PlayerInteract : MonoBehaviour
         }
         return selected;
     }
+ 
 }

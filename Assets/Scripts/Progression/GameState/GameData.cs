@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -6,6 +7,8 @@ public class GameData
 {
     [SerializeField] public SceneInfo[] SceneInfos { get; set; }
     [SerializeField] public int CurrentScene { get;  set; }
+    [SerializeField] public AchievementObject.AchievementStates[] AchievementStates { get;  set; }
+    [SerializeField] public Dictionary<string, int> TestObjectStates { get; set; }
 }
 [System.Serializable]
 public class SceneInfo
@@ -18,7 +21,12 @@ public class SceneInfo
     }
 
 }
-
+[System.Serializable]
+public class AchievementObjectStates 
+{
+    [SerializeField] public bool isUnlocked;
+    [SerializeField] public bool isAccomplished;
+}
 public interface IDataPersistence
 {
     public void SaveData(ref GameData data);

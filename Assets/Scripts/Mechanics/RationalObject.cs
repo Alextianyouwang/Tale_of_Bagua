@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-
 public class RationalObject : MonoBehaviour
 {
     protected Collider[] _overlappingColliders;
@@ -8,11 +8,12 @@ public class RationalObject : MonoBehaviour
     public LayerMask ObstacleMask, MirrorMask;
     public int _levelIndex = 0;
 
-    private void OnEnable()
+    public Action OnReceive;
+    protected virtual void OnEnable()
     {
         LevelManager.OnShareAllLevels += ReceiveAllLevels;
     }
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         LevelManager.OnShareAllLevels -= ReceiveAllLevels;
 
@@ -42,38 +43,38 @@ public class RationalObject : MonoBehaviour
         return true;
     }
 
-    protected bool HandShake(string tagName, Vector3 position, Vector3 distance, out RaycastHit hit)
+    protected bool HandShake( Vector3 position, Vector3 distance, out RaycastHit hit)
     {
         Ray handshake = new Ray(position, distance.normalized);
         Physics.Raycast(handshake, out hit, distance.magnitude);
-        if (hit.transform != null && hit.transform.tag.Equals(tagName))
+        if (hit.transform != null && hit.transform.GetComponent<RationalObject>())
             return true;
         else
             return false;
     }
 
-    public bool IsObjectVisible()
+    public bool IsObjectVisibleAndSameLevelWithPlayer()
     {
-        _allHitsMirrors = Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask);
-        return _allHitsMirrors.Length - 1 == _levelIndex;
+        return
+            LevelManager.allMirrorOnTop == Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask).Length - 1
+            &&
+            LevelManager.allMirrorOnTop == _levelIndex;
+    }
+    public bool IsObjectAtCorrectLevel() 
+    {
+        return Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask).Length - 1 == _levelIndex;
     }
 
     protected bool CheckVisibility(RaycastHit hit)
     {
         if (hit.transform.GetComponent<RationalObject>())
-            return hit.transform.GetComponent<RationalObject>().IsObjectVisible();
+            return hit.transform.GetComponent<RationalObject>().IsObjectAtCorrectLevel();
         return false;
     }
 
-
-    protected void Connect(RaycastHit hit)
+    public void Receive()
     {
-        hit.transform.GetComponent<RationalObject>().Receive();
-    }
-
-    protected void Receive()
-    {
-        print(name);
+        OnReceive?.Invoke();
     }
 
 }

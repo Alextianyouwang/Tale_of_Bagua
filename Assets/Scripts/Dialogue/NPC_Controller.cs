@@ -2,13 +2,13 @@
 using UnityEngine;
 using System;
 
-public class NPC_Controller : MonoBehaviour
-{
+public class NPC_Controller : RationalObject,IInteractable
+{ 
     public Action<Vector3, TextAsset, Sprite> OnDetactPlayer;
     public Action OnLostPlayer;
     public TextAsset InkDialogueAsset;
     public Sprite IconImage;
-    
+    public static Action<TextAsset, Sprite> OnPlayDialogue;
 
     public int interactionCounter { get; private set; } = 0;
     public DialogueProgressionSetting[] ProgressionSettings;
@@ -26,13 +26,34 @@ public class NPC_Controller : MonoBehaviour
         [Header(">>>>>>>>>>> Only Move to the Next Interaction When Event is Called")]
         public string progressEventName;
     }
-    private void OnEnable()
+    protected override void OnEnable()
     { 
         DialogueManager.OnGeneralEventCalledGlobal+= ReceiveGeneralEvent;
     }
-    private void OnDisable()
+    protected override void OnDisable()
     {
         DialogueManager.OnGeneralEventCalledGlobal-= ReceiveGeneralEvent;
+    }
+    public void Interact() 
+    {
+        NPC_Manager.currentNPC = this;
+        OnPlayDialogue?.Invoke(InkDialogueAsset, IconImage);
+    }
+    public void Hold() { }
+
+    public void Disengage() { }
+    public bool IsVisible() 
+    {
+        return IsObjectVisibleAndSameLevelWithPlayer();
+    }
+
+    public IconType GetIconType() 
+    {
+        return IconType.exclamation;
+    }
+    public bool IsActive() 
+    {
+        return true;
     }
     void ReceiveGeneralEvent(string value) 
     {

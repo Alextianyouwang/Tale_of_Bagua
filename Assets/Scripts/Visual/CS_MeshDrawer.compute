@@ -1,0 +1,22 @@
+
+#pragma kernel CSMain
+
+int _width;
+int _height;
+
+struct UnitData {
+    float3 pixelColor;
+    float3 pixelPos_WS;
+    float3 UV;
+};
+
+RWStructuredBuffer<UnitData> UnitDataBuffer;
+
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    UnitData current = UnitDataBuffer[id.x * _height + id.y];
+    current.pixelPos_WS += sin(current.UV * 5) * 2;
+    UnitDataBuffer[id.x * _height + id.y] = current;
+}

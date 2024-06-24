@@ -25,15 +25,18 @@ public class Level : MonoBehaviour
             levelObject.Add(t.gameObject);
         }
 
-      /*  boxColliders = GetComponents<BoxCollider>().ToList();
-        foreach (GameObject g in AdditionalObjects) 
+        boxColliders = GetComponents<BoxCollider>().ToList();
+        if (AdditionalObjects != null) 
         {
-            if (g == null)
-                continue;
-            if (!g.GetComponent<BoxCollider>())
-                continue;
-            boxColliders.Add(g.GetComponent<BoxCollider>());
-        }*/
+            foreach (GameObject g in AdditionalObjects)
+            {
+                if (g == null)
+                    continue;
+                if (!g.GetComponent<BoxCollider>())
+                    continue;
+                boxColliders.Add(g.GetComponent<BoxCollider>());
+            }
+        }
         foreach (BoxCollider c in boxColliders) 
         {
             c.isTrigger = true;

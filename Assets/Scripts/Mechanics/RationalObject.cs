@@ -12,6 +12,7 @@ public class RationalObject : MonoBehaviour
     protected virtual void OnEnable()
     {
         LevelManager.OnShareAllLevels += ReceiveAllLevels;
+        
     }
     protected virtual void OnDisable()
     {
@@ -56,13 +57,28 @@ public class RationalObject : MonoBehaviour
     public bool IsObjectVisibleAndSameLevelWithPlayer()
     {
         return
-            LevelManager.allMirrorOnTop == Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask).Length - 1
+           IsObjectAtCorrectLevel()
             &&
             LevelManager.allMirrorOnTop == _levelIndex;
     }
     public bool IsObjectAtCorrectLevel() 
     {
-        return Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask).Length - 1 == _levelIndex;
+        Bounds b = GetComponent<MeshRenderer>().bounds;
+        Vector3 tl = b.center + new Vector3(-b.extents.x, 0, b.extents.z);
+        Vector3 tr = b.center + new Vector3(b.extents.x, 0, b.extents.z);
+        Vector3 br = b.center + new Vector3(b.extents.x, 0, -b.extents.z);
+        Vector3 bl = b.center + new Vector3(-b.extents.x, 0, -b.extents.z);
+        int tlHit = Physics.RaycastAll(tl - Vector3.up * 3f, Vector3.up, 20f, MirrorMask).Length - 1;
+        int trHit = Physics.RaycastAll(tr - Vector3.up * 3f, Vector3.up, 20f, MirrorMask).Length - 1;
+        int brHit = Physics.RaycastAll(br - Vector3.up * 3f, Vector3.up, 20f, MirrorMask).Length - 1;
+        int blHit = Physics.RaycastAll(bl - Vector3.up * 3f, Vector3.up, 20f, MirrorMask).Length - 1;
+        if (tlHit != _levelIndex
+            || trHit != _levelIndex
+            || brHit != _levelIndex
+            || blHit != _levelIndex)
+            return false;
+        else return true;
+
     }
 
     protected bool CheckVisibility(RaycastHit hit)
@@ -72,6 +88,10 @@ public class RationalObject : MonoBehaviour
         return false;
     }
 
+    protected virtual void OnDrawGizmos()
+    {
+
+    }
     public void Receive()
     {
         OnReceive?.Invoke();

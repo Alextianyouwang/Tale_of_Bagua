@@ -1,13 +1,16 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Level : MonoBehaviour
 {
      List<GameObject> levelObject = new List<GameObject>();
 
-    BoxCollider[] boxColliders;   
+    List< BoxCollider> boxColliders = new List<BoxCollider> ();
 
     bool colliderToggleState = false;
+
+    public GameObject[] AdditionalObjects;
     private void Awake()
     {
         GetLevelObject();
@@ -21,7 +24,16 @@ public class Level : MonoBehaviour
             t.GetComponent<Collider>().isTrigger = true;
             levelObject.Add(t.gameObject);
         }
-        boxColliders = GetComponents<BoxCollider>();
+
+      /*  boxColliders = GetComponents<BoxCollider>().ToList();
+        foreach (GameObject g in AdditionalObjects) 
+        {
+            if (g == null)
+                continue;
+            if (!g.GetComponent<BoxCollider>())
+                continue;
+            boxColliders.Add(g.GetComponent<BoxCollider>());
+        }*/
         foreach (BoxCollider c in boxColliders) 
         {
             c.isTrigger = true;

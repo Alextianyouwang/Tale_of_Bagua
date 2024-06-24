@@ -14,7 +14,7 @@ public class PlayerInteract : MonoBehaviour
         if (currentInteract == null || !currentInteract.IsVisible() || !currentInteract.IsActive())
             return;
         if (Input.GetKeyDown(KeyCode.Space))
-            currentInteract.Interact();
+            currentInteract.Interact(transform.position);
         else if (Input.GetKey(KeyCode.Space))
             currentInteract.Hold();
         else if (Input.GetKeyUp(KeyCode.Space))

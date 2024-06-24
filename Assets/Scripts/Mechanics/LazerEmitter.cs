@@ -45,7 +45,7 @@ public class LazerEmitter : RationalObject,IInteractable
         }
         
     }
-    public void Interact() 
+    public void Interact(Vector3 pos) 
     {
    
         ReceiveShootCommand();
@@ -169,8 +169,9 @@ public void Editor_ChangeOriantationUI()
         VisualCueUI.transform.eulerAngles = eularAngle;
         VisualCueUI.transform.localScale = Reflector? Vector3.one * 0.5f : Vector3.one;
     }
-    private void OnDrawGizmos()
+    protected override void OnDrawGizmos()
     {
+        base.OnDrawGizmos();
         Gizmos.color = Color.yellow;
         foreach (Vector3 v in _rayCastPositionTracker)
             Gizmos.DrawSphere(v,0.1f);

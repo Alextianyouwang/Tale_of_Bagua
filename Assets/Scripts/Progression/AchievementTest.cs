@@ -6,7 +6,7 @@ public class AchievementTest : RationalObject, IInteractable, IDataPersistence
 {
     public AchievementObject Achievement;
     public string key;
-    public void Interact() 
+    public void Interact(Vector3 pos) 
     {
         Achievement.Accomplish();
 

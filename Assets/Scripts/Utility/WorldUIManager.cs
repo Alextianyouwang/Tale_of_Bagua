@@ -1,10 +1,13 @@
 using UnityEngine;
-public enum IconType { exclamation, kavaii }
+public enum IconType { exclamation, kavaii, door}
 
 public class WorldUIManager : MonoBehaviour
 {
     private GameObject exclamationIcon_prefab;
     private GameObject exclamationIcon_instance;
+
+    private GameObject doorIcon_prefab;
+    private GameObject doorIcon_instance;
 
     private GameObject kavaiiIcon_prefab;
     private GameObject kavaiiIcon_instance;
@@ -12,6 +15,11 @@ public class WorldUIManager : MonoBehaviour
 
     private void Awake()
     {
+
+        doorIcon_prefab = Resources.Load<GameObject>("UI/P_Door");
+        doorIcon_instance = Instantiate(doorIcon_prefab);
+        doorIcon_instance.SetActive(false);
+
         exclamationIcon_prefab = Resources.Load<GameObject>("UI/P_ExclamationIcon");
         exclamationIcon_instance = Instantiate(exclamationIcon_prefab);
         exclamationIcon_instance.SetActive(false);
@@ -48,6 +56,11 @@ public class WorldUIManager : MonoBehaviour
                 kavaiiIcon_instance.transform.position = pos;
                 kavaiiIcon_instance.SetActive(true);
                 break;
+
+            case IconType.door:
+                doorIcon_instance.transform.position = pos;
+                doorIcon_instance.SetActive(true);
+                break;
             default:
                 exclamationIcon_instance.transform.position = pos;
                 exclamationIcon_instance.SetActive(true);
@@ -60,6 +73,7 @@ public class WorldUIManager : MonoBehaviour
     {
         exclamationIcon_instance.SetActive(false);
         kavaiiIcon_instance.SetActive(false);
+        doorIcon_instance.SetActive(false);
     }
 
 }

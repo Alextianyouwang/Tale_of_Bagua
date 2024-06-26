@@ -34,7 +34,7 @@ public class NPC_Controller : RationalObject,IInteractable
     {
         DialogueManager.OnGeneralEventCalledGlobal-= ReceiveGeneralEvent;
     }
-    public void Interact() 
+    public void Interact(Vector3 pos) 
     {
         NPC_Manager.currentNPC = this;
         OnPlayDialogue?.Invoke(InkDialogueAsset, IconImage);

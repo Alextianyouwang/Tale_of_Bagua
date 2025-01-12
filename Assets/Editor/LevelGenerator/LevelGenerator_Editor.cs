@@ -34,14 +34,19 @@ public class LevelGenerator_Editor : EditorWindow
 
     private void OnEnable()
     {
-        _levelVisual = new LevelGenerator_Visual();
         _generator = new LevelGenerator();
+        _levelVisual = new LevelGenerator_Visual();
         _commandStack = new LevelGenerator_CommandStack();
 
-        _levelMat = EditorUtil.GetObject<Material>("M_LevelTemplate.mat");
         _generator.Cam = FindObjectOfType<Camera>();
-        if (!_generator.Cam)
+        if (!_generator.Cam) 
+        {
             Debug.LogError("No Camera Detected");
+            return;
+        }
+
+        _levelMat = EditorUtil.GetObject<Material>("M_LevelTemplate.mat");
+       
         _generator.SetupCamera();
 
         _levelVisual.PrepareVisualSetup(_generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
@@ -51,7 +56,8 @@ public class LevelGenerator_Editor : EditorWindow
 
     private void OnDisable()
     {
-        _levelVisual.RemoveVisualSetup();
+        if (_levelVisual!= null)
+            _levelVisual.RemoveVisualSetup();
         _levelDataObject = null;
         SceneView.duringSceneGui -= OnSceneGUI;
     }

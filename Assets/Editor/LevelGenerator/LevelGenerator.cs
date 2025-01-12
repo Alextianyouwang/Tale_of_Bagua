@@ -7,6 +7,7 @@ public class LevelGenerator
 
     public void SetupCamera()
     {
+        if (Cam == null) return;
         Cam.transform.position =  new Vector3(0f,15f,0f);
         Cam.transform.rotation = Quaternion.Euler(90, 0, 0);
         Cam.transform.localScale = Vector3.one;

@@ -34,6 +34,8 @@ public class LevelCapturer_Editor : EditorWindow
     {
         _capturer = new LevelCapturer();
         _capturer.Cam = FindObjectOfType<Camera>();
+        if (_capturer.Cam == null)
+            return;
         _urp_cam = _capturer.Cam.GetComponent<UniversalAdditionalCameraData>();
         _rendererData = EditorUtil. GetObject<UniversalRendererData>("URP_Renderer.asset");
         

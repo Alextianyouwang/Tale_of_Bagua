@@ -63,7 +63,7 @@ public class LevelGenerator_Visual
     {
         if (_levelVisual_buffer != null)
             _levelVisual_buffer.Dispose();
-        _levelVisual_tex.Release();
+        _levelVisual_tex?.Release();
 
         RemoveSearchClosestSetup();
 

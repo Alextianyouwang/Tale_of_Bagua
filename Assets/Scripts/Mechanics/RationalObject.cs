@@ -8,7 +8,7 @@ public class RationalObject : MonoBehaviour
     public LayerMask ObstacleMask, MirrorMask;
     public int _levelIndex = 0;
 
-    public Action OnReceive;
+    public Action<LazerEmitter.Oriantations> OnReceive;
     protected virtual void OnEnable()
     {
         LevelManager.OnShareAllLevels += ReceiveAllLevels;
@@ -92,9 +92,9 @@ public class RationalObject : MonoBehaviour
     {
 
     }
-    public void Receive()
+    public void Receive(LazerEmitter.Oriantations oriantation)
     {
-        OnReceive?.Invoke();
+        OnReceive?.Invoke(oriantation);
     }
 
 }

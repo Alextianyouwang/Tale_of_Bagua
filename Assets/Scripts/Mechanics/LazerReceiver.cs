@@ -11,7 +11,7 @@ public class LazerReceiver : RationalObject
     {
         base.OnDisable();
     }
-    public void BranchReceived() 
+    public void BranchReceived(LazerEmitter.Oriantations oriantation) 
     {
         print("Receiver Hit, name: " + name);
     }

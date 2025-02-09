@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class LazerEmitter : RationalObject,IInteractable
 {
-    public enum Oriantations { Top, Bot, Left, Right}
+    public enum Oriantations { Top, Right ,Bot, Left}
     public Oriantations OriantationOptions;
     public bool Reflector = false;
 
@@ -47,8 +47,17 @@ public class LazerEmitter : RationalObject,IInteractable
     }
     public void Interact(Vector3 pos) 
     {
-   
-        ReceiveShootCommand();
+
+        if (!Reflector)
+            ReceiveShootCommand();
+        else 
+        {
+            int currentOriaintation = (int)OriantationOptions;
+            currentOriaintation += 1;
+            currentOriaintation %= 4 ;
+            OriantationOptions = (Oriantations)currentOriaintation;
+            Editor_ChangeOriantationUI();
+        }
     }
     public void Hold() { }
 
@@ -67,11 +76,11 @@ public class LazerEmitter : RationalObject,IInteractable
     }
     private void ReceiveShootCommand() 
     {
-        ShootLazer(40, 0.47f);
+        ShootLazer(80, 0.23f);
     }
     public bool IsActive() 
     {
-        return !Reflector;
+        return true;
     }
     private void RecursivelyStop() 
     {
@@ -121,7 +130,8 @@ public class LazerEmitter : RationalObject,IInteractable
                     if (chain != null && chain.Reflector)
                         _chainedEmitter = chain;
 
-                    _hitReceiverObject.transform.GetComponent<RationalObject>().Receive();
+                   
+                    _hitReceiverObject.transform.GetComponent<RationalObject>().Receive(OriantationOptions);
                     break;
                 }
             }
@@ -140,8 +150,10 @@ public class LazerEmitter : RationalObject,IInteractable
         }
       
     }
-    public void BranchReceived()
+    public void BranchReceived(LazerEmitter.Oriantations oriantation)
     {
+        if ((int)oriantation == ((int)OriantationOptions + 2) % 4)
+            return;
         if (Reflector)
             ReceiveShootCommand();
     }

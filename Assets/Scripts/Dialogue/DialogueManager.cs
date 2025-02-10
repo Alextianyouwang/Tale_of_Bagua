@@ -90,8 +90,8 @@ public class DialogueManager : MonoBehaviour
             isDialoguePlaying = true;
             DialoguePanel.gameObject.SetActive(true);
             PlayerMove.canUseWASD = false;
-            MirrorManager.canUseLeftClick = false;
-            MirrorManager.canUseRightClick = false;
+            MirrorManager.CanUseLeftClick = false;
+            MirrorManager.CanUseRightClick = false;
             currentDialogue_NPC = new Story(inkJson_NPC.text);
             currentDialogue_NPC.BindExternalFunction("GeneralEvent",  OnGeneralEventCalled);
             NPC_Manager.currentNPC.UpdateInteractionBeforePrint();
@@ -153,8 +153,8 @@ public class DialogueManager : MonoBehaviour
         isDialoguePlaying = false;
         DialoguePanel.gameObject.SetActive(false);
         PlayerMove.canUseWASD = true;
-        MirrorManager.canUseLeftClick = true;
-        MirrorManager.canUseRightClick = true;
+        MirrorManager.CanUseLeftClick = true;
+        MirrorManager.CanUseRightClick = true;
         dialogueText.text = null;
         dialogueIcon.sprite = null;
         NPC_Manager.currentNPC.UpdateInteractionAfterPrint();

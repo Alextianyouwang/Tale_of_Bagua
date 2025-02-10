@@ -1,32 +1,29 @@
 using UnityEngine;
 using System;
 using System.Linq;
-using System.Net.NetworkInformation;
 
 public class MirrorManager : MonoBehaviour
 {
-    private Mirror currentMirror;
-    public LayerMask mirrorMask;
-    private Vector3 offset, finalWorldPos, screenCenter_WorldSpace;
-    private bool firstMirrorHasBeenClicked = false, isClicking = false, isCollapsed = false, isCharged = false, canChargeAgain = true;
-    private Mirror[] hoodMirrors,allMirrors;
-    public static Action<Mirror> OnSharingCurrentMirror;
 
-    public static Action<float,float> OnChargingCollapse;
-    public static Action<float,float> OnChargingRelease;
-    public static Action<float,float> OnChargedCollapse;
-    public static Action<float,float,bool> OnAbortCollapse;
+    public static Action<Mirror> OnSharingCurrentMirror;
+    public static Action<float, float> OnChargingCollapse;
+    public static Action<float, float> OnChargingRelease;
+    public static Action<float, float> OnChargedCollapse;
+    public static Action<float, float, bool> OnAbortCollapse;
     public static Action OnCollapsing;
     public static Action<bool> OnExpand;
+    public static bool CanUseRightClick = true, CanUseLeftClick = true;
 
-    private float collapseTimer = 0,chargeTime = 0.01f;
+    private Mirror _currentMirror;
+    private LayerMask _mirrorMask;
+    private Vector3 _offset, _finalWorldPos, _screenCenter_WorldSpace;
+    private bool _firstMirrorHasBeenClicked = false, _isClicking = false, _isCollapsed = false, _isCharged = false, _canChargeAgain = true;
+    private Mirror[] _hoodMirrors,_allMirrors;
+
+    private float _collapseTimer = 0,_chargeTime = 0.01f;
+    private int _previousHoodMirrorCount = 0,_currentHoodMirrorCount = 0;
 
     public AnimationCurve mirrorMoveCurve;
-
-    private int previousHoodMirrorCount = 0,currentHoodMirrorCount = 0; 
-
-    public static bool canUseRightClick = true, canUseLeftClick = true;
-
     [ColorUsage(true,true)]
     public Color normalCol;
     [ColorUsage(true, true)]
@@ -37,7 +34,8 @@ public class MirrorManager : MonoBehaviour
 
     private void OnEnable()
     {
-        screenCenter_WorldSpace = Utility.GetScreenCenterPosition_WorldSpace();
+        _mirrorMask = LayerMask.GetMask("MirrorPlane");
+        _screenCenter_WorldSpace = Utility.GetScreenCenterPosition_WorldSpace();
         LevelManager.OnShareHoodMirror += ReceiveHoodMirror;
         LevelManager.OnShareAllMirror += ReceiveAllMirror;
         LevelManager.OnFixUpdate += FollowFixUpdate;
@@ -48,63 +46,63 @@ public class MirrorManager : MonoBehaviour
         LevelManager.OnFixUpdate -= FollowFixUpdate;
         LevelManager.OnShareAllMirror -= ReceiveAllMirror;
 
-        canUseRightClick = true;
-        canUseLeftClick= true;
+        CanUseRightClick = true;
+        CanUseLeftClick= true;
     }
     void ReceiveHoodMirror(Mirror[] hoodMirror)
     {
-        hoodMirrors = hoodMirror;
+        _hoodMirrors = hoodMirror;
     }
 
     void ReceiveAllMirror(Mirror[] allMirror) 
     {
-        allMirrors = allMirror;
+        _allMirrors = allMirror;
         
     }
 
     void UpdateMirrorPhysics()
     {
-        if (!isClicking) return;
+        if (!_isClicking) return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit[] allHits = Physics.RaycastAll(ray, Mathf.Infinity, mirrorMask);
-        finalWorldPos = allHits.Where(x => x.transform.tag.Equals("MirrorPlane")).FirstOrDefault().point;
-        if (!firstMirrorHasBeenClicked)
+        RaycastHit[] allHits = Physics.RaycastAll(ray, Mathf.Infinity, _mirrorMask);
+        _finalWorldPos = allHits.Where(x => x.transform.tag.Equals("MirrorPlane")).FirstOrDefault().point;
+        if (!_firstMirrorHasBeenClicked)
         {
-            firstMirrorHasBeenClicked = true;
-            currentMirror = allHits.Where(x => x.transform.tag.Equals("Mirror")).Select(x => x.transform.gameObject.GetComponent<Mirror>()).FirstOrDefault();
-            if (currentMirror != null) 
-            offset =currentMirror.transform.position - finalWorldPos;
+            _firstMirrorHasBeenClicked = true;
+            _currentMirror = allHits.Where(x => x.transform.tag.Equals("Mirror")).Select(x => x.transform.gameObject.GetComponent<Mirror>()).FirstOrDefault();
+            if (_currentMirror != null) 
+            _offset =_currentMirror.transform.position - _finalWorldPos;
         }
     }
  
 
     public void MoveMirrorTo(Mirror m, Vector3 target, float speed ) 
     {
-        Vector3 mirrorCenter = m.transform.position - offset;
+        Vector3 mirrorCenter = m.transform.position - _offset;
         Vector3 direction = Vector3.Normalize(target - mirrorCenter);
-        float distance = (finalWorldPos - mirrorCenter).magnitude;
+        float distance = (_finalWorldPos - mirrorCenter).magnitude;
         m.RigidBodyAddForce(direction, Mathf.Min(distance * speed, 15));
      
     }
 
     private void SetMirrorYPos() 
     {
-        foreach(Mirror m in allMirrors) 
-            m.rb.position = new Vector3(m.rb.position.x, screenCenter_WorldSpace.y, m.rb.position.z);
+        foreach(Mirror m in _allMirrors) 
+            m.RigidBody.position = new Vector3(m.RigidBody.position.x, _screenCenter_WorldSpace.y, m.RigidBody.position.z);
     }
 
     private void CageMirrorWhenCollapsed() 
     {
-        foreach (Mirror m in hoodMirrors)
-            if (isCollapsed)
+        foreach (Mirror m in _hoodMirrors)
+            if (_isCollapsed)
                 m.ToggleBoxesRigidCollider(true);
     }
 
     private void AdjustMirrorColliderSize() 
     {
-        foreach (Mirror m in hoodMirrors)
+        foreach (Mirror m in _hoodMirrors)
             m.ToggleColliderSize(true);
-        foreach (Mirror m in allMirrors.Where(x => !hoodMirrors.Contains(x))) 
+        foreach (Mirror m in _allMirrors.Where(x => !_hoodMirrors.Contains(x))) 
             m.ToggleColliderSize(false);
     }
 
@@ -116,29 +114,29 @@ public class MirrorManager : MonoBehaviour
         CageMirrorWhenCollapsed();
         AdjustMirrorColliderSize();
 
-        if (!currentMirror || !firstMirrorHasBeenClicked) 
+        if (!_currentMirror || !_firstMirrorHasBeenClicked) 
             return;
  
-        if (isCollapsed && hoodMirrors.Contains(currentMirror))
-            for (int i = 0; i < hoodMirrors.Length; i++)
-                MoveMirrorTo(hoodMirrors[i], finalWorldPos, 7);
+        if (_isCollapsed && _hoodMirrors.Contains(_currentMirror))
+            for (int i = 0; i < _hoodMirrors.Length; i++)
+                MoveMirrorTo(_hoodMirrors[i], _finalWorldPos, 7);
         else
-             MoveMirrorTo(currentMirror, finalWorldPos, 7);
+             MoveMirrorTo(_currentMirror, _finalWorldPos, 7);
     }
 
     public void CollapseHoodMirror()
     {
-        if (hoodMirrors.Length <=1)
+        if (_hoodMirrors.Length <=1)
             return;
-        isCollapsed = true;
+        _isCollapsed = true;
         Vector3 averagePos = Vector3.zero;
-        foreach (Mirror m in hoodMirrors)
+        foreach (Mirror m in _hoodMirrors)
         {
             averagePos += m.transform.position;
 
         }
-        averagePos /= hoodMirrors.Length;
-        foreach (Mirror m in hoodMirrors) 
+        averagePos /= _hoodMirrors.Length;
+        foreach (Mirror m in _hoodMirrors) 
         {
             m.ToggleBoxesRigidCollider(true);
             m.MoveMirrorTowards(0.4f, averagePos,mirrorMoveCurve);
@@ -148,62 +146,62 @@ public class MirrorManager : MonoBehaviour
 
     public void ExpandHoodMirror() 
     {
-        if (hoodMirrors.Length <= 1)
+        if (_hoodMirrors.Length <= 1)
             return;
-        isCollapsed = false;
-        Vector2[] offsets = Utility.RadiusPosition(hoodMirrors.Length);
+        _isCollapsed = false;
+        Vector2[] offsets = Utility.RadiusPosition(_hoodMirrors.Length);
         Vector3 playerPos = PlayerMove.playerTransform.position;
 
-        for (int i = 0; i < hoodMirrors.Length; i++)
+        for (int i = 0; i < _hoodMirrors.Length; i++)
         {
             Vector2 offset = offsets[i];
-            Vector3 targetPos = new Vector3(playerPos.x + offset.x, hoodMirrors[0].transform.position.y, playerPos.z+ offset.y);
-            hoodMirrors[i].MoveMirrorTowards(0.4f, targetPos, mirrorMoveCurve);
+            Vector3 targetPos = new Vector3(playerPos.x + offset.x, _hoodMirrors[0].transform.position.y, playerPos.z+ offset.y);
+            _hoodMirrors[i].MoveMirrorTowards(0.4f, targetPos, mirrorMoveCurve);
         }
     }
 
     void CheckIfNewHoodMirrorAdded() 
     {
-        if (hoodMirrors == null) return;
-        if( hoodMirrors.Length == 0 )return;
-        currentHoodMirrorCount = hoodMirrors.Length;
-        if (previousHoodMirrorCount != currentHoodMirrorCount && isCollapsed) 
+        if (_hoodMirrors == null) return;
+        if( _hoodMirrors.Length == 0 )return;
+        _currentHoodMirrorCount = _hoodMirrors.Length;
+        if (_previousHoodMirrorCount != _currentHoodMirrorCount && _isCollapsed) 
         {
             CollapseHoodMirror();
         }
-        previousHoodMirrorCount = currentHoodMirrorCount;
+        _previousHoodMirrorCount = _currentHoodMirrorCount;
     }
 
     void LeftClick() {
-        if (!canUseLeftClick)
+        if (!CanUseLeftClick)
             return;
         if (Input.GetMouseButtonDown(0))
         {
-            isClicking = true;
+            _isClicking = true;
 
         }
         if (Input.GetMouseButtonUp(0))
         {
 
-            isClicking = false;
-            currentMirror = null;
-            firstMirrorHasBeenClicked = false;
-            offset = Vector3.zero;
+            _isClicking = false;
+            _currentMirror = null;
+            _firstMirrorHasBeenClicked = false;
+            _offset = Vector3.zero;
         }
     }
     void RightClick() 
     {
-        if (!canUseRightClick)
+        if (!CanUseRightClick)
             return;
 
-        if (isCollapsed && !Input.GetMouseButton(1))
+        if (_isCollapsed && !Input.GetMouseButton(1))
             OnCollapsing?.Invoke();
         if (Input.GetMouseButtonDown(1))
         {
 
-            if (isCollapsed)
+            if (_isCollapsed)
             {
-                canChargeAgain = false;
+                _canChargeAgain = false;
                 OnExpand?.Invoke(false);
                 ExpandHoodMirror();
 
@@ -212,38 +210,38 @@ public class MirrorManager : MonoBehaviour
         }
         if (Input.GetMouseButton(1))
         {
-            if (!canChargeAgain)
+            if (!_canChargeAgain)
                 return;
-            collapseTimer += Time.deltaTime;
-            if (!isCollapsed)
-                OnChargingCollapse?.Invoke(collapseTimer, chargeTime);
+            _collapseTimer += Time.deltaTime;
+            if (!_isCollapsed)
+                OnChargingCollapse?.Invoke(_collapseTimer, _chargeTime);
 
 
         }
         if (Input.GetMouseButtonUp(1))
         {
-            if (!canChargeAgain)
+            if (!_canChargeAgain)
             {
-                isCharged = false;
-                canChargeAgain = true;
+                _isCharged = false;
+                _canChargeAgain = true;
                 return;
             }
-            if (collapseTimer >= chargeTime)
+            if (_collapseTimer >= _chargeTime)
             {
 
-                OnChargedCollapse?.Invoke(collapseTimer, chargeTime);
-                if (!isCollapsed)
+                OnChargedCollapse?.Invoke(_collapseTimer, _chargeTime);
+                if (!_isCollapsed)
                 {
                     CollapseHoodMirror();
-                    isCharged = true;
+                    _isCharged = true;
                 }
             }
             else
             {
-                if (!isCharged)
-                    OnAbortCollapse?.Invoke(collapseTimer, chargeTime, false);
+                if (!_isCharged)
+                    OnAbortCollapse?.Invoke(_collapseTimer, _chargeTime, false);
             }
-            collapseTimer = 0;
+            _collapseTimer = 0;
         }
 
     }
@@ -255,31 +253,31 @@ public class MirrorManager : MonoBehaviour
 
     void SetMirrorColor(Mirror m, Color color) 
     {
-        m.material[2].color = color;  
+        m.Materials[2].color = color;  
     }
 
   
     void UpdateMaterial() 
     {
-        if (allMirrors != null)
-        foreach (Mirror m in allMirrors)
-                    if (m && m == currentMirror)
+        if (_allMirrors != null)
+        foreach (Mirror m in _allMirrors)
+                    if (m && m == _currentMirror)
                         SetMirrorColor(m, selectedCol);
-                    else if (m && m != currentMirror)
+                    else if (m && m != _currentMirror)
                         SetMirrorColor(m, normalCol);
-        if (hoodMirrors != null && hoodMirrors.Length > 0) 
+        if (_hoodMirrors != null && _hoodMirrors.Length > 0) 
         {
-            foreach (Mirror mr in hoodMirrors)
+            foreach (Mirror mr in _hoodMirrors)
                 if (mr)
                     SetMirrorColor(mr, hoodCol);
-            foreach (Mirror m in hoodMirrors)
+            foreach (Mirror m in _hoodMirrors)
                 if (m)
-                    if (m == currentMirror)
+                    if (m == _currentMirror)
                         SetMirrorColor(m, selectedCol);
-                    else if (m && m != currentMirror)
+                    else if (m && m != _currentMirror)
                         SetMirrorColor(m, hoodCol);
-            if (isCollapsed && currentMirror)
-                foreach (Mirror m in hoodMirrors)
+            if (_isCollapsed && _currentMirror)
+                foreach (Mirror m in _hoodMirrors)
                     if (m)
                         SetMirrorColor(m, selectedCol);
         }
@@ -294,14 +292,14 @@ public class MirrorManager : MonoBehaviour
         UpdateMaterial();
         CheckIfNewHoodMirrorAdded();
 
-        OnSharingCurrentMirror?.Invoke(currentMirror);
+        OnSharingCurrentMirror?.Invoke(_currentMirror);
 
 
     }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        if(currentMirror)
-        Gizmos.DrawLine(finalWorldPos, currentMirror.transform.position - offset);
+        if(_currentMirror)
+        Gizmos.DrawLine(_finalWorldPos, _currentMirror.transform.position - _offset);
     }
 }

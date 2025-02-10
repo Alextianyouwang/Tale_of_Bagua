@@ -57,7 +57,7 @@ public class Tutorial : MonoBehaviour
             InitiateMirrorCollapseTutorial();
         }
         if (MirrorCollapseTutorial_ExitCondition())
-            MirrorManager.canUseRightClick = true;
+            MirrorManager.CanUseRightClick = true;
 
         if (havePlayedMirrorCollapseTutorial) 
         {
@@ -87,7 +87,7 @@ public class Tutorial : MonoBehaviour
     }
     IEnumerator QueueTutorialActions(UIController master,Func<bool> exitCondition)
     {
-        MirrorManager.canUseRightClick = false;
+        MirrorManager.CanUseRightClick = false;
 
         Coroutine co;
         co = StartCoroutine(master.UI_EaseInOut(1f,true,false));
@@ -212,13 +212,13 @@ public class Tutorial : MonoBehaviour
     void MirrorDragTutorial() 
     {
         PlayerMove.canUseWASD = false;
-        MirrorManager.canUseLeftClick = false;
+        MirrorManager.CanUseLeftClick = false;
         OnToggleDarkenScreen?.Invoke(true);
         StartCoroutine(uc.MoveArrowsAsGroup(Utility.GetScreenCenterPosition_WorldSpace(), NewTransformFromPositon(Utility.GetScreenCenterPosition_WorldSpace()), 4f, 1f, 0f, 0f, 1f, 6f, tutorialArrowData, movementTutorialAnimationCurve, null, MirrorDragTutorial_LockMirror));
     }
     void MirrorDragTutorial_LockMirror(UIController uc) 
     {
-        MirrorManager.canUseLeftClick = true;
+        MirrorManager.CanUseLeftClick = true;
         Mirror currentMirror = FindObjectOfType<Mirror>();
         StartCoroutine(MirrorDragTutorial_QueueAction(currentMirror,MirrorDragTutorial_ExitCondition));
 

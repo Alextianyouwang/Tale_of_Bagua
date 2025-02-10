@@ -3,35 +3,33 @@ using UnityEngine;
 using System;
 public class Mirror : MonoBehaviour
 {
-    private BoxCollider[] boxs;
-    private Coroutine movingCo;
+    private BoxCollider[] _boxs;
+    private Coroutine _movingCo;
+
+    private Rigidbody _rigidBody;
+    private Material[] _materials;
+    private MeshRenderer _frameRenderer;
 
     public Action OnFinishMoving;
-    [HideInInspector]
-    public Rigidbody rb;
-
-    [HideInInspector]
-    public Material[] material;
-
-    public GetCollider crossCollider;
-    public GetCollider boxCollider;
-    [HideInInspector]
-    public MeshRenderer frameRenderer;
-
+    public GetCollider CrossCollider;
+    public GetCollider BoxCollider;
+    public Rigidbody RigidBody => _rigidBody;
+    public Material[] Materials => _materials;
+    public MeshRenderer FrameRenderer => _frameRenderer;
     private void Awake()
     {
-        frameRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
-        material = frameRenderer.materials;
+        _frameRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
+        _materials = FrameRenderer.materials;
+        _rigidBody = GetComponent<Rigidbody>();
 
-        if (material == null)
+        if (Materials == null)
             Debug.LogWarning("Emissive Material for Mirror not found");
-        rb = GetComponent<Rigidbody>();
 
     }
     private void OnEnable()
     {
-        crossCollider.GetColliders();
-        boxCollider.GetColliders();
+        CrossCollider.GetColliders();
+        BoxCollider.GetColliders();
         GetBoxs();
     }
 
@@ -39,38 +37,37 @@ public class Mirror : MonoBehaviour
     {
         if (enlarge)
         {
-            crossCollider.transform.localScale = Vector3.one * 1.01f;
-            boxCollider.transform.localScale = Vector3.one * 1.01f;
+            CrossCollider.transform.localScale = Vector3.one * 1.01f;
+            BoxCollider.transform.localScale = Vector3.one * 1.01f;
         }
         else 
         {
-            crossCollider.transform.localScale = Vector3.one * 0.99f;
-            boxCollider.transform.localScale = Vector3.one * 0.99f;
+            CrossCollider.transform.localScale = Vector3.one * 0.99f;
+            BoxCollider.transform.localScale = Vector3.one * 0.99f;
         }
     }
-
 
     public void MoveMirrorTowards(float time, Vector3 targetPos, AnimationCurve curve) 
     {
         AbortMovement();
-        movingCo = StartCoroutine(MoveTowards(time, targetPos, curve));
+        _movingCo = StartCoroutine(MoveTowards(time, targetPos, curve));
 
     }
 
     public void AbortMovement() 
     {
 
-        rb.isKinematic = false;
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
-        if (movingCo != null)
-            StopCoroutine(movingCo);
+        RigidBody.isKinematic = false;
+        RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+        if (_movingCo != null)
+            StopCoroutine(_movingCo);
     }
     private IEnumerator MoveTowards(float time,Vector3 targetPos, AnimationCurve curve) 
     {
         float percent = 0;
         Vector3 originalPos = transform.position;
-        rb.isKinematic = true;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
+        RigidBody.isKinematic = true;
+        RigidBody.constraints = RigidbodyConstraints.FreezeAll;
 
         while ( percent < 1) 
         {
@@ -81,8 +78,8 @@ public class Mirror : MonoBehaviour
             yield return null;
         }
 
-        rb.isKinematic = false;
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        RigidBody.isKinematic = false;
+        RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             
         OnFinishMoving?.Invoke();
 
@@ -90,25 +87,25 @@ public class Mirror : MonoBehaviour
 
     public void RigidBodyAddForce(Vector3 direction, float intensity) 
     {
-        rb.AddForce(direction * intensity, ForceMode.Force);
+        RigidBody.AddForce(direction * intensity, ForceMode.Force);
     }
     void GetBoxs() 
     {
-        BoxCollider[] colliders = new BoxCollider[boxCollider.colliders.Length + crossCollider.colliders.Length];
+        BoxCollider[] colliders = new BoxCollider[BoxCollider.colliders.Length + CrossCollider.colliders.Length];
         for (int i = 0; i < colliders.Length; i++)
         {
-            colliders[i] =(i < boxCollider.colliders.Length ? boxCollider.colliders[i] : crossCollider.colliders[i - boxCollider.colliders.Length]);
+            colliders[i] =(i < BoxCollider.colliders.Length ? BoxCollider.colliders[i] : CrossCollider.colliders[i - BoxCollider.colliders.Length]);
         }
         
-        boxs = colliders;
+        _boxs = colliders;
         
-        foreach (BoxCollider b in boxs)
+        foreach (BoxCollider b in _boxs)
             b.isTrigger = true;
     }
    
     public void ToggleBoxesRigidCollider(bool value) 
     {
-        foreach (BoxCollider b in boxs)
+        foreach (BoxCollider b in _boxs)
             b.isTrigger = !value;
     }
 

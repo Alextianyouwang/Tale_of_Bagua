@@ -2,11 +2,12 @@ using System;
 using UnityEngine;
 public class RationalObject : MonoBehaviour
 {
+    public LayerMask ObstacleMask, MirrorMask;
+    public int _levelIndex = 0;
+
     protected Collider[] _overlappingColliders;
     protected RaycastHit[] _allHitsMirrors;
     protected Level[] _levels;
-    public LayerMask ObstacleMask, MirrorMask;
-    public int _levelIndex = 0;
 
     public Action<LazerEmitter.Oriantations> OnReceive;
     

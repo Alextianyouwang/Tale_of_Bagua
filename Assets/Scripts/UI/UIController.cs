@@ -164,7 +164,7 @@ public class UIController : MonoBehaviour
         Vector4 boundsRegion = new Vector4(float.MinValue, float.MinValue, float.MaxValue, float.MaxValue);
         foreach (Mirror m in  mirrors)
         {
-            Bounds frameBounds = m.frameRenderer.bounds;
+            Bounds frameBounds = m.FrameRenderer.bounds;
             float topValue = frameBounds.center.z + frameBounds.extents.z + margin;
             float botValue = frameBounds.center.z - frameBounds.extents.z - margin;
             float rightValue = frameBounds.center.x + frameBounds.extents.x+ margin;

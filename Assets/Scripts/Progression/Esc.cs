@@ -32,8 +32,8 @@ public class Esc : MonoBehaviour
                 hasPaused = true;
                 pauseCanvas.SetActive(true);
                 PlayerMove.canUseWASD = false;
-                MirrorManager.canUseLeftClick = false;
-                MirrorManager.canUseRightClick = false;
+                MirrorManager.CanUseLeftClick = false;
+                MirrorManager.CanUseRightClick = false;
                 //isPlaying = false;
             }
             else 
@@ -60,8 +60,8 @@ public class Esc : MonoBehaviour
         hasPaused = false;
         pauseCanvas.SetActive(false);
         PlayerMove.canUseWASD = true;
-        MirrorManager.canUseLeftClick = true;
-        MirrorManager.canUseRightClick = true;
+        MirrorManager.CanUseLeftClick = true;
+        MirrorManager.CanUseRightClick = true;
     }
 
     

@@ -97,11 +97,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0c704d5b771fd4ea5ad1dfe129745d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  material: []
-  crossCollider: {fileID: 3696355005944275707}
-  boxCollider: {fileID: 1650861003}
-  frameRenderer: {fileID: 3841126964713769720}
+  RigidBody: {fileID: 0}
+  Materials: []
+  FrameRenderer: {fileID: 0}
+  CrossCollider: {fileID: 1650861003}
+  BoxCollider: {fileID: 3696355005944275707}
 --- !u!54 &1345058783432048939
 Rigidbody:
   m_ObjectHideFlags: 0

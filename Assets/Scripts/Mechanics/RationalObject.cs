@@ -9,10 +9,11 @@ public class RationalObject : MonoBehaviour
     public int _levelIndex = 0;
 
     public Action<LazerEmitter.Oriantations> OnReceive;
+    
     protected virtual void OnEnable()
     {
         LevelManager.OnShareAllLevels += ReceiveAllLevels;
-        
+        print("Enables");
     }
     protected virtual void OnDisable()
     {
@@ -59,7 +60,7 @@ public class RationalObject : MonoBehaviour
         return
            IsObjectAtCorrectLevel()
             &&
-            LevelManager.allMirrorOnTop == _levelIndex;
+            LevelManager.AllActivatedMirrors == _levelIndex;
     }
     public bool IsObjectAtCorrectLevel() 
     {

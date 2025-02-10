@@ -114,11 +114,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b82332d44172cd24eb69b471865f1b98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableMirrorAtStart: 1
-  mirrorMask:
+  _enableAllMirrorAtStart: 0
+  _mirrorRayCastMask:
     serializedVersion: 2
     m_Bits: 2048
-  obstacleMask:
+  _obstacleSphereCollideMask:
     serializedVersion: 2
     m_Bits: 1984
   levels:

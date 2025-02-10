@@ -4,58 +4,60 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
-     List<GameObject> levelObject = new List<GameObject>();
+    private List<GameObject> _levelObjects = new List<GameObject>();
+    private List<BoxCollider> _boxColliders = new List<BoxCollider> ();
+    private GameObject[] _additionalObjects;
 
-    List< BoxCollider> boxColliders = new List<BoxCollider> ();
+    private bool _colliderToggleState = false;
 
-    bool colliderToggleState = false;
-
-    public GameObject[] AdditionalObjects;
     private void Awake()
     {
         GetLevelObject();
     }
-    public void GetLevelObject() 
+    private void GetLevelObjectRecursive(Transform transform) 
     {
         foreach (Transform t in transform)
         {
+            GetLevelObjectRecursive(t);
             if (!t.GetComponent<Collider>())
                 continue;
             t.GetComponent<Collider>().isTrigger = true;
-            levelObject.Add(t.gameObject);
+            _levelObjects.Add(t.gameObject);
         }
-
-        boxColliders = GetComponents<BoxCollider>().ToList();
-        if (AdditionalObjects != null) 
+    }
+    private void GetLevelObject() 
+    {
+        GetLevelObjectRecursive(transform);
+        _boxColliders = GetComponents<BoxCollider>().ToList();
+        if (_additionalObjects != null) 
         {
-            foreach (GameObject g in AdditionalObjects)
+            foreach (GameObject g in _additionalObjects)
             {
                 if (g == null)
                     continue;
                 if (!g.GetComponent<BoxCollider>())
                     continue;
-                boxColliders.Add(g.GetComponent<BoxCollider>());
+                _boxColliders.Add(g.GetComponent<BoxCollider>());
             }
         }
-        foreach (BoxCollider c in boxColliders) 
+        foreach (BoxCollider c in _boxColliders) 
         {
             c.isTrigger = true;
         }
-
     }
     public void ToggleRigidColliders(bool value) 
     {
-        if (colliderToggleState == value)
+        if (_colliderToggleState == value)
         return;
-        colliderToggleState = value;
-        foreach (GameObject t in levelObject) 
+        _colliderToggleState = value;
+        foreach (GameObject t in _levelObjects) 
         {
             if (!t.GetComponent<Collider>())
                 continue;
             Collider c = t.GetComponent<Collider>();
             c.isTrigger =!value;
         }
-        foreach (BoxCollider c in boxColliders)
+        foreach (BoxCollider c in _boxColliders)
         {
             c.isTrigger = !value;
         }

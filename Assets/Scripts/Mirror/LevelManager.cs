@@ -1,56 +1,49 @@
-
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
 
 public class LevelManager : MonoBehaviour
 {
-    public bool enableMirrorAtStart = false;
-    public LayerMask mirrorMask,obstacleMask;
-    public List<Level> levels = new List<Level>();
-    private Level currentLevel,lastLevel,nextLevel;
-    private Mirror[] hoodMirrors;
-    public Mirror[] allMirrors;
-    private Collider[] overlapping;
-    
-    RaycastHit[] allHitsMirrors;
-    
-    public static int allMirrorOnTop;
-    private int previousAllMirrorOnTop;
-
+    public static int AllActivatedMirrors;
     public static Action<Mirror[]> OnShareHoodMirror;
     public static Action<Mirror[]> OnShareAllMirror;
     public static Action<Level[]> OnShareAllLevels;
     public static Action OnPlayerSwitchLevel;
     public static Action OnFixUpdate;
 
+    [SerializeField] private bool _enableAllMirrorAtStart = false;
+    [SerializeField] private LayerMask _mirrorRayCastMask,_obstacleSphereCollideMask;
+    [SerializeField] private Level[] _levels;
+    [SerializeField] private Mirror[] _mirrors;
+
+    private Level _currentLevel,_lastLevel,_nextLevel;
+    private Mirror[] _hoodMirrors;
+    private Collider[] _overlappedCollider;
+    private RaycastHit[] _allHitMirrors;
+    private int _allActivatedMirrors_prev;
+
     private void OnEnable()
     {
-        allMirrorOnTop = 0;
-        
+        AllActivatedMirrors = 0;
     }
     private void Start()
     {
-        allMirrors = FindObjectsOfType<Mirror>();
-        foreach (var mirror in allMirrors) 
-        {
-            mirror.gameObject.SetActive(enableMirrorAtStart);
-         }
-        OnShareAllMirror?.Invoke(allMirrors);
-        OnShareAllLevels?.Invoke(levels.ToArray());
+        _mirrors = FindObjectsOfType<Mirror>();
+        foreach (var mirror in _mirrors) 
+            mirror.gameObject.SetActive(_enableAllMirrorAtStart);
+        OnShareAllMirror?.Invoke(_mirrors);
+        OnShareAllLevels?.Invoke(_levels.ToArray());
     }
 
     void DisableOtherLevels(Level current) 
     {
         current.ToggleRigidColliders(true);
-        foreach (Level l in levels) 
+        foreach (Level l in _levels) 
         {
             if (l != current)
                 l.ToggleRigidColliders(false);
         }
     }
-
 
     private void FixedUpdate()
     {
@@ -62,45 +55,43 @@ public class LevelManager : MonoBehaviour
     private void CheckLayers()
     {
         UpdateLevelInfo();
-        DisableOtherLevels(currentLevel);
+        DisableOtherLevels(_currentLevel);
         LevelColliderControl();
     }
-
-    void UpdateLevelInfo() 
+    private void UpdateLevelInfo() 
     {
-        overlapping = Physics.OverlapSphere(transform.position, 0.4f * transform.localScale.x, obstacleMask);
-        allHitsMirrors = Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, mirrorMask);
-        RaycastHit[] mirrorHits = allHitsMirrors.Where(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
-        hoodMirrors = mirrorHits.Select(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
-        OnShareHoodMirror?.Invoke(hoodMirrors);
+        _overlappedCollider = Physics.OverlapSphere(transform.position, 0.4f * transform.localScale.x, _obstacleSphereCollideMask);
+        _allHitMirrors = Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, _mirrorRayCastMask);
+        RaycastHit[] mirrorHits = _allHitMirrors.Where(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
+        _hoodMirrors = mirrorHits.Select(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
+        OnShareHoodMirror?.Invoke(_hoodMirrors);
 
-        allMirrorOnTop = hoodMirrors.Length;
-        currentLevel = levels[allHitsMirrors.Length - 1];
-        lastLevel = levels[allHitsMirrors.Length - 2 <= 0 ? 0 : allHitsMirrors.Length - 2];
-        nextLevel = levels[allHitsMirrors.Length >= levels.Count - 1 ? levels.Count - 1 : allHitsMirrors.Length];
-        if (allMirrorOnTop != previousAllMirrorOnTop)
+        AllActivatedMirrors = _hoodMirrors.Length;
+        _currentLevel = _levels[_allHitMirrors.Length - 1];
+        _lastLevel = _levels[_allHitMirrors.Length - 2 <= 0 ? 0 : _allHitMirrors.Length - 2];
+        _nextLevel = _levels[_allHitMirrors.Length >= _levels.Length - 1 ? _levels.Length - 1 : _allHitMirrors.Length];
+        if (AllActivatedMirrors != _allActivatedMirrors_prev)
             OnPlayerSwitchLevel?.Invoke();
-        previousAllMirrorOnTop = allMirrorOnTop;
+        _allActivatedMirrors_prev = AllActivatedMirrors;
 
     }
-
-    void LevelColliderControl() 
+    private void LevelColliderControl() 
     {
-        foreach (Mirror m in hoodMirrors)
+        foreach (Mirror m in _hoodMirrors)
             m.ToggleBoxesRigidCollider(CheckHoodeMirrorSliable());
 
-        foreach (Mirror m in allMirrors.Where(x => !hoodMirrors.Contains(x)).ToArray())
+        foreach (Mirror m in _mirrors.Where(x => !_hoodMirrors.Contains(x)).ToArray())
             m.ToggleBoxesRigidCollider(CheckFreeMirrorEnterable());
     }
 
     private bool CheckFreeMirrorEnterable()
     {
-        foreach (Collider c in overlapping)
+        foreach (Collider c in _overlappedCollider)
         {
             if (c.gameObject.GetComponentInParent<Level>())
             {
                 Level localLevel = c.gameObject.GetComponentInParent<Level>();
-                if (localLevel == nextLevel)
+                if (localLevel == _nextLevel)
                     return true;
             }
         }
@@ -108,12 +99,12 @@ public class LevelManager : MonoBehaviour
     }
     private bool CheckHoodeMirrorSliable()
     {
-        foreach (Collider c in overlapping)
+        foreach (Collider c in _overlappedCollider)
         {
             if (c.gameObject.GetComponentInParent<Level>())
             {
                 Level localLevel = c.gameObject.GetComponentInParent<Level>();
-                if (currentLevel == nextLevel ? localLevel == lastLevel || localLevel == nextLevel : localLevel == lastLevel)
+                if (_currentLevel == _nextLevel ? localLevel == _lastLevel || localLevel == _nextLevel : localLevel == _lastLevel)
                     return true;
             }
         }
@@ -131,7 +122,7 @@ public class LevelManager : MonoBehaviour
             float x = Mathf.Cos(i * incement) * radius;
             float y = Mathf.Sin(i * incement) * radius;
             Vector3 castingPos = transform.position - Vector3.up * 3f + new Vector3(x, 0, y);
-            RaycastHit[] hits = Physics.RaycastAll(castingPos, Vector3.up, 20f, mirrorMask);
+            RaycastHit[] hits = Physics.RaycastAll(castingPos, Vector3.up, 20f, _mirrorRayCastMask);
             foreach (RaycastHit h in hits)
                 if (h.collider.tag.Equals("Mirror"))
                     circularRayCasts[i] = h;

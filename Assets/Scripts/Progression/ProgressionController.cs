@@ -14,11 +14,11 @@ public class ProgressionController : MonoBehaviour
 
     public void OnCollisionEnter(Collision other)
     {
-        if (CanBeEnableWhenMirroEqual == LevelManager.allMirrorOnTop)
+        if (CanBeEnableWhenMirroEqual == LevelManager.AllActivatedMirrors)
         if (other.gameObject.tag =="Player")
         {
                 OnBaguaCollected?.Invoke(gameObject);
-                if (LevelManager.allMirrorOnTop == 4)
+                if (LevelManager.AllActivatedMirrors == 4)
                 {
                     SceneManager.LoadScene("Closing Cut");
                 }

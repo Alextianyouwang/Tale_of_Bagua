@@ -18,7 +18,7 @@ public class NPC_Manager : MonoBehaviour
     }
     void CheckNPCLevel() 
     {
-        currentNPCLevel = NPC_Levels[LevelManager.allMirrorOnTop];
+        currentNPCLevel = NPC_Levels[LevelManager.AllActivatedMirrors];
         Utility.ToggleChildGameobjectColliderActivation(true, currentNPCLevel);
         foreach (GameObject level in NPC_Levels)
             if (level != currentNPCLevel)

@@ -11,7 +11,6 @@ public class RationalObject : MonoBehaviour
 
     public Action<RationalObject> OnReceive;
 
-
     protected bool FreeToProceed(Vector3 position, float objectRadius)
     {
         _overlappingColliders = Physics.OverlapSphere(position, objectRadius, ObstacleMask);

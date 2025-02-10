@@ -41,11 +41,16 @@ public class Hay : RationalObject,IFlammable {
     yield return null;
         }
         float burnOut = 0;
+        float expendCheck = 0.25f;
         while (burnOut< burnOutTime)
         {
-            ExpandFlame();
             burnOut += Time.deltaTime;
             float burnOutPercent = burnOut / burnOutTime;
+            if (burnOut > expendCheck) 
+            {
+                ExpandFlame();
+                expendCheck += 0.25f;
+            }
             _mpb.SetColor("_BaseColor", Color.Lerp(Color.red, Color.black, burnOutPercent));
             _mr.SetPropertyBlock(_mpb);
             yield return null;

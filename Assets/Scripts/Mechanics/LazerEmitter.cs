@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 public class LazerEmitter : RationalObject,IInteractable
 {
-    public enum Oriantations { Top, Right ,Bot, Left}
-    public Oriantations OriantationOptions;
+    public enum Orientation { Top, Right ,Bot, Left}
+    public Orientation OriantationOptions;
     public bool Reflector = false;
 
     public Material[] RayVisualMaterial;
@@ -53,7 +53,7 @@ public class LazerEmitter : RationalObject,IInteractable
             int currentOriaintation = (int)OriantationOptions;
             currentOriaintation += 1;
             currentOriaintation %= 4 ;
-            OriantationOptions = (Oriantations)currentOriaintation;
+            OriantationOptions = (Orientation)currentOriaintation;
             Editor_ChangeOriantationUI();
         }
     }
@@ -103,16 +103,16 @@ public class LazerEmitter : RationalObject,IInteractable
         Vector3 direction = Vector3.zero;
         switch (OriantationOptions) 
         {
-            case Oriantations.Top:
+            case Orientation.Top:
                 direction = Vector3.forward;
                 break;
-            case Oriantations.Bot:
+            case Orientation.Bot:
                 direction = Vector3.back;
                 break;
-            case Oriantations.Left:
+            case Orientation.Left:
                 direction = Vector3.left;
                 break;
-            case Oriantations.Right:
+            case Orientation.Right:
                 direction = Vector3.right;
                 break;
         }
@@ -129,7 +129,7 @@ public class LazerEmitter : RationalObject,IInteractable
                         _chainedEmitter = chain;
 
                    
-                    _hitReceiverObject.transform.GetComponent<RationalObject>().Receive(OriantationOptions);
+                    _hitReceiverObject.transform.GetComponent<RationalObject>().Receive(this);
                     break;
                 }
             }
@@ -148,31 +148,36 @@ public class LazerEmitter : RationalObject,IInteractable
         }
       
     }
-    public void BranchReceived(LazerEmitter.Oriantations oriantation)
+    public void BranchReceived(RationalObject ro)
     {
-        if ((int)oriantation == ((int)OriantationOptions + 2) % 4)
+        LazerEmitter l = ro.GetComponent<LazerEmitter>();
+        if (l == null)
+            return;
+
+        if ((int)l.OriantationOptions == ((int)OriantationOptions + 2) % 4)
             return;
         if (Reflector)
             ReceiveShootCommand();
     }
 
-public void Editor_ChangeOriantationUI() 
+
+    public void Editor_ChangeOriantationUI() 
     {
         if (!VisualCueUI)
             return;
         Vector3 eularAngle = Vector3.zero;
         switch (OriantationOptions)
         {
-            case Oriantations.Top:
+            case Orientation.Top:
                 eularAngle = new Vector3(90, 180, 0);
                 break;
-            case Oriantations.Bot:
+            case Orientation.Bot:
                 eularAngle = new Vector3(90, 0, 0);
                 break;
-            case Oriantations.Left:
+            case Orientation.Left:
                 eularAngle = new Vector3(90, 90, 0);
                 break;
-            case Oriantations.Right:
+            case Orientation.Right:
                 eularAngle = new Vector3(90, 270, 0);
                 break;
         }

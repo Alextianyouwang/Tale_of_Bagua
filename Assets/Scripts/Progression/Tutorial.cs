@@ -11,7 +11,6 @@ public class Tutorial : MonoBehaviour
 
     private GameObject clickUI;
 
-    private Mirror[] hoodMirrors;
     private bool havePlayedMirrorCollapseTutorial = false, mirrorCollapseConditionMet = false;
     private int mirrorCollapseClickTime = 0;
     public static Func<UIController> OnRequestTutorialMasterSupport;
@@ -33,25 +32,17 @@ public class Tutorial : MonoBehaviour
 
     private void OnEnable()
     {
-        LevelManager.OnShareHoodMirror += ReceiveHoodMirror;
         ProgressionController.OnBaguaCollected += ReceiveBaguaCollected;
     }
     private void OnDisable()
     {
-        LevelManager.OnShareHoodMirror -= ReceiveHoodMirror;
         ProgressionController.OnBaguaCollected -= ReceiveBaguaCollected;
-
-
-    }
-    void ReceiveHoodMirror(Mirror[] hoodMirror)
-    {
-        hoodMirrors = hoodMirror;
     }
 
     void MirrorCollapseTutorial_Condition() 
     {
-        if (hoodMirrors!= null)
-        if (hoodMirrors.Length == 2 && !mirrorCollapseConditionMet) 
+        if (LevelManager._HoodMirrors != null)
+        if (LevelManager._HoodMirrors.Length == 2 && !mirrorCollapseConditionMet) 
         {
             mirrorCollapseConditionMet = true;
             InitiateMirrorCollapseTutorial();
@@ -83,7 +74,7 @@ public class Tutorial : MonoBehaviour
             return;
         havePlayedMirrorCollapseTutorial = true;
         StartCoroutine(QueueTutorialActions(uc, MirrorCollapseTutorial_ExitCondition));
-        StartCoroutine(ClickButtonShow(uc, uc.hoodMirrors, 0.7f, false,-1, MirrorCollapseTutorial_UI_ExitCondition));
+        StartCoroutine(ClickButtonShow(uc, LevelManager._HoodMirrors, 0.7f, false,-1, MirrorCollapseTutorial_UI_ExitCondition));
     }
     IEnumerator QueueTutorialActions(UIController master,Func<bool> exitCondition)
     {
@@ -97,7 +88,7 @@ public class Tutorial : MonoBehaviour
         {
             master.ConstantlyUpdatingUIPos(0.2f, master.screenMargin);
             for (int i = 0; i < 4; i++)
-                master.arrows[i].gameObject.SetActive(hoodMirrors.Length >= 2);
+                master.arrows[i].gameObject.SetActive(LevelManager._HoodMirrors.Length >= 2);
             yield return null;
         }
        
@@ -315,7 +306,7 @@ public class Tutorial : MonoBehaviour
                 pos += v;
             pos /= 4f;
 
-            clickUI.SetActive(hoodMirrors.Length >= 2 ? true : mirrors.Length == 1);
+            clickUI.SetActive(LevelManager._HoodMirrors.Length >= 2 ? true : mirrors.Length == 1);
             clickUI.transform.position = pos;
 
             timer  += Time.deltaTime;

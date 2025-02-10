@@ -26,11 +26,11 @@ public class NPC_Controller : RationalObject,IInteractable
         [Header(">>>>>>>>>>> Only Move to the Next Interaction When Event is Called")]
         public string progressEventName;
     }
-    protected override void OnEnable()
+    protected void OnEnable()
     { 
         DialogueManager.OnGeneralEventCalledGlobal+= ReceiveGeneralEvent;
     }
-    protected override void OnDisable()
+    protected void OnDisable()
     {
         DialogueManager.OnGeneralEventCalledGlobal-= ReceiveGeneralEvent;
     }

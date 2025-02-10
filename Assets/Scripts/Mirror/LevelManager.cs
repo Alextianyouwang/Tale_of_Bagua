@@ -4,12 +4,13 @@ using System.Linq;
 
 public class LevelManager : MonoBehaviour
 {
-    public static int AllActivatedMirrors;
-    public static Action<Mirror[]> OnShareHoodMirror;
-    public static Action<Mirror[]> OnShareAllMirror;
-    public static Action<Level[]> OnShareAllLevels;
     public static Action OnPlayerSwitchLevel;
     public static Action OnFixUpdate;
+
+    public static Mirror[] _Mirrors;
+    public static Mirror[] _HoodMirrors;
+    public static Level[] _Levels;
+    public static int AllActivatedMirrors;
 
     [SerializeField] private bool _enableAllMirrorAtStart = false;
     [SerializeField] private LayerMask _mirrorRayCastMask,_obstacleSphereCollideMask;
@@ -25,14 +26,22 @@ public class LevelManager : MonoBehaviour
     private void OnEnable()
     {
         AllActivatedMirrors = 0;
+        _Mirrors = _mirrors;
+        _Levels = _levels;
+    }
+    private void OnDisable()
+    {
+        AllActivatedMirrors = 0;
+        _Mirrors = null;
+        _Levels = null;
+        _HoodMirrors = null;
     }
     private void Start()
     {
         _mirrors = FindObjectsOfType<Mirror>();
         foreach (var mirror in _mirrors) 
             mirror.gameObject.SetActive(_enableAllMirrorAtStart);
-        OnShareAllMirror?.Invoke(_mirrors);
-        OnShareAllLevels?.Invoke(_levels.ToArray());
+
     }
 
     void DisableOtherLevels(Level current) 
@@ -64,7 +73,7 @@ public class LevelManager : MonoBehaviour
         _allHitMirrors = Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, _mirrorRayCastMask);
         RaycastHit[] mirrorHits = _allHitMirrors.Where(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
         _hoodMirrors = mirrorHits.Select(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
-        OnShareHoodMirror?.Invoke(_hoodMirrors);
+        _HoodMirrors =  _hoodMirrors;
 
         AllActivatedMirrors = _hoodMirrors.Length;
         _currentLevel = _levels[_allHitMirrors.Length - 1];

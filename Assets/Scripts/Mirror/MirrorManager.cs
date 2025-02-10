@@ -18,7 +18,6 @@ public class MirrorManager : MonoBehaviour
     private LayerMask _mirrorMask;
     private Vector3 _offset, _finalWorldPos, _screenCenter_WorldSpace;
     private bool _firstMirrorHasBeenClicked = false, _isClicking = false, _isCollapsed = false, _isCharged = false, _canChargeAgain = true;
-    private Mirror[] _hoodMirrors,_allMirrors;
 
     private float _collapseTimer = 0,_chargeTime = 0.01f;
     private int _previousHoodMirrorCount = 0,_currentHoodMirrorCount = 0;
@@ -36,28 +35,14 @@ public class MirrorManager : MonoBehaviour
     {
         _mirrorMask = LayerMask.GetMask("MirrorPlane");
         _screenCenter_WorldSpace = Utility.GetScreenCenterPosition_WorldSpace();
-        LevelManager.OnShareHoodMirror += ReceiveHoodMirror;
-        LevelManager.OnShareAllMirror += ReceiveAllMirror;
         LevelManager.OnFixUpdate += FollowFixUpdate;
     }
     private void OnDisable()
     {
-        LevelManager.OnShareHoodMirror -= ReceiveHoodMirror;
         LevelManager.OnFixUpdate -= FollowFixUpdate;
-        LevelManager.OnShareAllMirror -= ReceiveAllMirror;
 
         CanUseRightClick = true;
         CanUseLeftClick= true;
-    }
-    void ReceiveHoodMirror(Mirror[] hoodMirror)
-    {
-        _hoodMirrors = hoodMirror;
-    }
-
-    void ReceiveAllMirror(Mirror[] allMirror) 
-    {
-        _allMirrors = allMirror;
-        
     }
 
     void UpdateMirrorPhysics()
@@ -87,22 +72,22 @@ public class MirrorManager : MonoBehaviour
 
     private void SetMirrorYPos() 
     {
-        foreach(Mirror m in _allMirrors) 
+        foreach(Mirror m in LevelManager._Mirrors) 
             m.RigidBody.position = new Vector3(m.RigidBody.position.x, _screenCenter_WorldSpace.y, m.RigidBody.position.z);
     }
 
     private void CageMirrorWhenCollapsed() 
     {
-        foreach (Mirror m in _hoodMirrors)
+        foreach (Mirror m in LevelManager._HoodMirrors)
             if (_isCollapsed)
                 m.ToggleBoxesRigidCollider(true);
     }
 
     private void AdjustMirrorColliderSize() 
     {
-        foreach (Mirror m in _hoodMirrors)
+        foreach (Mirror m in LevelManager._HoodMirrors)
             m.ToggleColliderSize(true);
-        foreach (Mirror m in _allMirrors.Where(x => !_hoodMirrors.Contains(x))) 
+        foreach (Mirror m in LevelManager._Mirrors.Where(x => !LevelManager._HoodMirrors.Contains(x))) 
             m.ToggleColliderSize(false);
     }
 
@@ -117,26 +102,26 @@ public class MirrorManager : MonoBehaviour
         if (!_currentMirror || !_firstMirrorHasBeenClicked) 
             return;
  
-        if (_isCollapsed && _hoodMirrors.Contains(_currentMirror))
-            for (int i = 0; i < _hoodMirrors.Length; i++)
-                MoveMirrorTo(_hoodMirrors[i], _finalWorldPos, 7);
+        if (_isCollapsed && LevelManager._HoodMirrors.Contains(_currentMirror))
+            for (int i = 0; i < LevelManager._HoodMirrors.Length; i++)
+                MoveMirrorTo(LevelManager._HoodMirrors[i], _finalWorldPos, 7);
         else
              MoveMirrorTo(_currentMirror, _finalWorldPos, 7);
     }
 
     public void CollapseHoodMirror()
     {
-        if (_hoodMirrors.Length <=1)
+        if (LevelManager._HoodMirrors.Length <=1)
             return;
         _isCollapsed = true;
         Vector3 averagePos = Vector3.zero;
-        foreach (Mirror m in _hoodMirrors)
+        foreach (Mirror m in LevelManager._HoodMirrors)
         {
             averagePos += m.transform.position;
 
         }
-        averagePos /= _hoodMirrors.Length;
-        foreach (Mirror m in _hoodMirrors) 
+        averagePos /= LevelManager._HoodMirrors.Length;
+        foreach (Mirror m in LevelManager._HoodMirrors) 
         {
             m.ToggleBoxesRigidCollider(true);
             m.MoveMirrorTowards(0.4f, averagePos,mirrorMoveCurve);
@@ -146,25 +131,25 @@ public class MirrorManager : MonoBehaviour
 
     public void ExpandHoodMirror() 
     {
-        if (_hoodMirrors.Length <= 1)
+        if (LevelManager._HoodMirrors.Length <= 1)
             return;
         _isCollapsed = false;
-        Vector2[] offsets = Utility.RadiusPosition(_hoodMirrors.Length);
+        Vector2[] offsets = Utility.RadiusPosition(LevelManager._HoodMirrors.Length);
         Vector3 playerPos = PlayerMove.playerTransform.position;
 
-        for (int i = 0; i < _hoodMirrors.Length; i++)
+        for (int i = 0; i < LevelManager._HoodMirrors.Length; i++)
         {
             Vector2 offset = offsets[i];
-            Vector3 targetPos = new Vector3(playerPos.x + offset.x, _hoodMirrors[0].transform.position.y, playerPos.z+ offset.y);
-            _hoodMirrors[i].MoveMirrorTowards(0.4f, targetPos, mirrorMoveCurve);
+            Vector3 targetPos = new Vector3(playerPos.x + offset.x, LevelManager._HoodMirrors[0].transform.position.y, playerPos.z+ offset.y);
+            LevelManager._HoodMirrors[i].MoveMirrorTowards(0.4f, targetPos, mirrorMoveCurve);
         }
     }
 
     void CheckIfNewHoodMirrorAdded() 
     {
-        if (_hoodMirrors == null) return;
-        if( _hoodMirrors.Length == 0 )return;
-        _currentHoodMirrorCount = _hoodMirrors.Length;
+        if (LevelManager._HoodMirrors == null) return;
+        if( LevelManager._HoodMirrors.Length == 0 )return;
+        _currentHoodMirrorCount = LevelManager._HoodMirrors.Length;
         if (_previousHoodMirrorCount != _currentHoodMirrorCount && _isCollapsed) 
         {
             CollapseHoodMirror();
@@ -259,25 +244,25 @@ public class MirrorManager : MonoBehaviour
   
     void UpdateMaterial() 
     {
-        if (_allMirrors != null)
-        foreach (Mirror m in _allMirrors)
+        if (LevelManager._Mirrors != null)
+        foreach (Mirror m in LevelManager._Mirrors)
                     if (m && m == _currentMirror)
                         SetMirrorColor(m, selectedCol);
                     else if (m && m != _currentMirror)
                         SetMirrorColor(m, normalCol);
-        if (_hoodMirrors != null && _hoodMirrors.Length > 0) 
+        if (LevelManager._HoodMirrors != null && LevelManager._HoodMirrors.Length > 0) 
         {
-            foreach (Mirror mr in _hoodMirrors)
+            foreach (Mirror mr in LevelManager._HoodMirrors)
                 if (mr)
                     SetMirrorColor(mr, hoodCol);
-            foreach (Mirror m in _hoodMirrors)
+            foreach (Mirror m in LevelManager._HoodMirrors)
                 if (m)
                     if (m == _currentMirror)
                         SetMirrorColor(m, selectedCol);
                     else if (m && m != _currentMirror)
                         SetMirrorColor(m, hoodCol);
             if (_isCollapsed && _currentMirror)
-                foreach (Mirror m in _hoodMirrors)
+                foreach (Mirror m in LevelManager._HoodMirrors)
                     if (m)
                         SetMirrorColor(m, selectedCol);
         }

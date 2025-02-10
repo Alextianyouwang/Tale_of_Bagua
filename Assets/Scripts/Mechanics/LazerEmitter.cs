@@ -18,15 +18,13 @@ public class LazerEmitter : RationalObject,IInteractable
     {
         PrepareLineVisual();
     }
-    protected override void OnEnable()
+    protected void OnEnable()
     {
-        base.OnEnable();
         OnReceive += BranchReceived;
         
     }
-    protected override void OnDisable()
+    protected  void OnDisable()
     {
-        base.OnDisable();
     }
     private void PrepareLineVisual() 
     {

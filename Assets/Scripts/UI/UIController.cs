@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 public class UIController : MonoBehaviour
 {
-    [HideInInspector]
-    public Mirror[] hoodMirrors;
     private Camera cam;
 
 
@@ -44,10 +42,7 @@ public class UIController : MonoBehaviour
         MirrorManager.OnCollapsing += UI_Behavior_ConstantlyUpdatePosition;
         MirrorManager.OnExpand += UI_Behavior_InitiateEaseOut;
 
-        LevelManager.OnShareHoodMirror += ReceiveHoodMirror;
         Tutorial.OnRequestTutorialMasterSupport += GetSelf;
-
-        
     }
 
     private void OnDisable()
@@ -58,12 +53,7 @@ public class UIController : MonoBehaviour
         MirrorManager.OnCollapsing -= UI_Behavior_ConstantlyUpdatePosition;
         MirrorManager.OnExpand -= UI_Behavior_InitiateEaseOut;
 
-        LevelManager.OnShareHoodMirror -= ReceiveHoodMirror;
         Tutorial.OnRequestTutorialMasterSupport -= GetSelf;
-
-
-
-
     }
     UIController GetSelf()
     {
@@ -107,12 +97,6 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void ReceiveHoodMirror(Mirror[] hoodMirror)
-    {
-        hoodMirrors = hoodMirror;
-    }
-
-
     public IEnumerator UI_EaseInOut(float time,bool easein, bool onlyAnimateMaterial )
     {
         float percent = 0;
@@ -133,7 +117,7 @@ public class UIController : MonoBehaviour
 
 
             mirrorMargin = Mathf.Lerp(originalMargin, targetMargin, percent);
-            Vector3[] corners = Util_GetMirrorCorner(hoodMirrors, 2, mirrorMargin);
+            Vector3[] corners = Util_GetMirrorCorner(LevelManager._HoodMirrors, 2, mirrorMargin);
 
             if (!onlyAnimateMaterial)
             for (int i = 0; i < 4; i++)
@@ -208,11 +192,11 @@ public class UIController : MonoBehaviour
     {
         if (!canDoUIAnime)
             return;
-        if (hoodMirrors.Length <= 1)
+        if (LevelManager._HoodMirrors.Length <= 1)
             return;
 
         mirrorMargin = Mathf.Lerp(expandedMargin, transitionMargin, timer / target) ;
-       Vector3[]  corners = Util_GetMirrorCorner(hoodMirrors, 2, mirrorMargin);
+       Vector3[]  corners = Util_GetMirrorCorner(LevelManager._HoodMirrors, 2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
@@ -229,10 +213,10 @@ public class UIController : MonoBehaviour
     {
         if (!canDoUIAnime)
             return;
-        if (hoodMirrors.Length <= 1)
+        if (LevelManager._HoodMirrors.Length <= 1)
             return;
 
-        Vector3[] corners = Util_GetMirrorCorner(hoodMirrors, 2, mirrorMargin);
+        Vector3[] corners = Util_GetMirrorCorner(LevelManager._HoodMirrors, 2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
@@ -250,7 +234,7 @@ public class UIController : MonoBehaviour
     {
         if (!canDoUIAnime)
             return;
-        if (hoodMirrors.Length <= 1 && !disableOverrite)
+        if (LevelManager._HoodMirrors.Length <= 1 && !disableOverrite)
             return;
             for (int i = 0; i < 4; i++)
                 arrows[i].gameObject.SetActive(false);
@@ -260,7 +244,7 @@ public class UIController : MonoBehaviour
     {
         if (!canDoUIAnime)
             return;
-        if (hoodMirrors.Length <= 1)
+        if (LevelManager._HoodMirrors.Length <= 1)
             return;
         ConstantlyUpdatingUIPos(mirrorMargin,screenMargin);
     }
@@ -268,7 +252,7 @@ public class UIController : MonoBehaviour
     {
         if (!canDoUIAnime)
             return;
-        if (hoodMirrors.Length <= 1)
+        if (LevelManager._HoodMirrors.Length <= 1)
             return;
 
         for (int i = 0; i < 4; i++)
@@ -288,7 +272,7 @@ public class UIController : MonoBehaviour
 
     public void ConstantlyUpdatingUIPos(float mirrorMargin, float screenMargin) 
     {
-        Vector3[] corners = Util_GetMirrorCorner(hoodMirrors, 2, mirrorMargin);
+        Vector3[] corners = Util_GetMirrorCorner(LevelManager._HoodMirrors, 2, mirrorMargin);
 
         for (int i = 0; i < 4; i++)
         {
@@ -425,7 +409,7 @@ public class UIController : MonoBehaviour
         if (!cam)
             return;
         Gizmos.color = Color.yellow;
-        Vector3[] corners = Util_GetMirrorCorner(hoodMirrors, 2,mirrorMargin); 
+        Vector3[] corners = Util_GetMirrorCorner(LevelManager._HoodMirrors, 2,mirrorMargin); 
 
         foreach (Vector3 corner in corners) 
         {

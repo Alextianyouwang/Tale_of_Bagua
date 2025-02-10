@@ -24,7 +24,6 @@ public class Mirror : MonoBehaviour
 
         if (Materials == null)
             Debug.LogWarning("Emissive Material for Mirror not found");
-
     }
     private void OnEnable()
     {

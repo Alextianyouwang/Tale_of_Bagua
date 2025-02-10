@@ -11,20 +11,6 @@ public class RationalObject : MonoBehaviour
 
     public Action<LazerEmitter.Oriantations> OnReceive;
     
-    protected virtual void OnEnable()
-    {
-        LevelManager.OnShareAllLevels += ReceiveAllLevels;
-        print("Enables");
-    }
-    protected virtual void OnDisable()
-    {
-        LevelManager.OnShareAllLevels -= ReceiveAllLevels;
-
-    }
-    private void ReceiveAllLevels(Level[] level)
-    {
-        _levels = level;
-    }
 
     protected bool FreeToProceed(Vector3 position, float objectRadius)
     {
@@ -32,7 +18,7 @@ public class RationalObject : MonoBehaviour
         _allHitsMirrors = Physics.RaycastAll(position - Vector3.up * 3f, Vector3.up, 20f, MirrorMask);
         if (_allHitsMirrors.Length == 0)
             return false;
-        Level currentLevel = _levels[_allHitsMirrors.Length - 1];
+        Level currentLevel =LevelManager._Levels[_allHitsMirrors.Length - 1];
         if (_overlappingColliders.Length == 0)
             return true;
         foreach (Collider c in _overlappingColliders)

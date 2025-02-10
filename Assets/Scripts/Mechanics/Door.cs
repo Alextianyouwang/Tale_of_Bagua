@@ -7,15 +7,14 @@ public class Door : RationalObject, IInteractable
     private MeshRenderer _doorRenderer;
     public enum OpenDirection { Top, Bot, Left, Right }
     public OpenDirection ActivateDirection;
-    protected override void OnEnable()
+    protected  void OnEnable()
     {
-        base.OnEnable();
+
         _doorCollider = GetComponent<BoxCollider>();
         _doorRenderer = GetComponent<MeshRenderer>();
     }
-    protected override void OnDisable()
+    protected  void OnDisable()
     {
-        base.OnDisable();
     }
 
     public void Interact(Vector3 pos)

@@ -6,15 +6,6 @@ public class MoveGateTrigger : RationalObject, IInteractable
 
     private bool _stage0 = true;
     private bool _stage1 = false;
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-    }
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-    }
 
     public void Interact(Vector3 pos)
     {

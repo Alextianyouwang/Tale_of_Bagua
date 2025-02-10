@@ -165,6 +165,17 @@ public class LevelGenerator_Editor : EditorWindow
             GUI.enabled = true;
         }
 
+        if (_cells != null && _canEditCells)
+        {
+            if (GUILayout.Button("Invert"))
+            {
+                foreach (Cell c in _cells)
+                    c.isActive = !c.isActive;
+                _levelVisual.UpdateVisualPerFrame(_cells, _generator.Cam.pixelWidth, _generator.Cam.pixelHeight);
+            }
+
+        }
+
         if (_canEditCells && _levelMesh)
             if (GUILayout.Button( "Save Level Collider"))
             {
@@ -175,6 +186,7 @@ public class LevelGenerator_Editor : EditorWindow
                 _generator.GeneratePackedLevel(optimizer.PackCells(), _meshName + "_levelObject");
                 //_generator.GenerateLevelObject(_cells, _meshName + "_levelObject");
             }
+
 
         GUILayout.FlexibleSpace();
         if (_cells != null && _canEditCells) 
@@ -191,7 +203,8 @@ public class LevelGenerator_Editor : EditorWindow
             }
             _levelDataObject = (LevelDataObject)EditorGUILayout.ObjectField("Level Data Container", _levelDataObject, typeof(LevelDataObject), false);
         }
-    
+
+
 
         _prev_levelDepth = _levelDepth;
     }

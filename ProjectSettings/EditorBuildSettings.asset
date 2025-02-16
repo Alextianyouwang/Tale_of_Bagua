@@ -18,27 +18,28 @@ EditorBuildSettings:
     path: Assets/Scenes/Closing Cut.unity
     guid: 407448fb1e01ca249a2105bfe4699c4f
   - enabled: 1
-    path: Assets/Playtest/SceneManager/SceneMain.unity
+    path: Assets/_Playtest/SceneManager/SceneMain.unity
     guid: 4ff7dfc1352eb5e4fb428d1f0c3a3042
   - enabled: 1
-    path: Assets/Playtest/SceneManager/Scene1.unity
+    path: Assets/_Playtest/SceneManager/Scene1.unity
     guid: b661a3b48e25b6a449e4318ae6220d87
   - enabled: 1
-    path: Assets/Playtest/SceneManager/Scene2.unity
+    path: Assets/_Playtest/SceneManager/Scene2.unity
     guid: 3b403b3329357aa4bbe4913ba4e8dc50
   - enabled: 1
-    path: Assets/Playtest/SceneManager/Scene3.unity
+    path: Assets/_Playtest/SceneManager/Scene3.unity
     guid: 6af8080eef78902438c59d50394607ba
-  - enabled: 1
+  - enabled: 0
     path: Assets/Playtest/SceneManager/Scene4.unity
     guid: cad3713a9ef780c4680f49b20923ffe7
   - enabled: 1
-    path: Assets/Playtest/SceneManager/Functional/SceneMenu.unity
+    path: Assets/_Playtest/SceneManager/Functional/SceneMenu.unity
     guid: f3a7fd86a6a9eb248ad2135bf15de4f2
   - enabled: 1
-    path: Assets/Playtest/SceneManager/Functional/SceneEnding.unity
+    path: Assets/_Playtest/SceneManager/Functional/SceneEnding.unity
     guid: c24a46c9baa99ff48a89913b4ac990c2
   - enabled: 1
-    path: Assets/Playtest/SceneManager/Functional/ScenePrelude.unity
+    path: Assets/_Playtest/SceneManager/Functional/ScenePrelude.unity
     guid: 17242f25db5a48f44830f842f0558d32
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

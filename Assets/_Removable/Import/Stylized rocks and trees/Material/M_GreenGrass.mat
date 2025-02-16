@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: M_GreenGrass
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
   m_InvalidKeywords:
@@ -32,6 +34,7 @@ Material:
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -149,10 +152,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AddPrecomputedVelocity: 0
     - _AdvancedCat: 0
     - _AlphaClip: 1
     - _AlphaTest: 1
     - _AlphaTestThreshold: 0
+    - _AlphaToMask: 1
     - _AlphaVariationValue: 0
     - _Amplitude: 0.1
     - _BakedMeshData: 0
@@ -160,6 +165,7 @@ Material:
     - _BatchingMessage: 0
     - _BillboardCat: 0
     - _Blend: 0
+    - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -185,6 +191,7 @@ Material:
     - _DoubleSidedMode: 0
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 0
+    - _DstBlendAlpha: 0
     - _EmissionIntensity: 0
     - _EmissiveCat: 0
     - _EnvironmentReflections: 1
@@ -296,6 +303,7 @@ Material:
     - _SpecularHighlights: 1
     - _SquashAmount: 1
     - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
     - _SubsurfaceAngleValue: 8
     - _SubsurfaceCat: 0
     - _SubsurfaceDiffusion: 3.5648174
@@ -398,6 +406,7 @@ Material:
     - _WindFade: {r: 50, g: 20, b: 0, a: 0}
     - _render_normals_options: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &1634506814865744821
 MonoBehaviour:
   m_ObjectHideFlags: 11
@@ -410,4 +419,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 5
+  version: 9

@@ -6,8 +6,6 @@ public class Level : MonoBehaviour
 {
     private List<GameObject> _levelObjects = new List<GameObject>();
     private List<BoxCollider> _boxColliders = new List<BoxCollider> ();
-    private GameObject[] _additionalObjects;
-
     private bool _colliderToggleState = false;
 
     private void Awake()
@@ -29,17 +27,6 @@ public class Level : MonoBehaviour
     {
         GetLevelObjectRecursive(transform);
         _boxColliders = GetComponents<BoxCollider>().ToList();
-        if (_additionalObjects != null) 
-        {
-            foreach (GameObject g in _additionalObjects)
-            {
-                if (g == null)
-                    continue;
-                if (!g.GetComponent<BoxCollider>())
-                    continue;
-                _boxColliders.Add(g.GetComponent<BoxCollider>());
-            }
-        }
         foreach (BoxCollider c in _boxColliders) 
         {
             c.isTrigger = true;

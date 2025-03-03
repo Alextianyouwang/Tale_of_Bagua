@@ -38,7 +38,7 @@ public class LevelManager : MonoBehaviour
     }
     private void Start()
     {
-        _mirrors = FindObjectsOfType<Mirror>();
+        _mirrors = FindObjectsByType<Mirror>(FindObjectsSortMode.InstanceID);
         foreach (var mirror in _mirrors) 
             mirror.gameObject.SetActive(_enableAllMirrorAtStart);
 
@@ -69,7 +69,9 @@ public class LevelManager : MonoBehaviour
     }
     private void UpdateLevelInfo() 
     {
-        _overlappedCollider = Physics.OverlapSphere(transform.position, 0.4f * transform.localScale.x, _obstacleSphereCollideMask);
+        // Somehow overlaps sphere cannot get all colliders..
+        //_overlappedCollider = Physics.OverlapSphere(transform.position, 0.4f * transform.localScale.x, _obstacleSphereCollideMask);
+        _overlappedCollider = Physics.RaycastAll(transform.position - Vector3.up, Vector3.up, 10, _obstacleSphereCollideMask).Select(x=>x.collider).ToArray();
         _allHitMirrors = Physics.RaycastAll(transform.position - Vector3.up * 3f, Vector3.up, 20f, _mirrorRayCastMask);
         RaycastHit[] mirrorHits = _allHitMirrors.Where(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();
         _hoodMirrors = mirrorHits.Select(x => x.transform.gameObject.GetComponent<Mirror>()).ToArray();

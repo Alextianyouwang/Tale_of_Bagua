@@ -861,6 +861,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: _levelIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: FaceDirection
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3427594563371229634, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3427594563371229634, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
     - target: {fileID: 5713094493209862998, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
       propertyPath: m_Name
       value: Emitter (6)
@@ -4379,6 +4395,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 451590648}
     m_Modifications:
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: _levelIndex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5713094493209862998, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
       propertyPath: m_Name
       value: Emitter (6)
@@ -6488,6 +6508,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 451590648}
     m_Modifications:
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: _levelIndex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5713094493209862998, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
       propertyPath: m_Name
       value: Emitter (7)
@@ -6727,6 +6751,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 106775061}
     m_Modifications:
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: _levelIndex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5713094493209862998, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
       propertyPath: m_Name
       value: Emitter (3)
@@ -7055,6 +7083,7 @@ GameObject:
   - component: {fileID: 611389646}
   - component: {fileID: 611389645}
   - component: {fileID: 611389648}
+  - component: {fileID: 611389649}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7180,6 +7209,18 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &611389649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 611389644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46ce2350c9668bf4eb98a9a6f190746b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &620498628
 GameObject:
   m_ObjectHideFlags: 0
@@ -10810,6 +10851,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 451590648}
     m_Modifications:
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: _levelIndex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5713094493209862998, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
       propertyPath: m_Name
       value: Emitter (8)
@@ -11483,6 +11528,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 106775061}
     m_Modifications:
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: _levelIndex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5713094493209862998, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
       propertyPath: m_Name
       value: Emitter (4)
@@ -11980,6 +12029,50 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: _levelIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: FaceDirection
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: SelectInteractionType
+      value: 
+      objectReference: {fileID: 11400000, guid: 05853f25bf4d7de408d96c4cbf1b68fc, type: 2}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: RayVisualMaterial.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: 'RayVisualMaterial.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c9ba849fc7b9e1949b1db203ed10a732, type: 2}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: 'RayVisualMaterial.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7cd670ad2614def4c875202196a02b4c, type: 2}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: 'RayVisualMaterial.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b5e250ab67d08504898b2a8f561d073e, type: 2}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: 'RayVisualMaterial.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ca9bcde469048274ab1e46d80101ca6c, type: 2}
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: 'RayVisualMaterial.Array.data[4]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2cb9ad290c8336846907a4a591ca537e, type: 2}
+    - target: {fileID: 3427594563371229634, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.00000004371139
+      objectReference: {fileID: 0}
+    - target: {fileID: 3427594563371229634, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5713094493209862998, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
       propertyPath: m_Name
       value: Emitter (1)
@@ -12122,6 +12215,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 106775061}
     m_Modifications:
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: _levelIndex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5713094493209862998, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
       propertyPath: m_Name
       value: Emitter (5)
@@ -12623,6 +12720,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 451590648}
     m_Modifications:
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: _levelIndex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5713094493209862998, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
       propertyPath: m_Name
       value: Emitter (9)
@@ -20843,6 +20944,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 106775061}
     m_Modifications:
+    - target: {fileID: 2516954760393651866, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
+      propertyPath: _levelIndex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5713094493209862998, guid: 4b23e0fa7676bda45b7ef282c89ff350, type: 3}
       propertyPath: m_Name
       value: Emitter (2)

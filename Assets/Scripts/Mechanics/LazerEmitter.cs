@@ -14,7 +14,7 @@ public class LazerEmitter : RationalObject,IInteractable
 
 
     private LazerEmitter _chainedEmitter = null;
-    private Transform _gui_parent;
+    public Transform GUI_Parent;
     [ReadOnly]
     public int FaceDirection = 0;
 
@@ -22,13 +22,12 @@ public class LazerEmitter : RationalObject,IInteractable
     {
         PrepareLineVisual();
         OnReceive += BranchReceived;
-        _gui_parent = transform.GetChild(0);
-        GameObject g = Instantiate(SelectInteractionType.GUI, _gui_parent,false);
+        GameObject g = Instantiate(SelectInteractionType.GUI, GUI_Parent,false);
         g.layer = gameObject.layer;
     }
     protected void OnDisable()
     {
-        DestroyImmediate(_gui_parent.GetChild(0).gameObject);
+        DestroyImmediate(GUI_Parent.GetChild(0).gameObject);
     }
 
     private Vector3 CalculateDirectionBaseOnType(RationalObject ro) 
@@ -39,16 +38,25 @@ public class LazerEmitter : RationalObject,IInteractable
         if (emitter != null)
         {
             return emitter.CreateDirection((SOB_Lazer_SubEmit.Orientation)FaceDirection);
+
         }
         else return Vector3.zero;
        
     }
-    [Button]
-    public void ChangeFaceDirection() 
-    {
-    
-    }
 
+    [Button]
+    public void ChangeDirection() 
+    {
+        SOB_Lazer_Reflect reflector = SelectInteractionType as SOB_Lazer_Reflect;
+        SOB_Lazer_SubEmit emitter = SelectInteractionType as SOB_Lazer_SubEmit;
+
+        if (emitter != null)
+        {
+            FaceDirection = emitter.LoopOriantation(FaceDirection);
+            GUI_Parent.eulerAngles = emitter.CreateEulerAngle((SOB_Lazer_SubEmit.Orientation)FaceDirection);
+            GUI_Parent.localScale = emitter.Reflector ? Vector3.one * 0.5f : Vector3.one;
+        }
+    }
     public void DetermineInteractionBaseOnType() 
     {
         SOB_Lazer_Reflect reflector = SelectInteractionType as SOB_Lazer_Reflect;
@@ -61,8 +69,8 @@ public class LazerEmitter : RationalObject,IInteractable
             else 
             {
                 FaceDirection = emitter.LoopOriantation(FaceDirection);
-                _gui_parent.eulerAngles = emitter.CreateEulerAngle((SOB_Lazer_SubEmit.Orientation)FaceDirection);
-                _gui_parent.localScale = emitter. Reflector ? Vector3.one * 0.5f : Vector3.one;
+                GUI_Parent.eulerAngles = emitter.CreateEulerAngle((SOB_Lazer_SubEmit.Orientation)FaceDirection);
+                GUI_Parent.localScale = emitter. Reflector ? Vector3.one * 0.5f : Vector3.one;
             }
         }
     }
@@ -204,8 +212,8 @@ public class LazerEmitter : RationalObject,IInteractable
         //if ((int)l. OriantationOptions == ((int)OriantationOptions + 2) % 4)
         //    return;
 
-        //if (FalseConditionBasedOnType(ro))
-        //    return;
+        if (FalseConditionBasedOnType(ro))
+            return;
         SOB_Lazer_SubEmit emitter = SelectInteractionType as SOB_Lazer_SubEmit;
         if ( emitter. Reflector)
             ReceiveShootCommand(ro);

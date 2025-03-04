@@ -107,10 +107,16 @@ MonoBehaviour:
   MirrorMask:
     serializedVersion: 2
     m_Bits: 2048
-  _levelIndex: 0
-  SelectInteractionType: {fileID: 11400000, guid: 05853f25bf4d7de408d96c4cbf1b68fc, type: 2}
-  RayVisualMaterial: []
-  FaceDirection: 7
+  _levelIndex: 2
+  SelectInteractionType: {fileID: 11400000, guid: c51445276ead07246b85cb9492d94ae6, type: 2}
+  RayVisualMaterial:
+  - {fileID: 2100000, guid: c9ba849fc7b9e1949b1db203ed10a732, type: 2}
+  - {fileID: 2100000, guid: 7cd670ad2614def4c875202196a02b4c, type: 2}
+  - {fileID: 2100000, guid: b5e250ab67d08504898b2a8f561d073e, type: 2}
+  - {fileID: 2100000, guid: ca9bcde469048274ab1e46d80101ca6c, type: 2}
+  - {fileID: 2100000, guid: 2cb9ad290c8336846907a4a591ca537e, type: 2}
+  GUI_Parent: {fileID: 3427594563371229634}
+  FaceDirection: 3
 --- !u!65 &5713094493209863020
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -183,7 +189,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9151917237527610628}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

@@ -14,17 +14,22 @@ public class LazerEmitter : RationalObject,IInteractable
     public GameObject VisualCueUI;
     private LazerEmitter _chainedEmitter = null;
 
+    private int _rayIteration;
+    private static List<LazerEmitter> _path = new List<LazerEmitter>();
+
     private void Awake()
     {
         PrepareLineVisual();
     }
     protected void OnEnable()
     {
+        _path = new List<LazerEmitter>();
         OnReceive += BranchReceived;
         
     }
     protected  void OnDisable()
     {
+        _path = null;
     }
     private void PrepareLineVisual() 
     {
@@ -45,9 +50,10 @@ public class LazerEmitter : RationalObject,IInteractable
     }
     public void Interact(Vector3 pos) 
     {
-
-        if (!Reflector)
+        if (!Reflector) 
+        {
             ReceiveShootCommand();
+        }
         else 
         {
             int currentOriaintation = (int)OriantationOptions;
@@ -61,6 +67,7 @@ public class LazerEmitter : RationalObject,IInteractable
 
     public void Disengage() 
     {
+        _path?.Clear();
         RecursivelyStop();
     }
     public bool IsVisible()
@@ -82,6 +89,8 @@ public class LazerEmitter : RationalObject,IInteractable
     }
     private void RecursivelyStop() 
     {
+        _rayIteration = 0;
+
         LazerEmitter current = this;
         while (current != null)
         {
@@ -124,13 +133,20 @@ public class LazerEmitter : RationalObject,IInteractable
             {
                 if (CheckVisibility(_hitReceiverObject))
                 {
-                    LazerEmitter chain = _hitReceiverObject.transform.GetComponent<LazerEmitter>();
-                    if (chain != null && chain.Reflector)
+                    RationalObject hitObject = _hitReceiverObject.transform.GetComponent<RationalObject>();
+                    LazerEmitter chain = hitObject.GetComponent<LazerEmitter>();
+                    if (chain == null) 
+                    {
+                        hitObject.Receive(this);
+                        break;
+                    }
+                    if (chain != null && !_path.Contains(chain) && chain.Reflector) 
+                    {
                         _chainedEmitter = chain;
-
-                   
-                    _hitReceiverObject.transform.GetComponent<RationalObject>().Receive(this);
-                    break;
+                        _path.Add(chain);
+                        hitObject.Receive(this);
+                        break;
+                    }
                 }
             }
             if (!FreeToProceed(currentPosition, 0.01f))
@@ -150,15 +166,10 @@ public class LazerEmitter : RationalObject,IInteractable
     }
     public void BranchReceived(RationalObject ro)
     {
-        LazerEmitter l = ro.GetComponent<LazerEmitter>();
-        if (l == null)
-            return;
-
-        if ((int)l.OriantationOptions == ((int)OriantationOptions + 2) % 4)
-            return;
         if (Reflector)
             ReceiveShootCommand();
     }
+
 
 
     public void Editor_ChangeOriantationUI() 

@@ -82,8 +82,9 @@ public class Hay : RationalObject,IFlammable {
     }
     public void Ignite(RationalObject ro) 
     {
-        if (ro._levelIndex != _levelIndex && (!ro.IsObjectAtCorrectLevel_strict() || !IsObjectAtCorrectLevel_mild(1f)))
-        return;
+       // if (ro._levelIndex != _levelIndex && (!ro.IsObjectAtCorrectLevel_strict() || !IsObjectAtCorrectLevel_mild(1f)))
+        if (ro._levelIndex != _levelIndex)
+            return;
 
             if (_isIngnited)
                 return;

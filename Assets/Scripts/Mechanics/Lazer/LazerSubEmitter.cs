@@ -3,30 +3,22 @@ using UnityEngine;
 public class LazerSubEmitter : Lazer, IInteractable
 {
     [ReadOnly]
-    public Orientation OriantationOptions;
+    public Lazer_OriantationHelper.Orientation OriantationOptions;
     [Button]
     public void UpdateOriantation()
     {
-        OriantationOptions = NextOriantation(OriantationOptions);
-        Editor_ChangeOriantationUI(OriantationOptions);
+        OriantationOptions = Lazer_OriantationHelper.NextOriantation(OriantationOptions);
+        Lazer_OriantationHelper.Editor_ChangeOriantationUI(OriantationOptions, VisualCueUI);
+        VisualCueUI.transform.localScale = Vector3.one * 0.5f;
     }
     protected new void OnEnable()
     {
         OnReceive += BranchReceived;
     }
-    private void OnGUI()
-    {
-        Editor_ChangeOriantationUI(OriantationOptions);
-    }
-    protected override void Editor_ChangeOriantationUI(Orientation oriantation)
-    {
-        base.Editor_ChangeOriantationUI(oriantation);
-        VisualCueUI.transform.localScale = Vector3.one * 0.5f;
-    }
     public void BranchReceived(RationalObject ro)
     {
         RationalObject hit;
-        ShootLazer(80, 0.23f, GetDirection(OriantationOptions), out hit);
+        ShootLazer(80, 0.23f, Lazer_OriantationHelper.GetDirection(OriantationOptions), out hit);
         ProcessChain(hit);
     }
    
@@ -38,7 +30,6 @@ public class LazerSubEmitter : Lazer, IInteractable
     public void Hold() { }
     public void Disengage() {}
     public bool IsVisible() => IsObjectVisibleAndSameLevelWithPlayer();
-
     public IconType GetIconType() => IconType.kavaii;
 
 }

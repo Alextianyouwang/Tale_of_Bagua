@@ -2,17 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 public abstract class Lazer : RationalObject
 {
-
     public GameObject VisualCueUI;
-
     public Material[] RayVisualMaterial;
+
     private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
     private RaycastHit _hitReceiverObject;
     private LineRenderer[] _rayVisual;
-
-
     private Lazer _chainedEmitter = null;
     protected static List<Lazer> _path = new List<Lazer>();
+
     private void Awake()
     {
         PrepareLineVisual();
@@ -38,7 +36,6 @@ public abstract class Lazer : RationalObject
             _rayVisual[i].material = RayVisualMaterial[i];
             _rayVisual[i].enabled = false;
         }
-        
     }
     public bool IsActive() 
     {
@@ -108,60 +105,7 @@ public abstract class Lazer : RationalObject
             r.startWidth = 0.1f;
             r.endWidth = 0.1f;
         }
-      
     }
-    protected virtual void Editor_ChangeOriantationUI(Orientation oriantationOptions)
-    {
-        if (!VisualCueUI)
-            return;
-        Vector3 eularAngle = Vector3.zero;
-        switch (oriantationOptions)
-        {
-            case Orientation.Top:
-                eularAngle = new Vector3(90, 180, 0);
-                break;
-            case Orientation.Bot:
-                eularAngle = new Vector3(90, 0, 0);
-                break;
-            case Orientation.Left:
-                eularAngle = new Vector3(90, 90, 0);
-                break;
-            case Orientation.Right:
-                eularAngle = new Vector3(90, 270, 0);
-                break;
-        }
-        VisualCueUI.transform.eulerAngles = eularAngle;
-    }
-    protected Vector3 GetDirection(Orientation oriantationOptions)
-    {
-        Vector3 direction = Vector3.zero;
-        switch (oriantationOptions)
-        {
-            case Orientation.Top:
-                direction = Vector3.forward;
-                break;
-            case Orientation.Bot:
-                direction = Vector3.back;
-                break;
-            case Orientation.Left:
-                direction = Vector3.left;
-                break;
-            case Orientation.Right:
-                direction = Vector3.right;
-                break;
-        }
-        return direction;
-    }
-    protected Orientation NextOriantation(Orientation oriantationOptions)
-    {
-        int currentOriaintation = (int)oriantationOptions;
-        currentOriaintation += 1;
-        currentOriaintation %= 4;
-        return (Orientation)currentOriaintation;
-        
-    }
-    public enum Orientation { Top, Right, Bot, Left }
-
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();

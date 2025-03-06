@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 5713094493209863016}
   - component: {fileID: 5713094493209863020}
   - component: {fileID: 7038386664998875863}
-  - component: {fileID: 7647835375629835574}
+  - component: {fileID: 3235940399352939108}
   m_Layer: 0
-  m_Name: Emitter
+  m_Name: SubEmitter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -137,7 +137,7 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 3
---- !u!114 &7647835375629835574
+--- !u!114 &3235940399352939108
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5713094493209862998}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a3952fb2567ddb418976c81f038d988, type: 3}
+  m_Script: {fileID: 11500000, guid: 206114d5cffbf7849bbd961c4de3305f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ObstacleMask:

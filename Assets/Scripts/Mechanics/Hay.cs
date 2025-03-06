@@ -20,7 +20,7 @@ public class Hay : RationalObject,IFlammable {
     }
     private void RecieveLazer(RationalObject ro)
     {
-        LazerEmitter l = ro.GetComponent<LazerEmitter>();
+        Lazer l = ro.GetComponent<Lazer>();
         if (l == null)
             return;
 

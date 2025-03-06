@@ -1,31 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
-public class LazerEmitter : RationalObject,IInteractable
+public abstract class Lazer : RationalObject
 {
-    public enum Orientation { Top, Right ,Bot, Left}
-    public Orientation OriantationOptions;
-    public bool Reflector = false;
+
+    public GameObject VisualCueUI;
 
     public Material[] RayVisualMaterial;
     private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
     private RaycastHit _hitReceiverObject;
     private LineRenderer[] _rayVisual;
 
-    public GameObject VisualCueUI;
-    private LazerEmitter _chainedEmitter = null;
 
-    private int _rayIteration;
-    private static List<LazerEmitter> _path = new List<LazerEmitter>();
-
+    private Lazer _chainedEmitter = null;
+    protected static List<Lazer> _path = new List<Lazer>();
     private void Awake()
     {
         PrepareLineVisual();
     }
     protected void OnEnable()
     {
-        _path = new List<LazerEmitter>();
-        OnReceive += BranchReceived;
-        
+        _path = new List<Lazer>();
     }
     protected  void OnDisable()
     {
@@ -34,8 +28,6 @@ public class LazerEmitter : RationalObject,IInteractable
     private void PrepareLineVisual() 
     {
         _rayVisual = new LineRenderer[5];
-       
-       
         for (int i = 0; i < _rayVisual.Length; i++) 
         {
             GameObject g = new GameObject();
@@ -48,84 +40,49 @@ public class LazerEmitter : RationalObject,IInteractable
         }
         
     }
-    public void Interact(Vector3 pos) 
-    {
-        if (!Reflector) 
-        {
-            ReceiveShootCommand();
-        }
-        else 
-        {
-            int currentOriaintation = (int)OriantationOptions;
-            currentOriaintation += 1;
-            currentOriaintation %= 4 ;
-            OriantationOptions = (Orientation)currentOriaintation;
-            Editor_ChangeOriantationUI();
-        }
-    }
-    public void Hold() { }
-
-    public void Disengage() 
-    {
-        _path?.Clear();
-        RecursivelyStop();
-    }
-    public bool IsVisible()
-    {
-        return IsObjectVisibleAndSameLevelWithPlayer();
-    }
-
-    public IconType GetIconType() 
-    {
-        return IconType.kavaii;
-    }
-    private void ReceiveShootCommand() 
-    {
-        ShootLazer(80, 0.23f);
-    }
     public bool IsActive() 
     {
         return true;
     }
-    private void RecursivelyStop() 
+    protected void RecursivelyStop() 
     {
-        _rayIteration = 0;
-
-        LazerEmitter current = this;
+        Lazer current = this;
         while (current != null)
         {
             current.ReceiveStopCommand();
             current = current._chainedEmitter;
         }
     }
-    private void ReceiveStopCommand() 
+    protected void ReceiveStopCommand() 
     {
         foreach (LineRenderer r in _rayVisual)
             r.enabled = false;
         _rayCastPositionTracker.Clear();
     }
-    private void ShootLazer(int steps, float increment) 
+
+    protected void ProcessChain(RationalObject hit) 
+    {
+        if (hit == null)
+            return;
+        Lazer chain = hit.GetComponent<Lazer>();
+        if (chain == null) 
+        {
+            hit.Receive(this);
+            return;
+        }
+        if (chain != null && !_path.Contains(chain)) 
+        {
+            _chainedEmitter = chain;
+            _path.Add(chain);
+            hit.Receive(this);
+        }
+    }
+    protected void ShootLazer(int steps, float increment, Vector3 direction, out RationalObject hit) 
     {
         _rayCastPositionTracker.Clear();
 
         Vector3 currentPosition = transform.position;
-        Vector3 direction = Vector3.zero;
-        switch (OriantationOptions) 
-        {
-            case Orientation.Top:
-                direction = Vector3.forward;
-                break;
-            case Orientation.Bot:
-                direction = Vector3.back;
-                break;
-            case Orientation.Left:
-                direction = Vector3.left;
-                break;
-            case Orientation.Right:
-                direction = Vector3.right;
-                break;
-        }
-        
+        hit = null;
         for (int i = 0; i < steps; i++) 
         {
             _rayCastPositionTracker.Add(currentPosition);
@@ -133,20 +90,9 @@ public class LazerEmitter : RationalObject,IInteractable
             {
                 if (CheckVisibility(_hitReceiverObject))
                 {
-                    RationalObject hitObject = _hitReceiverObject.transform.GetComponent<RationalObject>();
-                    LazerEmitter chain = hitObject.GetComponent<LazerEmitter>();
-                    if (chain == null) 
-                    {
-                        hitObject.Receive(this);
+                    hit = _hitReceiverObject.transform.GetComponent<RationalObject>();
+                    if (hit != null)
                         break;
-                    }
-                    if (chain != null && !_path.Contains(chain) && chain.Reflector) 
-                    {
-                        _chainedEmitter = chain;
-                        _path.Add(chain);
-                        hitObject.Receive(this);
-                        break;
-                    }
                 }
             }
             if (!FreeToProceed(currentPosition, 0.01f))
@@ -164,20 +110,12 @@ public class LazerEmitter : RationalObject,IInteractable
         }
       
     }
-    public void BranchReceived(RationalObject ro)
-    {
-        if (Reflector)
-            ReceiveShootCommand();
-    }
-
-
-
-    public void Editor_ChangeOriantationUI() 
+    protected virtual void Editor_ChangeOriantationUI(Orientation oriantationOptions)
     {
         if (!VisualCueUI)
             return;
         Vector3 eularAngle = Vector3.zero;
-        switch (OriantationOptions)
+        switch (oriantationOptions)
         {
             case Orientation.Top:
                 eularAngle = new Vector3(90, 180, 0);
@@ -193,8 +131,37 @@ public class LazerEmitter : RationalObject,IInteractable
                 break;
         }
         VisualCueUI.transform.eulerAngles = eularAngle;
-        VisualCueUI.transform.localScale = Reflector? Vector3.one * 0.5f : Vector3.one;
     }
+    protected Vector3 GetDirection(Orientation oriantationOptions)
+    {
+        Vector3 direction = Vector3.zero;
+        switch (oriantationOptions)
+        {
+            case Orientation.Top:
+                direction = Vector3.forward;
+                break;
+            case Orientation.Bot:
+                direction = Vector3.back;
+                break;
+            case Orientation.Left:
+                direction = Vector3.left;
+                break;
+            case Orientation.Right:
+                direction = Vector3.right;
+                break;
+        }
+        return direction;
+    }
+    protected Orientation NextOriantation(Orientation oriantationOptions)
+    {
+        int currentOriaintation = (int)oriantationOptions;
+        currentOriaintation += 1;
+        currentOriaintation %= 4;
+        return (Orientation)currentOriaintation;
+        
+    }
+    public enum Orientation { Top, Right, Bot, Left }
+
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();

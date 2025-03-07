@@ -11,6 +11,7 @@ public abstract class Lazer : RationalObject
     protected Lazer _upstreamEmitter, _downstreamEmitter;
     protected static List<Lazer> _path = new List<Lazer>();
     private int _rayThroughCount = 0;
+    public int RayThroughCount => _rayThroughCount;
 
     protected Lazer_Helper.Orientation _orientation;
     public Lazer_Helper.Orientation Orientation => _orientation;
@@ -68,7 +69,7 @@ public abstract class Lazer : RationalObject
         }
         else
         {
-            if ( !DetectLoop()) 
+            if ( chain.RayThroughCount < 2) 
             {
                 chain._upstreamEmitter = this;
                 _downstreamEmitter = chain;
@@ -76,24 +77,6 @@ public abstract class Lazer : RationalObject
                 hit.Receive(this);
             }
         }
-    }
-    protected bool DetectLoop() 
-    {
-        if (_path == null || _path.Count < 2)
-            return false;
-
-        HashSet<Lazer> visited = new HashSet<Lazer>();
-        Lazer current = _path[0];
-        
-        while (current != null)
-        {
-            if (!visited.Add(current))
-                return true;
-                
-            current = current._downstreamEmitter;
-        }
-        
-        return false;
     }
     protected void ShootLazer(int steps, float increment,
         Lazer_Helper.Orientation orientaion,  out RationalObject hit) 

@@ -7,16 +7,13 @@ public abstract class Lazer : RationalObject
 
     private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
     private RaycastHit _hitReceiverObject;
-    private LineRenderer[] _rayVisual;
-    protected Lazer _upstreamEmitter;
+    private  List<LineRenderer> _rayVisual = new List<LineRenderer>();
+    protected Lazer _upstreamEmitter, _downstreamEmitter;
     protected static List<Lazer> _path = new List<Lazer>();
+    private int _rayThroughCount = 0;
 
     protected Lazer_Helper.Orientation _orientation;
     public Lazer_Helper.Orientation Orientation => _orientation;
-    private void Awake()
-    {
-        PrepareLineVisual();
-    }
     protected void OnEnable()
     {
         _path = new List<Lazer>();
@@ -29,29 +26,34 @@ public abstract class Lazer : RationalObject
 
     private void PrepareLineVisual() 
     {
-        _rayVisual = new LineRenderer[5];
-        for (int i = 0; i < _rayVisual.Length; i++) 
+        for (int i = 0; i < 5; i++) 
         {
             GameObject g = new GameObject();
             g.transform.parent = transform;
             g.layer = 6 + i;
             g.AddComponent<LineRenderer>();
-            _rayVisual[i] = g.GetComponent<LineRenderer>();
-            _rayVisual[i].material = RayVisualMaterial[i];
-            _rayVisual[i].enabled = false;
+            LineRenderer lr = g.GetComponent<LineRenderer>();
+            _rayVisual.Add(lr) ;
+            lr.material = RayVisualMaterial[i];
+            lr.enabled = false;
         }
     }
     protected static void StopAllLazerInChain() 
     {
-        foreach (Lazer l in _path) 
+         foreach (Lazer l in _path) 
             l.ReceiveStopCommand();
         _path?.Clear();
     }
     protected void ReceiveStopCommand() 
     {
-        foreach (LineRenderer r in _rayVisual)
-            r.enabled = false;
+        for (int i = 0 ; i < _rayVisual.Count; i++) 
+            Destroy(_rayVisual[i].gameObject);
+        _rayVisual.Clear();
+
         _rayCastPositionTracker.Clear();
+        _upstreamEmitter = null;
+        _downstreamEmitter = null;
+        _rayThroughCount = 0;
     }
 
     protected void ProcessChain(RationalObject hit) 
@@ -59,22 +61,44 @@ public abstract class Lazer : RationalObject
         if (hit == null)
             return;
         Lazer chain = hit.GetComponent<Lazer>();
-        if (chain == null) 
+        if (chain == null)
         {
             hit.Receive(this);
             return;
         }
-        if (chain != null && !_path.Contains(chain)) 
+        else
         {
-            _path.Add(chain);
-            chain._upstreamEmitter = this;
-            hit.Receive(this);
+            if ( !DetectLoop()) 
+            {
+                chain._upstreamEmitter = this;
+                _downstreamEmitter = chain;
+                _path.Add(chain);
+                hit.Receive(this);
+            }
         }
+    }
+    protected bool DetectLoop() 
+    {
+        if (_path == null || _path.Count < 2)
+            return false;
+
+        HashSet<Lazer> visited = new HashSet<Lazer>();
+        Lazer current = _path[0];
+        
+        while (current != null)
+        {
+            if (!visited.Add(current))
+                return true;
+                
+            current = current._downstreamEmitter;
+        }
+        
+        return false;
     }
     protected void ShootLazer(int steps, float increment,
         Lazer_Helper.Orientation orientaion,  out RationalObject hit) 
     {
-        _path.Add(this);
+        PrepareLineVisual();
         _rayCastPositionTracker.Clear();
         _orientation = orientaion;
         Vector3 direction=  Lazer_Helper.GetDirection(orientaion);
@@ -97,14 +121,16 @@ public abstract class Lazer : RationalObject
 
             currentPosition += increment * direction;
         }
-        foreach (LineRenderer r in _rayVisual) 
+        for (int i = _rayThroughCount * 5; i < 5 + _rayThroughCount * 5; i++) 
         {
+            LineRenderer r = _rayVisual[i];
             r.enabled = true;
             r.SetPosition(0, transform.position);
             r.SetPosition(1, _hitReceiverObject.transform == null ? currentPosition : _hitReceiverObject.point);
             r.startWidth = 0.1f;
             r.endWidth = 0.1f;
         }
+        _rayThroughCount++;
     }
     protected override void OnDrawGizmos()
     {

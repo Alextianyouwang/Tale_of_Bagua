@@ -13,6 +13,7 @@ public class LazerEmitter : Lazer, IInteractable
 
     public void Interact(Vector3 pos)
     {
+        _path.Add(this);
         RationalObject hit;
         ShootLazer(80, 0.23f,OrientationOptions,out hit);
         ProcessChain(hit);

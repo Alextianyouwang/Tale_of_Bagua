@@ -184,7 +184,7 @@ public class CellPacker
 public class UtilityCell
 {
     private Cell _cell;
-    // 0,1,2,3 => Top,Right,Bottom,Left
+    // 0,1,2,3 => Top,BackSlash,Bottom,ForSlash
     private UtilityCell[] neighbors;
 
     public UtilityCell(Cell cell)

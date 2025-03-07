@@ -3,26 +3,25 @@ using UnityEngine;
 public class LazerEmitter : Lazer, IInteractable
 {
     [ReadOnly]
-    public Lazer_OriantationHelper.Orientation OriantationOptions;
+    public Lazer_Helper.Orientation OrientationOptions;
     [Button]
     public void UpdateOriantation()
     {
-        OriantationOptions = Lazer_OriantationHelper.NextOriantation(OriantationOptions);
-        Lazer_OriantationHelper.Editor_ChangeOriantationUI(OriantationOptions,VisualCueUI);
+        OrientationOptions = Lazer_Helper.NextOriantation(OrientationOptions, 1);
+        Lazer_Helper.Editor_ChangeOriantationUI(OrientationOptions,VisualCueUI);
     }
 
     public void Interact(Vector3 pos)
     {
         RationalObject hit;
-        ShootLazer(80, 0.23f, Lazer_OriantationHelper.GetDirection(OriantationOptions),out hit);
+        ShootLazer(80, 0.23f,OrientationOptions,out hit);
         ProcessChain(hit);
     }
     public void Hold() { }
 
     public void Disengage()
     {
-        _path?.Clear();
-        RecursivelyStop();
+        StopAllLazerInChain();
     }
     public bool IsVisible() => IsObjectVisibleAndSameLevelWithPlayer();
     public IconType GetIconType() => IconType.kavaii;

@@ -1,15 +1,14 @@
 using TriInspector;
 using UnityEngine;
-public class LazerSubEmitter : Lazer, IInteractable
+public class LazerReflector : Lazer, IInteractable
 {
     [ReadOnly]
-    public Lazer_Helper.Orientation OrientationOptions;
+    public Lazer_Helper.ReflectionDirection ReflectionOptions;
     [Button]
     public void UpdateOriantation()
     {
-        OrientationOptions = Lazer_Helper.NextOriantation(OrientationOptions, 1);
-        Lazer_Helper.Editor_ChangeOriantationUI(OrientationOptions, VisualCueUI);
-        VisualCueUI.transform.localScale = Vector3.one * 0.5f;
+        ReflectionOptions = Lazer_Helper.NextReflectionDirection(ReflectionOptions);
+        Lazer_Helper.Editor_ChangeReflectionUI(ReflectionOptions, VisualCueUI);
     }
     protected new void OnEnable()
     {
@@ -17,8 +16,9 @@ public class LazerSubEmitter : Lazer, IInteractable
     }
     public void BranchReceived(RationalObject ro)
     {
+        Lazer_Helper.Orientation o = Lazer_Helper.GetReflectedDirection(ReflectionOptions, _upstreamEmitter.Orientation);
         RationalObject hit;
-        ShootLazer(80, 0.23f, OrientationOptions, out hit);
+        ShootLazer(80, 0.23f,o, out hit);
         ProcessChain(hit);
     }
    

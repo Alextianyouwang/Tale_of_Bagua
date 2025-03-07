@@ -8,9 +8,11 @@ public abstract class Lazer : RationalObject
     private List<Vector3> _rayCastPositionTracker = new List<Vector3>();
     private RaycastHit _hitReceiverObject;
     private LineRenderer[] _rayVisual;
-    private Lazer _chainedEmitter = null;
+    protected Lazer _upstreamEmitter;
     protected static List<Lazer> _path = new List<Lazer>();
 
+    protected Lazer_Helper.Orientation _orientation;
+    public Lazer_Helper.Orientation Orientation => _orientation;
     private void Awake()
     {
         PrepareLineVisual();
@@ -23,6 +25,8 @@ public abstract class Lazer : RationalObject
     {
         _path = null;
     }
+    public bool IsActive() => true;
+
     private void PrepareLineVisual() 
     {
         _rayVisual = new LineRenderer[5];
@@ -37,18 +41,11 @@ public abstract class Lazer : RationalObject
             _rayVisual[i].enabled = false;
         }
     }
-    public bool IsActive() 
+    protected static void StopAllLazerInChain() 
     {
-        return true;
-    }
-    protected void RecursivelyStop() 
-    {
-        Lazer current = this;
-        while (current != null)
-        {
-            current.ReceiveStopCommand();
-            current = current._chainedEmitter;
-        }
+        foreach (Lazer l in _path) 
+            l.ReceiveStopCommand();
+        _path?.Clear();
     }
     protected void ReceiveStopCommand() 
     {
@@ -69,15 +66,18 @@ public abstract class Lazer : RationalObject
         }
         if (chain != null && !_path.Contains(chain)) 
         {
-            _chainedEmitter = chain;
             _path.Add(chain);
+            chain._upstreamEmitter = this;
             hit.Receive(this);
         }
     }
-    protected void ShootLazer(int steps, float increment, Vector3 direction, out RationalObject hit) 
+    protected void ShootLazer(int steps, float increment,
+        Lazer_Helper.Orientation orientaion,  out RationalObject hit) 
     {
+        _path.Add(this);
         _rayCastPositionTracker.Clear();
-
+        _orientation = orientaion;
+        Vector3 direction=  Lazer_Helper.GetDirection(orientaion);
         Vector3 currentPosition = transform.position;
         hit = null;
         for (int i = 0; i < steps; i++) 

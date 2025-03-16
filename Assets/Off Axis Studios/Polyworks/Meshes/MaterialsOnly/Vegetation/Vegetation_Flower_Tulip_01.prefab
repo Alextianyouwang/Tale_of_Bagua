@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &204989065717491133
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.4282527
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0051721036
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.1697745
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9653294
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.06224832
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.24301246
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.07217524
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 8.932
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 27.764
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -6.34
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e982185e461f3f7498e81f5feedbbcf0, type: 2}
+    - target: {fileID: -7511558181221131132, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f2a12212d85e9684eb494af8f3bf426c, type: 2}
+    - target: {fileID: 919132149155446097, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_Name
+      value: Vegetation_Flower_Tulip_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d050d3ace3119154eaaa41598b65cc71, type: 3}

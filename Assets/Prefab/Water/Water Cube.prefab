@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9022678518058702135}
   - component: {fileID: 6201019153758402934}
   - component: {fileID: 3145746279427494333}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Water Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 11a038d332003fe44bdca7a0131cba46, type: 2}
+  - {fileID: 2100000, guid: 9307c84de43bfcf46a4c3faedf34de3a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

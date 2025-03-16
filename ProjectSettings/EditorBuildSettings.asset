@@ -41,5 +41,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Playtest/SceneManager/Functional/ScenePrelude.unity
     guid: 17242f25db5a48f44830f842f0558d32
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 0ae06ae3cf7224c4ba7d982dbba1c517, type: 2}
   m_UseUCBPForAssetBundles: 0

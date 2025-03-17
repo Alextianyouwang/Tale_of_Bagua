@@ -238,8 +238,95 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3125634651758732692, guid: a7849f1db26eb1242a026c2139fa1436, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1876883}
+    - targetCorrespondingSourceObject: {fileID: 3125634651758732692, guid: a7849f1db26eb1242a026c2139fa1436, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1876882}
+    - targetCorrespondingSourceObject: {fileID: 3125634651758732692, guid: a7849f1db26eb1242a026c2139fa1436, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1876881}
   m_SourcePrefab: {fileID: 100100000, guid: a7849f1db26eb1242a026c2139fa1436, type: 3}
+--- !u!1 &1876880 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3125634651758732692, guid: a7849f1db26eb1242a026c2139fa1436, type: 3}
+  m_PrefabInstance: {fileID: 1876879}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1876881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876880}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb78831d51eae543b7a3b71a9a199cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlayCamera: {fileID: 1633101129}
+  mainCamera: {fileID: 1633101129}
+  blitScreenMaterial: {fileID: 2100000, guid: d82ce178ad01d3740a85bbbda568d3c6, type: 2}
+--- !u!114 &1876882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876880}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 161b7df5ed498c74485459b92d930b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickUIPrefab: {fileID: 1742183176909361116, guid: 9d3897eecfefb614fa6ea552d2ebc771, type: 3}
+  movementTutorialAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  normalCol: {r: 0.054111768, g: 0.40810713, b: 0.6037736, a: 1}
+  flickerCol: {r: 3.2076862, g: 1.1714311, b: 0, a: 1}
+--- !u!114 &1876883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876880}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2c89f96b90c86448996c0ec55ff8087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenMargin: 60
+  UIColor: {r: 1, g: 0.83, b: 0.61, a: 1}
+  arrows:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &52790868
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using UnityEngine;
 public interface IInteractable
 {
     public void Interact(Vector3 pos);
+    public void DetactPlayer();
     public void Hold();
     public void Disengage();
 

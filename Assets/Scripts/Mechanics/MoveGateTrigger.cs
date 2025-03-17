@@ -6,6 +6,7 @@ public class MoveGateTrigger : RationalObject, IInteractable
 
     private bool _stage0 = true;
     private bool _stage1 = false;
+    public void DetactPlayer() { }
 
     public void Interact(Vector3 pos)
     {

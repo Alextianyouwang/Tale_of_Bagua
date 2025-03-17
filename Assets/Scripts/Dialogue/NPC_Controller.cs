@@ -46,7 +46,7 @@ public class NPC_Controller : RationalObject,IInteractable
     {
         return IsObjectVisibleAndSameLevelWithPlayer();
     }
-
+    public void DetactPlayer() { }
     public IconType GetIconType() 
     {
         return IconType.exclamation;

@@ -7,6 +7,8 @@ public class Rotator : RationalObject, IInteractable
     public GameObject ObjectToRotate;
     public GameObject[] Blocks;
     private bool _inAction = false;
+    public void DetactPlayer() { }
+
     IEnumerator Rotate90Degree() 
     {
         float percentage = 0;

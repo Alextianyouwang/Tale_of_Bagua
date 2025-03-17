@@ -26,6 +26,7 @@ public class LazerReflector : Lazer, IInteractable
     {
         UpdateOriantation();
     }
+    public void DetactPlayer() { }
 
     public void Hold() { }
     public void Disengage() {}

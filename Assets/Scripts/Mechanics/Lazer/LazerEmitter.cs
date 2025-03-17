@@ -10,6 +10,8 @@ public class LazerEmitter : Lazer, IInteractable
         OrientationOptions = Lazer_Helper.NextOriantation(OrientationOptions, 1);
         Lazer_Helper.Editor_ChangeOriantationUI(OrientationOptions,VisualCueUI);
     }
+    public void DetactPlayer() { }
+
 
     public void Interact(Vector3 pos)
     {

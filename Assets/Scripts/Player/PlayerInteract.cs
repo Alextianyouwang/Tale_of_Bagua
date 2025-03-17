@@ -21,13 +21,19 @@ public class PlayerInteract : MonoBehaviour
             currentInteract.Disengage();
       
     }
+
     void CheckObjectSelection()
     {
         currentInteract = GetCurrentInteractiveObject();
 
-        if (currentInteract != null && currentInteract.IsVisible() && currentInteract.IsActive())
+        if (currentInteract != null && currentInteract.IsVisible() && currentInteract.IsActive()) 
+        {
             OnDetactPlayer?.Invoke((currentInteract as MonoBehaviour).transform.position + Vector3.forward * 0.5f, currentInteract.GetIconType());
-
+        }
+        if (currentInteract != null && currentInteract != previousInteract ) 
+        {
+            currentInteract.DetactPlayer();
+        }
 
         if (currentInteract == null && previousInteract != null)
         {

@@ -43,6 +43,8 @@ public class Door : RationalObject, IInteractable
         }
     
     }
+    public void DetactPlayer() { }
+
 
     public void Open() 
     {

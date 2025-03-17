@@ -51,6 +51,8 @@ public class AchievementTest : RationalObject, IInteractable, IDataPersistence
         GetComponent<MeshRenderer>().material.SetColor("_BaseColor", Color.green);
 
     }
+    public void DetactPlayer() { }
+
     public void Hold() { }
     public void Disengage() { }
 

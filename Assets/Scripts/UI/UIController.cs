@@ -59,10 +59,15 @@ public class UIController : MonoBehaviour
     {
         return this;
     }
-    private void Start()
+
+    private void Awake()
     {
         InitializeArrow();
         InitializeWASD();
+    }
+    private void Start()
+    {
+     
         
     }
     private void InitializeWASD() 
@@ -143,11 +148,15 @@ public class UIController : MonoBehaviour
     }
     public Vector3[] Util_GetMirrorCorner(Mirror[]mirrors, float yValue,float margin)
     {
+        if (mirrors == null)
+            return null;
         Vector3[] corners = new Vector3[4];
         // x:top, y:right, z: bottom , w: left 
         Vector4 boundsRegion = new Vector4(float.MinValue, float.MinValue, float.MaxValue, float.MaxValue);
         foreach (Mirror m in  mirrors)
         {
+            if (m == null)
+                continue;
             Bounds frameBounds = m.FrameRenderer.bounds;
             float topValue = frameBounds.center.z + frameBounds.extents.z + margin;
             float botValue = frameBounds.center.z - frameBounds.extents.z - margin;
@@ -409,8 +418,9 @@ public class UIController : MonoBehaviour
         if (!cam)
             return;
         Gizmos.color = Color.yellow;
-        Vector3[] corners = Util_GetMirrorCorner(LevelManager._HoodMirrors, 2,mirrorMargin); 
-
+        Vector3[] corners = Util_GetMirrorCorner(LevelManager._HoodMirrors, 2,mirrorMargin);
+        if (corners == null)
+            return;
         foreach (Vector3 corner in corners) 
         {
             Gizmos.DrawSphere( Util_ClampToScreenBound(corner, screenMargin) , 0.1f);

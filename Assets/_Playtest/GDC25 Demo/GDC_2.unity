@@ -8859,6 +8859,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: --- EssentialGameModule GDC2025 ---
       objectReference: {fileID: 0}
+    - target: {fileID: 1589893985442877996, guid: a1913f31fdd476c4eb58eee586205917, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2281073443751230817, guid: a1913f31fdd476c4eb58eee586205917, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -56,8 +56,8 @@ public class Mirror : MonoBehaviour
     public void AbortMovement() 
     {
 
-        RigidBody.isKinematic = false;
-        RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+        _rigidBody.isKinematic = false;
+        _rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
         if (_movingCo != null)
             StopCoroutine(_movingCo);
     }
@@ -65,8 +65,9 @@ public class Mirror : MonoBehaviour
     {
         float percent = 0;
         Vector3 originalPos = transform.position;
-        RigidBody.isKinematic = true;
-        RigidBody.constraints = RigidbodyConstraints.FreezeAll;
+        _rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        _rigidBody.isKinematic = true;
+        _rigidBody.constraints = RigidbodyConstraints.FreezeAll;
 
         while ( percent < 1) 
         {
@@ -77,16 +78,16 @@ public class Mirror : MonoBehaviour
             yield return null;
         }
 
-        RigidBody.isKinematic = false;
-        RigidBody.constraints = RigidbodyConstraints.FreezeRotation;
-            
+        _rigidBody.isKinematic = false;
+        _rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+        _rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         OnFinishMoving?.Invoke();
 
     }
 
     public void RigidBodyAddForce(Vector3 direction, float intensity) 
     {
-        RigidBody.AddForce(direction * intensity, ForceMode.Force);
+        _rigidBody.AddForce(direction * intensity, ForceMode.Force);
     }
     void GetBoxs() 
     {

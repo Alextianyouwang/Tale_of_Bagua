@@ -13,6 +13,7 @@ public class Tutorial : MonoBehaviour
 
     private bool havePlayedMirrorCollapseTutorial = false, mirrorCollapseConditionMet = false;
     private int mirrorCollapseClickTime = 0;
+    private bool _havePassedMirrorDragTutorial = false;
     public static Func<UIController> OnRequestTutorialMasterSupport;
     public static Action<bool> OnToggleDarkenScreen;
     
@@ -25,6 +26,8 @@ public class Tutorial : MonoBehaviour
     private int keyPressCounter = 0;
     private bool hasPressedW = false, hasPressedD = false, hasPressedS = false, hasPressedA = false;
 
+    [SerializeField]private bool _mirrorMoveTutorialAtStart = false;
+
     [ColorUsage(true, true)]
     public Color normalCol;
     [ColorUsage(true, true)]
@@ -32,12 +35,14 @@ public class Tutorial : MonoBehaviour
 
     private void OnEnable()
     {
+
         ProgressionController.OnBaguaCollected += ReceiveBaguaCollected;
     }
     private void OnDisable()
     {
         ProgressionController.OnBaguaCollected -= ReceiveBaguaCollected;
     }
+    
 
     void MirrorCollapseTutorial_Condition() 
     {
@@ -103,6 +108,7 @@ public class Tutorial : MonoBehaviour
         InitialArrowData();
 
         MovementTutorial();
+
     }
 
     private void Update()
@@ -154,8 +160,13 @@ public class Tutorial : MonoBehaviour
     void Tutorial_TurnOff(UIController uc) 
     {
         uc.ResetArrowDatas(tutorialArrowData);
-        uc.GroupControlArrows(Vector3.zero, 0, 0, 1, false, tutorialArrowData, null);
+        uc.GroupControlArrows(Vector3.zero, 0, 0, 1, false, tutorialArrowData,null);
         uc.ResetWASD();
+        if (_mirrorMoveTutorialAtStart && !_havePassedMirrorDragTutorial) 
+        {
+            _havePassedMirrorDragTutorial = true;
+            MirrorDragTutorial();
+        }
     }
 
     void CheckMovementTutorialExitCondition() 
@@ -200,12 +211,14 @@ public class Tutorial : MonoBehaviour
         t.transform.localPosition = target;
         return t;
     }
+
     void MirrorDragTutorial() 
     {
         PlayerMove.canUseWASD = false;
         MirrorManager.CanUseLeftClick = false;
         OnToggleDarkenScreen?.Invoke(true);
-        StartCoroutine(uc.MoveArrowsAsGroup(Utility.GetScreenCenterPosition_WorldSpace(), NewTransformFromPositon(Utility.GetScreenCenterPosition_WorldSpace()), 4f, 1f, 0f, 0f, 1f, 6f, tutorialArrowData, movementTutorialAnimationCurve, null, MirrorDragTutorial_LockMirror));
+        // Chane time to complete later
+        StartCoroutine(uc.MoveArrowsAsGroup(Utility.GetScreenCenterPosition_WorldSpace(), NewTransformFromPositon(Utility.GetScreenCenterPosition_WorldSpace()), 4f, 1f, 0f, 0f, 1f, 1f, tutorialArrowData, movementTutorialAnimationCurve, null, MirrorDragTutorial_LockMirror));
     }
     void MirrorDragTutorial_LockMirror(UIController uc) 
     {
@@ -300,7 +313,7 @@ public class Tutorial : MonoBehaviour
         int counter = 0;
         while (!exitCondition.Invoke())
         {
-            Vector3[] corners = master.Util_GetMirrorCorner(mirrors, 2f, 0f);
+            Vector3[] corners = master.Util_GetMirrorCorner(mirrors, 0.5f, 0f);
             Vector3 pos = Vector3.zero;
             foreach (Vector3 v in corners)
                 pos += v;

@@ -35,8 +35,8 @@ public class PlayerMove : MonoBehaviour
             rb.isKinematic = false;
         }
          
-        else
-            rb.isKinematic = true;
+      // else
+      //     rb.isKinematic = true;
     }
     private void Movement()
     {

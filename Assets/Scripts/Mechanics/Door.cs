@@ -22,12 +22,12 @@ public class Door : RationalObject, IInteractable
         switch (ActivateDirection) 
         {
             case OpenDirection.Top:
-                if (pos.y > transform.position.x)
+                if (pos.z > transform.position.z)
                     Open();
                 break;
             
             case OpenDirection.Bot:
-                if (pos.y < transform.position.x)
+                if (pos.z < transform.position.z)
                     Open();
                 break;
             

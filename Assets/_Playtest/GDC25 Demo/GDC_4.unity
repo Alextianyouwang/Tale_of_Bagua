@@ -11028,6 +11028,14 @@ PrefabInstance:
       propertyPath: m_CollisionDetection
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6355570089406876096, guid: a1913f31fdd476c4eb58eee586205917, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 6355570089406876096, guid: a1913f31fdd476c4eb58eee586205917, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.12
+      objectReference: {fileID: 0}
     - target: {fileID: 7141112016197754681, guid: a1913f31fdd476c4eb58eee586205917, type: 3}
       propertyPath: _levels.Array.size
       value: 3

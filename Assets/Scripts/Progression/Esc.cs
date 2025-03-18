@@ -9,6 +9,7 @@ public class Esc : MonoBehaviour
     public GameObject pauseCanvas;
 
     public GameObject[] panels;
+    public static bool _IsPauseOn;
 
     bool IsDisplayingInfo() 
     {
@@ -24,16 +25,17 @@ public class Esc : MonoBehaviour
    
     void Update()
     {
+        if (SceneDataManager._IsAreYouSureActive)
+            return;
 
         if (Input.GetKeyDown(KeyCode.Escape) && !IsDisplayingInfo()) 
         {
             if (!hasPaused)
             {
+                
                 hasPaused = true;
-                pauseCanvas.SetActive(true);
-                PlayerMove.canUseWASD = false;
-                MirrorManager.CanUseLeftClick = false;
-                MirrorManager.CanUseRightClick = false;
+                PauseGame();
+                _IsPauseOn = true;
                 //isPlaying = false;
             }
             else 
@@ -50,6 +52,18 @@ public class Esc : MonoBehaviour
 
     }
 
+
+    public void PauseGame() 
+    {
+        pauseCanvas.SetActive(true);
+        PlayerMove.canUseWASD = false;
+        MirrorManager.CanUseLeftClick = false;
+        MirrorManager.CanUseRightClick = false;
+    }
+    public void ExitGame() 
+    {
+        Application.Quit();
+    }
     public void LoadMainMenu() 
     {
         SceneManager.LoadScene("Main Menu");
@@ -59,6 +73,7 @@ public class Esc : MonoBehaviour
     {
         hasPaused = false;
         pauseCanvas.SetActive(false);
+        _IsPauseOn = false;
         PlayerMove.canUseWASD = true;
         MirrorManager.CanUseLeftClick = true;
         MirrorManager.CanUseRightClick = true;

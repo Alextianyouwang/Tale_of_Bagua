@@ -13188,9 +13188,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2396530125506463796, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      propertyPath: _startState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2396530125506463796, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      propertyPath: _stateData.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2396530125506463796, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      propertyPath: '_stateData.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 203c43d4b22549342b5da7ccb78d4eef, type: 2}
+    - target: {fileID: 2396530125506463796, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      propertyPath: '_stateData.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 25553cc2c893b9f4a84dbe6713144698, type: 2}
+    - target: {fileID: 2396530125506463796, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      propertyPath: '_stateData.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 5d64c880e7044c245839db79bfbb57a0, type: 2}
     - target: {fileID: 8085033172866274032, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
       propertyPath: m_Name
       value: --- GameFlowModule GDC 2025 ---
+      objectReference: {fileID: 0}
+    - target: {fileID: 8085033172866274032, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8686379227632262214, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
       propertyPath: m_LocalPosition.x

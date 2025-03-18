@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
@@ -39,13 +37,11 @@ public class NextLine : MonoBehaviour
         {
             if (Ending)
             {
-                SceneManager.LoadScene("Main Menu");
+                SceneManager.LoadScene("GDC_Menu");
             } else 
             { 
-                SceneManager.LoadScene("GameScene"); 
+                SceneManager.LoadScene("GDC_Menu"); 
             }
-                
-                
         }
 
 

@@ -10,6 +10,9 @@ public class StateManager : MonoBehaviour
 
     public static Action<string> OnSetCurrentStateName;
     public static Action<bool> OnToggleGameDebugPanel;
+    public static Action<bool> OnToggleMenu;
+
+    public GameObject Menu;
 
     private void OnEnable()
     {
@@ -33,6 +36,25 @@ public class StateManager : MonoBehaviour
         CurrentState = _stateData[_currentState];
         OnSetCurrentStateName?.Invoke(CurrentState.Name);
         OnToggleGameDebugPanel?.Invoke(_stateData[_currentState].IsGameSession);
+
+        if (_currentState == 0)
+            Menu.SetActive(true);
+        else
+            Menu.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha0)) 
+        {
+            SelectState(2);
+        }
+    }
+
+    public void SelectState(int value) 
+    {
+        _currentState = value;
+        ExecuteCurrentState();
     }
 
     public void NextState()
@@ -49,6 +71,7 @@ public class StateManager : MonoBehaviour
         }
         _currentState++;
         ExecuteCurrentState();
+
     }
     public void PreviousState()
     {
@@ -64,6 +87,7 @@ public class StateManager : MonoBehaviour
         }
         _currentState--;
         ExecuteCurrentState();
+
     }
 
 }

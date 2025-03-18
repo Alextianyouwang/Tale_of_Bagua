@@ -50,8 +50,8 @@ public class DebuggerManager : MonoBehaviour
         if (!_sceneName) return;
         if (!_levelCount) return;
 
-        _sceneName.text = data.GetSceneName();
-        _levelCount.text = data.GetLayerNumber().ToString();
+       // _sceneName.text = data.GetSceneName();
+       // _levelCount.text = data.GetLayerNumber().ToString();
     }
 
     public void SetCurrentStateName(string currentStateName)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,6 +17,11 @@ public class SceneDataManager : MonoBehaviour
 
     public static Action<SceneDataCommunicator> OnUpdateSceneInfoText;
     public static Action OnSceneFinishedLoading;
+
+    public GameObject AreYouSurePanel;
+    public TextMeshProUGUI AreYouSurePanaelText;
+    public static bool _IsAreYouSureActive;
+    private int _levelYouWillBeVisiting;
     public void Awake()
     {
         InitializeTempSceneInfo();
@@ -104,14 +110,51 @@ public class SceneDataManager : MonoBehaviour
         _currentScene--;
         Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
     }
+    //GDC 2025
+    public void Update()
+    {
+        if (Esc._IsPauseOn)
+            return;
+        for (int i = 0; i < 5; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+            {
+                if (_currentScene == i)
+                    continue;
+                AreYouSurePanel.SetActive(true);
+                AreYouSurePanaelText.text = $"Are you sure about skipping to level {i + 1}? Your Progress won't be saved";
+                _IsAreYouSureActive = true;
+                _levelYouWillBeVisiting = i;
 
+                PlayerMove.canUseWASD = false;
+                MirrorManager.CanUseLeftClick = false;
+                MirrorManager.CanUseRightClick = false;
+
+
+                break; // Exit loop after finding a match
+            }
+        }
+
+    }
+
+    public void SetAreYouSureToFalse() 
+    {
+        _IsAreYouSureActive = false;
+        PlayerMove.canUseWASD = true;
+        MirrorManager.CanUseLeftClick = true;
+        MirrorManager.CanUseRightClick = true;
+    }
+    public void GoToScene() 
+    {
+         Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[_levelYouWillBeVisiting].Name));
+    }
     private IEnumerator LoadLevel(string sceneName)
     {
         AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         while (!asyncLoadLevel.isDone)
             yield return null;
         OnSceneFinishedLoading?.Invoke();
-        ImplementCurrentSceneWithData();
+     //   ImplementCurrentSceneWithData();
         OnUpdateSceneInfoText?.Invoke(_currentCommunicator);
     }
     private void GetCurrentSceneData()

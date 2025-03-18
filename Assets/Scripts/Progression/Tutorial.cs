@@ -131,9 +131,11 @@ public class Tutorial : MonoBehaviour
     }
 
  
-    void MovementTutorial() 
+    void MovementTutorial()
     {
-        StartCoroutine(uc.MoveArrowsAsGroup(Utility.GetScreenCenterPosition_WorldSpace(), PlayerMove.playerTransform, 3f, 1f, 0f, 0f, 1f, 1.5f, tutorialArrowData, movementTutorialAnimationCurve,uc.SyncOtherStuffWithArrow, MovementTutorial_FollowArrowWithPlayer));   
+        StartCoroutine(uc.MoveArrowsAsGroup(Utility.GetScreenCenterPosition_WorldSpace(), PlayerMove.playerTransform, 3f, 1f, 0f, 0f, 1f, 1.5f, tutorialArrowData, movementTutorialAnimationCurve, uc.SyncOtherStuffWithArrow, MovementTutorial_FollowArrowWithPlayer));
+        MirrorManager.CanUseLeftClick = false;
+        MirrorManager.CanUseRightClick = false;
     }
     void MovementTutorial_FollowArrowWithPlayer(UIController uc) 
     {
@@ -154,7 +156,8 @@ public class Tutorial : MonoBehaviour
     void MovementTutorial_ArrowFade(UIController uc) 
     {
         StartCoroutine(uc.MoveArrowsAsGroup(PlayerMove.playerTransform.position, PlayerMove.playerTransform, 1f, 3f, 0f, 1f, 0f, 1f, tutorialArrowData, movementTutorialAnimationCurve, uc.SyncOtherStuffWithArrow,Tutorial_TurnOff));
-
+        MirrorManager.CanUseLeftClick = true;
+        MirrorManager.CanUseRightClick = true;
     }
 
     void Tutorial_TurnOff(UIController uc) 

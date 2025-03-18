@@ -10,6 +10,9 @@ public class NextLine : MonoBehaviour
     public static Action<bool> OnToggleBagua;
 
     public BaguaShow bagua;
+
+    public EventObject NextState;
+    public EventObject StartState;
     public void NextDialogue()
     {
         for (int i = 0; i < Dialogues.Length; i++)
@@ -37,10 +40,12 @@ public class NextLine : MonoBehaviour
         {
             if (Ending)
             {
-                SceneManager.LoadScene("GDC_Menu");
+                //SceneManager.LoadScene("GDC_Menu");
+                StartState.Raise();
             } else 
-            { 
-                SceneManager.LoadScene("GDC_Menu"); 
+            {
+                NextState?.Raise();
+                //SceneManager.LoadScene("GDC_1"); 
             }
         }
 

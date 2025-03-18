@@ -47,7 +47,7 @@ public class StateManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha0)) 
         {
-            SelectState(2);
+            SelectState(3);
         }
     }
 

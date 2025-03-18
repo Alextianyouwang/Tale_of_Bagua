@@ -104,7 +104,7 @@ Material:
     m_Floats:
     - Vector1_2BC1DA0F: 0.6
     - Vector1_33D6ED88: 0
-    - Vector1_3770B5C: 1.09
+    - Vector1_3770B5C: 3
     - Vector1_38047C91: 0.5
     - Vector1_40C5EB4E: 0.4
     - Vector1_41FAE320: 0.89
@@ -120,14 +120,14 @@ Material:
     - Vector1_81D95DDA: -0.18
     - Vector1_8280C9BC: 0.22
     - Vector1_894FE3F1: 0.534
-    - Vector1_965BA36C: 1.18
+    - Vector1_965BA36C: 3
     - Vector1_A465D6C0: 0.67
     - Vector1_A6818E9E: 1
     - Vector1_B2C28A3D: 5.53
     - Vector1_B5C121FC: 0.3
     - Vector1_C17124A0: 0.81
     - Vector1_DFF69F7C: -0.08
-    - Vector1_E280F477: 0.27
+    - Vector1_E280F477: 1
     - Vector1_E54BAFA9: 0.1
     - Vector1_E7F1FCE4: 1.59
     - Vector1_F958A8C7: 0.2
@@ -161,6 +161,7 @@ Material:
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _OpaqueCullMode: 2
+    - _QuantizeAmount: 20
     - _QueueControl: 1
     - _QueueOffset: 0
     - _RayTracing: 0
@@ -203,7 +204,7 @@ Material:
     m_Colors:
     - Color_692218A4: {r: 0.101960786, g: 0.6039216, b: 0.99215686, a: 1}
     - Color_7CCE133F: {r: 0.11792451, g: 0.8614541, b: 1, a: 0}
-    - Color_8B0C7504: {r: 0.23829654, g: 0.27417544, b: 0.5943396, a: 0}
+    - Color_8B0C7504: {r: 1, g: 0.25979668, b: 0.19811308, a: 1}
     - Color_9FE5C60C: {r: 0.10849059, g: 0.61193115, b: 1, a: 0}
     - Color_A7197EF5: {r: 0.014198661, g: 1, b: 0, a: 1}
     - Color_CA76E07E: {r: 0.101960786, g: 0.47058824, b: 0.7529412, a: 1}

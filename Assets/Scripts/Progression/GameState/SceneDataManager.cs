@@ -122,6 +122,9 @@ public class SceneDataManager : MonoBehaviour
     {
         if (Esc._IsPauseOn)
             return;
+        if (StateManager._currentState != 2)
+            return;
+        //if (Main.Instance.)
         for (int i = 0; i < 5; i++)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1 + i))

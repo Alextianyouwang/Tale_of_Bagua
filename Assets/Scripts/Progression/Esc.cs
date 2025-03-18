@@ -27,6 +27,8 @@ public class Esc : MonoBehaviour
     {
         if (SceneDataManager._IsAreYouSureActive)
             return;
+        if (StateManager._currentState != 2)
+            return;
 
         if (Input.GetKeyDown(KeyCode.Escape) && !IsDisplayingInfo()) 
         {

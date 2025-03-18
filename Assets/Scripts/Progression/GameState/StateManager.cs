@@ -5,7 +5,7 @@ public class StateManager : MonoBehaviour
 {
     [SerializeField]private StateDataObject[] _stateData;
     [SerializeField] private int _startState;
-    private int _currentState = 0;
+   public static int _currentState = 0;
     public static StateDataObject CurrentState;
 
     public static Action<string> OnSetCurrentStateName;
@@ -13,6 +13,7 @@ public class StateManager : MonoBehaviour
     public static Action<bool> OnToggleMenu;
 
     public GameObject Menu;
+
 
     private void OnEnable()
     {

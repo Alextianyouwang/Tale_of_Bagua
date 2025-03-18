@@ -7021,6 +7021,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1965164844649248522, guid: 3e8c8a952c4cc734fb067eb9d8a77127, type: 3}
+      propertyPath: _levelIndex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2038389011291891338, guid: 3e8c8a952c4cc734fb067eb9d8a77127, type: 3}
       propertyPath: m_LocalPosition.y
       value: 9.87
@@ -7053,6 +7057,10 @@ PrefabInstance:
       propertyPath: _eventBlock
       value: 
       objectReference: {fileID: 11400000, guid: ad5a5b989dcb84941bad9ddccffb0cc3, type: 2}
+    - target: {fileID: 7991147643114855549, guid: 3e8c8a952c4cc734fb067eb9d8a77127, type: 3}
+      propertyPath: _levelIndex
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8333103056961652557, guid: 3e8c8a952c4cc734fb067eb9d8a77127, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0

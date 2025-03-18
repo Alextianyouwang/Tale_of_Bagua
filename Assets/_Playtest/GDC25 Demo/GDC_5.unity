@@ -669,6 +669,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1755152809}
     m_Modifications:
+    - target: {fileID: 4623162026384730110, guid: 9597d0d2fa913bc44a82c8b45d49d425, type: 3}
+      propertyPath: ActivateDirection
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5033074645785709109, guid: 9597d0d2fa913bc44a82c8b45d49d425, type: 3}
       propertyPath: m_Name
       value: OnewayWall (7)

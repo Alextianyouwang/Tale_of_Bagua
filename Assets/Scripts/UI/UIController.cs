@@ -122,7 +122,7 @@ public class UIController : MonoBehaviour
 
 
             mirrorMargin = Mathf.Lerp(originalMargin, targetMargin, percent);
-            Vector3[] corners = Util_GetMirrorCorner(LevelManager._HoodMirrors, 2, mirrorMargin);
+            Vector3[] corners = Util_GetMirrorCorner(LevelManager._HoodMirrors, 0, mirrorMargin);
 
             if (!onlyAnimateMaterial)
             for (int i = 0; i < 4; i++)

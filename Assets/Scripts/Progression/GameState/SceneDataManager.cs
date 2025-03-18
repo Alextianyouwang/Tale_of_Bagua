@@ -126,8 +126,6 @@ public class SceneDataManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Alpha1 + i))
             {
-                if (_currentScene == i)
-                    continue;
                 _currentScenePreviousDataSaver = _currentScene;
                 AreYouSurePanel.SetActive(true);
                 AreYouSurePanaelText.text = $"Are you sure about skipping to level {i + 1}? Your Progress won't be saved";

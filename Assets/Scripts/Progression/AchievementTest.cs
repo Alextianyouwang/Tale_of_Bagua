@@ -51,6 +51,7 @@ public class AchievementTest : RationalObject, IInteractable, IDataPersistence
         GetComponent<MeshRenderer>().material.SetColor("_BaseColor", Color.green);
 
     }
+    public Orientation GetIconOrientation() => Orientation.Top;
     public void DetactPlayer() { }
 
     public void Hold() { }

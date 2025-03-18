@@ -3,12 +3,12 @@ using UnityEngine;
 public class LazerEmitter : Lazer, IInteractable
 {
     [ReadOnly]
-    public Lazer_Helper.Orientation OrientationOptions;
+    public Orientation OrientationOptions;
     [Button]
     public void UpdateOriantation()
     {
-        OrientationOptions = Lazer_Helper.NextOriantation(OrientationOptions, 1);
-        Lazer_Helper.Editor_ChangeOriantationUI(OrientationOptions,VisualCueUI);
+        OrientationOptions = DirectionHelper.NextOriantation(OrientationOptions, 1);
+        DirectionHelper.Editor_ChangeOriantationUI(OrientationOptions,VisualCueUI);
     }
     public void DetactPlayer() { }
 
@@ -27,6 +27,7 @@ public class LazerEmitter : Lazer, IInteractable
         StopAllLazerInChain();
     }
     public bool IsVisible() => IsObjectVisibleAndSameLevelWithPlayer();
-    public IconType GetIconType() => IconType.kavaii;
+    public IconType GetIconType() => IconType.space;
+    public Orientation GetIconOrientation() => Orientation.Top;
 
 }

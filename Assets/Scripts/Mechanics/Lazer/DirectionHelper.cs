@@ -1,8 +1,7 @@
 using UnityEngine;
 
-public class Lazer_Helper 
+public class DirectionHelper 
 {
-    public enum Orientation { Top, Right, Bot, Left }
     public enum ReflectionDirection { ForSlash, BackSlash}
     public static void Editor_ChangeOriantationUI(Orientation orientationOptions, GameObject visual)
     {

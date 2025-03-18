@@ -4,7 +4,7 @@ using System;
 public class PlayerInteract : MonoBehaviour
 {
     public float InteractionDistance = 0.5f;
-    public static Action<Vector3,IconType> OnDetactPlayer;
+    public static Action<Vector3,IconType,Orientation> OnDetactPlayer;
     public static Action OnLostPlayer;
     private IInteractable currentInteract, previousInteract;
 
@@ -28,7 +28,7 @@ public class PlayerInteract : MonoBehaviour
 
         if (currentInteract != null && currentInteract.IsVisible() && currentInteract.IsActive()) 
         {
-            OnDetactPlayer?.Invoke((currentInteract as MonoBehaviour).transform.position + Vector3.forward * 0.5f, currentInteract.GetIconType());
+            OnDetactPlayer?.Invoke((currentInteract as MonoBehaviour).transform.position + Vector3.forward * 0.5f, currentInteract.GetIconType(), currentInteract.GetIconOrientation());
         }
         if (currentInteract != null && currentInteract != previousInteract ) 
         {

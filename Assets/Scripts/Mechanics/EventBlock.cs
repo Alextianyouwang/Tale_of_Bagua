@@ -15,7 +15,7 @@ public class EventBlock : RationalObject, IInteractable
 
     public IconType GetIconType()
     {
-        return IconType.kavaii;
+        return IconType.space;
     }
 
     public void Hold()
@@ -27,7 +27,7 @@ public class EventBlock : RationalObject, IInteractable
     {
      
     }
-
+    public Orientation GetIconOrientation() => Orientation.Top;
     public bool IsActive()
     {
         return true;

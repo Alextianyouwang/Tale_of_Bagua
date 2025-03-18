@@ -13,8 +13,8 @@ public abstract class Lazer : RationalObject
     private int _rayThroughCount = 0;
     public int RayThroughCount => _rayThroughCount;
 
-    protected Lazer_Helper.Orientation _orientation;
-    public Lazer_Helper.Orientation Orientation => _orientation;
+    protected Orientation _orientation;
+    public Orientation Orientation => _orientation;
     protected void OnEnable()
     {
         _path = new List<Lazer>();
@@ -79,12 +79,12 @@ public abstract class Lazer : RationalObject
         }
     }
     protected void ShootLazer(int steps, float increment,
-        Lazer_Helper.Orientation orientaion,  out RationalObject hit) 
+        Orientation orientaion,  out RationalObject hit) 
     {
         PrepareLineVisual();
         _rayCastPositionTracker.Clear();
         _orientation = orientaion;
-        Vector3 direction=  Lazer_Helper.GetDirection(orientaion);
+        Vector3 direction=  DirectionHelper.GetDirection(orientaion);
         Vector3 currentPosition = transform.position;
         hit = null;
         for (int i = 0; i < steps; i++) 

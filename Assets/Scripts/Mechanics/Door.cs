@@ -1,11 +1,10 @@
 
 using UnityEngine;
-
 public class Door : RationalObject, IInteractable
 {
     private BoxCollider _doorCollider;
     private MeshRenderer _doorRenderer;
-    public enum OpenDirection { Top, Bot, Left, Right }
+    public enum OpenDirection { Top, Right ,Bot, Left }
     public OpenDirection ActivateDirection;
     protected  void OnEnable()
     {
@@ -16,6 +15,8 @@ public class Door : RationalObject, IInteractable
     protected  void OnDisable()
     {
     }
+
+    public Orientation GetIconOrientation() => (Orientation)ActivateDirection;
 
     public void Interact(Vector3 pos)
     {

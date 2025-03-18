@@ -31,7 +31,7 @@ public class MoveGateTrigger : RationalObject, IInteractable
             
 
     }
-
+    public Orientation GetIconOrientation() => Orientation.Top;
     public void Hold() { }
 
     public void Disengage()

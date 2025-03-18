@@ -2,8 +2,8 @@
 using UnityEngine;
 using System;
 
-public class NPC_Controller : RationalObject,IInteractable
-{ 
+public class NPC_Controller : RationalObject, IInteractable
+{
     public Action<Vector3, TextAsset, Sprite> OnDetactPlayer;
     public Action OnLostPlayer;
     public TextAsset InkDialogueAsset;
@@ -14,9 +14,9 @@ public class NPC_Controller : RationalObject,IInteractable
     public DialogueProgressionSetting[] ProgressionSettings;
 
     [Serializable]
-    public class DialogueProgressionSetting 
+    public class DialogueProgressionSetting
     {
-        [Header (">>>>>>>>>>> Always Move to the Next Interaction When Clicked")]
+        [Header(">>>>>>>>>>> Always Move to the Next Interaction When Clicked")]
         public bool progressRegardless;
 
         [Header(">>>>>>>>>>> Only Move to the Next Interaction When Condition Satisfied")]
@@ -27,21 +27,22 @@ public class NPC_Controller : RationalObject,IInteractable
         public string progressEventName;
     }
     protected void OnEnable()
-    { 
-        DialogueManager.OnGeneralEventCalledGlobal+= ReceiveGeneralEvent;
+    {
+        DialogueManager.OnGeneralEventCalledGlobal += ReceiveGeneralEvent;
     }
     protected void OnDisable()
     {
-        DialogueManager.OnGeneralEventCalledGlobal-= ReceiveGeneralEvent;
+        DialogueManager.OnGeneralEventCalledGlobal -= ReceiveGeneralEvent;
     }
-    public void Interact(Vector3 pos) 
+    public void Interact(Vector3 pos)
     {
         NPC_Manager.currentNPC = this;
         OnPlayDialogue?.Invoke(InkDialogueAsset, IconImage);
     }
     public void Hold() { }
-
+    public Orientation GetIconOrientation() => Orientation.Top;
     public void Disengage() { }
+
     public bool IsVisible() 
     {
         return IsObjectVisibleAndSameLevelWithPlayer();

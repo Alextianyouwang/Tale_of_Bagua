@@ -3,12 +3,12 @@ using UnityEngine;
 public class LazerReflector : Lazer, IInteractable
 {
     [ReadOnly]
-    public Lazer_Helper.ReflectionDirection ReflectionOptions;
+    public DirectionHelper.ReflectionDirection ReflectionOptions;
     [Button]
     public void UpdateOriantation()
     {
-        ReflectionOptions = Lazer_Helper.NextReflectionDirection(ReflectionOptions);
-        Lazer_Helper.Editor_ChangeReflectionUI(ReflectionOptions, VisualCueUI);
+        ReflectionOptions = DirectionHelper.NextReflectionDirection(ReflectionOptions);
+        DirectionHelper.Editor_ChangeReflectionUI(ReflectionOptions, VisualCueUI);
     }
     protected new void OnEnable()
     {
@@ -16,7 +16,7 @@ public class LazerReflector : Lazer, IInteractable
     }
     public void BranchReceived(RationalObject ro)
     {
-        Lazer_Helper.Orientation o = Lazer_Helper.GetReflectedDirection(ReflectionOptions, _upstreamEmitter.Orientation);
+        Orientation o = DirectionHelper.GetReflectedDirection(ReflectionOptions, _upstreamEmitter.Orientation);
         RationalObject hit;
         ShootLazer(80, 0.23f,o, out hit);
         ProcessChain(hit);
@@ -27,10 +27,10 @@ public class LazerReflector : Lazer, IInteractable
         UpdateOriantation();
     }
     public void DetactPlayer() { }
-
+    public Orientation GetIconOrientation() => Orientation.Top;
     public void Hold() { }
     public void Disengage() {}
     public bool IsVisible() => IsObjectVisibleAndSameLevelWithPlayer();
-    public IconType GetIconType() => IconType.kavaii;
+    public IconType GetIconType() => IconType.space;
 
 }

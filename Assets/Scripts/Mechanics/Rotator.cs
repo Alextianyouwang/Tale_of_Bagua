@@ -46,7 +46,7 @@ public class Rotator : RationalObject, IInteractable
     {
 
     }
-
+    public Orientation GetIconOrientation() => Orientation.Top;
     public bool IsVisible()
     {
         return IsObjectVisibleAndSameLevelWithPlayer();

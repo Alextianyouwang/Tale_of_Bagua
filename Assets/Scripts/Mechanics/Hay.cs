@@ -18,6 +18,7 @@ public class Hay : RationalObject,IFlammable {
         _initialColor = _mr.material.GetColor("_BaseColor");
         _mpb = new MaterialPropertyBlock();
         //_mpb.SetColor("_BaseColor", _initialColor);
+        _mpb.SetFloat("_BurnAmount", 0);
         _mr.SetPropertyBlock(_mpb);
 
         smokePS = GetComponentInChildren<ParticleSystem>();

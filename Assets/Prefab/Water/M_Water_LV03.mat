@@ -23,7 +23,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: mat_water_autoPond 1
+  m_Name: M_Water_LV03
   m_Shader: {fileID: -6465566751694194690, guid: de28e9bcfd0678640893b6e060fbac81, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -45,7 +45,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_5917C0F1:
-        m_Texture: {fileID: 2800000, guid: cfcefe14a578fe545acd4113168f5c65, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0a0c0f58ea6e1f04c8c03cf5fc886be9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_7255C4CD:
@@ -122,32 +122,32 @@ Material:
     - Vector1_33D6ED88: 0
     - Vector1_3770B5C: 3
     - Vector1_38047C91: 0.5
-    - Vector1_40C5EB4E: 0.523
+    - Vector1_40C5EB4E: 0.4
     - Vector1_41FAE320: 2.97
     - Vector1_490079ED: 11.14
-    - Vector1_4C7B0289: 0.05
+    - Vector1_4C7B0289: -0.3
     - Vector1_4ED49B17: 4.17
     - Vector1_52E31C97: 0.43
-    - Vector1_5A3E2040: -0.54
-    - Vector1_5CCADC29: -0.48
+    - Vector1_5A3E2040: 0.14
+    - Vector1_5CCADC29: 0.38
     - Vector1_68B44540: 0
     - Vector1_717649CF: 0.5
     - Vector1_80F9EA72: 0
-    - Vector1_81D95DDA: 0.27
+    - Vector1_81D95DDA: 0.01
     - Vector1_8280C9BC: -0.39
-    - Vector1_894FE3F1: 0.465
+    - Vector1_894FE3F1: 0.426
     - Vector1_965BA36C: 3
     - Vector1_A465D6C0: 3.35
     - Vector1_A6818E9E: 1
     - Vector1_B2C28A3D: 2.1
     - Vector1_B5C121FC: 0.3
-    - Vector1_C17124A0: 0.65
+    - Vector1_C17124A0: 1.16
     - Vector1_DFF69F7C: 0.025
     - Vector1_E280F477: 0.248
     - Vector1_E54BAFA9: 0.19
-    - Vector1_E7F1FCE4: -1.12
+    - Vector1_E7F1FCE4: 0.66
     - Vector1_F958A8C7: 0.2
-    - Vector1_FCCF8EB4: 0.25
+    - Vector1_FCCF8EB4: 0.07
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaCutoffEnable: 1
@@ -227,8 +227,8 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Color_692218A4: {r: 0.101960786, g: 0.6039216, b: 0.99215686, a: 1}
-    - Color_7CCE133F: {r: 1, g: 0.75157225, b: 0.94544333, a: 1}
-    - Color_8B0C7504: {r: 0.40697443, g: 0.3657291, b: 0.57861626, a: 1}
+    - Color_7CCE133F: {r: 0.0047169924, g: 0.24670747, b: 1, a: 0}
+    - Color_8B0C7504: {r: 1, g: 0.7998006, b: 0.39937097, a: 1}
     - Color_9FE5C60C: {r: 1, g: 1, b: 1, a: 0}
     - Color_A7197EF5: {r: 0.014198661, g: 1, b: 0, a: 1}
     - Color_CA76E07E: {r: 0.101960786, g: 0.47058824, b: 0.7529412, a: 1}

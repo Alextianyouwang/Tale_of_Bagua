@@ -14,6 +14,7 @@ public class SceneDataManager : MonoBehaviour
 
     private SceneDataCommunicator _currentCommunicator;
     private int _currentScene = 0;
+    private int _currentScenePreviousDataSaver = 0;
 
     public static Action<SceneDataCommunicator> OnUpdateSceneInfoText;
     public static Action OnSceneFinishedLoading;
@@ -25,7 +26,7 @@ public class SceneDataManager : MonoBehaviour
     public void Awake()
     {
         InitializeTempSceneInfo();
-        GetCurrentSceneData();
+        //GetCurrentSceneData();
     }
 
     public void OnEnable()
@@ -47,20 +48,20 @@ public class SceneDataManager : MonoBehaviour
     }
     public void SaveData(ref GameData data) 
     {
-        GetCurrentSceneData();
-   
-        data.SceneInfos = _tempSceneInfo;
-        data.CurrentScene = _currentScene;
+       // GetCurrentSceneData();
+       //
+       // data.SceneInfos = _tempSceneInfo;
+       // data.CurrentScene = _currentScene;
     }
 
     public void LoadData(GameData data) 
     {
  
-        _tempSceneInfo = data.SceneInfos;
-        _currentScene = data.CurrentScene;
-        _tempTestObjectStates = data.TestObjectStates;
-        if (Main.Instance.LoadingGame_co == null)
-            Main.Instance.LoadingGame_co = Main.Instance.StartCoroutine(ImplementAllScenes(data));
+       // _tempSceneInfo = data.SceneInfos;
+       // _currentScene = data.CurrentScene;
+       // _tempTestObjectStates = data.TestObjectStates;
+       // if (Main.Instance.LoadingGame_co == null)
+       //     Main.Instance.LoadingGame_co = Main.Instance.StartCoroutine(ImplementAllScenes(data));
     }
     public void GetCommunicator() 
     {
@@ -110,6 +111,12 @@ public class SceneDataManager : MonoBehaviour
         _currentScene--;
         Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[_currentScene].Name));
     }
+
+    public void SelectSceneToGo(int value) 
+    {
+        _currentScene = value;
+        Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[value].Name));
+    }
     //GDC 2025
     public void Update()
     {
@@ -121,6 +128,7 @@ public class SceneDataManager : MonoBehaviour
             {
                 if (_currentScene == i)
                     continue;
+                _currentScenePreviousDataSaver = _currentScene;
                 AreYouSurePanel.SetActive(true);
                 AreYouSurePanaelText.text = $"Are you sure about skipping to level {i + 1}? Your Progress won't be saved";
                 _IsAreYouSureActive = true;
@@ -130,7 +138,6 @@ public class SceneDataManager : MonoBehaviour
                 MirrorManager.CanUseLeftClick = false;
                 MirrorManager.CanUseRightClick = false;
 
-
                 break; // Exit loop after finding a match
             }
         }
@@ -139,6 +146,7 @@ public class SceneDataManager : MonoBehaviour
 
     public void SetAreYouSureToFalse() 
     {
+       _currentScene = _currentScenePreviousDataSaver;
         _IsAreYouSureActive = false;
         PlayerMove.canUseWASD = true;
         MirrorManager.CanUseLeftClick = true;
@@ -146,6 +154,7 @@ public class SceneDataManager : MonoBehaviour
     }
     public void GoToScene() 
     {
+        _currentScene = _levelYouWillBeVisiting;
          Main.Instance.StartCoroutine(LoadLevel(_sceneDatas[_levelYouWillBeVisiting].Name));
     }
     private IEnumerator LoadLevel(string sceneName)

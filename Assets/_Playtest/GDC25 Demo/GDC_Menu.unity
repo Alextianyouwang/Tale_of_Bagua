@@ -1962,6 +1962,21 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8085033172866274032, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
       insertIndex: -1
       addedObject: {fileID: 912488571}
+    - targetCorrespondingSourceObject: {fileID: 8085033172866274032, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 912488577}
+    - targetCorrespondingSourceObject: {fileID: 8085033172866274032, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 912488576}
+    - targetCorrespondingSourceObject: {fileID: 8085033172866274032, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 912488575}
+    - targetCorrespondingSourceObject: {fileID: 8085033172866274032, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 912488574}
+    - targetCorrespondingSourceObject: {fileID: 8085033172866274032, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 912488578}
   m_SourcePrefab: {fileID: 100100000, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
 --- !u!114 &912488570 stripped
 MonoBehaviour:
@@ -2030,6 +2045,157 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   Event: {fileID: 11400000, guid: 1a7023d46ccd58c49a89d4675d2c301b, type: 2}
+--- !u!114 &912488573 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8442014645687272728, guid: bc1973d78de5fb142a16f546e80ed539, type: 3}
+  m_PrefabInstance: {fileID: 912488569}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15316862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09d397b323951ce41815158f7b39c713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &912488574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15316862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 912488573}
+        m_TargetAssemblyTypeName: SceneDataManager, Assembly-CSharp
+        m_MethodName: SelectSceneToGo
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: 8850fda3b6808994ba676560d7df390e, type: 2}
+--- !u!114 &912488575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15316862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 912488573}
+        m_TargetAssemblyTypeName: SceneDataManager, Assembly-CSharp
+        m_MethodName: SelectSceneToGo
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: bec68fc6e2da0c34ea11811f1a615ae0, type: 2}
+--- !u!114 &912488576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15316862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 912488573}
+        m_TargetAssemblyTypeName: SceneDataManager, Assembly-CSharp
+        m_MethodName: SelectSceneToGo
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: 68513dadd8b41484cb237adabfd3aea6, type: 2}
+--- !u!114 &912488577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15316862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 912488573}
+        m_TargetAssemblyTypeName: SceneDataManager, Assembly-CSharp
+        m_MethodName: SelectSceneToGo
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: f252c6c13b5f23f479ef33817e60d194, type: 2}
+--- !u!114 &912488578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15316862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 912488570}
+        m_TargetAssemblyTypeName: StateManager, Assembly-CSharp
+        m_MethodName: NextState
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: 7a5a40770db1aaf4398cb5c88278781b, type: 2}
 --- !u!1 &940052994
 GameObject:
   m_ObjectHideFlags: 0

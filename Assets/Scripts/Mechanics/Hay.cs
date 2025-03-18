@@ -7,15 +7,21 @@ public class Hay : RationalObject,IFlammable {
     private MaterialPropertyBlock _mpb;
     private Color _initialColor;
     private bool _isIngnited = false;
-    [SerializeField]private float _fullyIgniteTime = 1f;
+    [SerializeField] private ParticleSystem smokePS;
+    [SerializeField] private float _fullyIgniteTime = 1f;
     [SerializeField] private float _burnOutTime = 5f;
 
 
     private void OnEnable()
     {
         _mr = GetComponent<MeshRenderer>();
-        _initialColor = _mr.material.color;
+        _initialColor = _mr.material.GetColor("_BaseColor");
         _mpb = new MaterialPropertyBlock();
+        //_mpb.SetColor("_BaseColor", _initialColor);
+        _mr.SetPropertyBlock(_mpb);
+
+        smokePS = GetComponentInChildren<ParticleSystem>();
+
         OnReceive += RecieveLazer;
     }
     private void RecieveLazer(RationalObject ro)
@@ -32,6 +38,9 @@ public class Hay : RationalObject,IFlammable {
     private IEnumerator IgnitionRoutine(float fullyIgniteTime, float burnOutTime)
     {
         float fullyIgnite = 0;
+
+        if(smokePS != null)
+            smokePS.Play();
 
         while (fullyIgnite < fullyIgniteTime) { 
             fullyIgnite += Time.deltaTime;
@@ -52,6 +61,7 @@ public class Hay : RationalObject,IFlammable {
                 expendCheck += 0.25f;
             }
             _mpb.SetColor("_BaseColor", Color.Lerp(Color.red, Color.black, burnOutPercent));
+            _mpb.SetFloat("_BurnAmount", burnOutPercent);
             _mr.SetPropertyBlock(_mpb);
             yield return null;
         }

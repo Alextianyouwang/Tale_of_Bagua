@@ -7,7 +7,7 @@ public class Hay : RationalObject,IFlammable {
     private MaterialPropertyBlock _mpb;
     private Color _initialColor;
     private bool _isIngnited = false;
-    [SerializeField] private ParticleSystem smokePS;
+    private ParticleSystem smokePS;
     [SerializeField] private float _fullyIgniteTime = 1f;
     [SerializeField] private float _burnOutTime = 5f;
 

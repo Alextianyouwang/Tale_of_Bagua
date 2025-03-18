@@ -330,7 +330,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &15126219
 Transform:
   m_ObjectHideFlags: 0
@@ -9314,7 +9314,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 912affb48c7649f42971fbb18633b5fc, type: 2}
     - target: {fileID: 919132149155446097, guid: b72067f34c6be7042aacf8fbaf4b7dfd, type: 3}
       propertyPath: m_Name
-      value: Prop_Stairs_Single_Castle_Dungeon_Stone_04
+      value: ExitStairs_0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b72067f34c6be7042aacf8fbaf4b7dfd, type: 3}
       propertyPath: m_Layer
@@ -12538,7 +12538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1083223305
 Transform:
   m_ObjectHideFlags: 0
@@ -16671,7 +16671,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 0e4868f39278da3489bd18cf38cd37e6, type: 2}
     - target: {fileID: 919132149155446097, guid: b72067f34c6be7042aacf8fbaf4b7dfd, type: 3}
       propertyPath: m_Name
-      value: Prop_Stairs_Single_Castle_Dungeon_Stone_04 (2)
+      value: ExitStairs_2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b72067f34c6be7042aacf8fbaf4b7dfd, type: 3}
       propertyPath: m_Layer
@@ -21008,7 +21008,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1841911673
 Transform:
   m_ObjectHideFlags: 0
@@ -21993,7 +21993,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 304a8ca09c6ad0c4ab1408d538f402ad, type: 2}
     - target: {fileID: 919132149155446097, guid: b72067f34c6be7042aacf8fbaf4b7dfd, type: 3}
       propertyPath: m_Name
-      value: Prop_Stairs_Single_Castle_Dungeon_Stone_04 (1)
+      value: ExitStairs_1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b72067f34c6be7042aacf8fbaf4b7dfd, type: 3}
       propertyPath: m_Layer

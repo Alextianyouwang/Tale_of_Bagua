@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class WorldUIManager : MonoBehaviour
 {
@@ -26,6 +25,7 @@ public class WorldUIManager : MonoBehaviour
 
         spaceUI_prefab = Resources.Load<GameObject>("UI/P_UISpace");
         spaceUI_instance = Instantiate(spaceUI_prefab);
+        spaceUI_instance.SetActive(false);
 
     }
 

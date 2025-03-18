@@ -64,6 +64,8 @@ public class PersistenceDataManager : MonoBehaviour
     }
     public void StartGame() 
     {
+        if (!EnableSaveLoad)
+            return;
         CreateNewGameDataIfNull();
         _dataPersistenceObjects.ToList().ForEach(x => x.LoadData(_gameData[_gameDataIndex]));
         GetComponent<SceneDataManager>().LoadData(_gameData[_gameDataIndex]);
@@ -112,11 +114,15 @@ public class PersistenceDataManager : MonoBehaviour
     // Make sure type like dictionary are correctly initialized with values.
     public void SaveDataPersistentObject() 
     {
+        if (!EnableSaveLoad)
+            return;
         _dataPersistenceObjects.ToList().ForEach(x => x.SaveData(ref _gameData[_gameDataIndex]));
     }
 
     public void SetSlotIndex(int value)
     {
+        if (!EnableSaveLoad)
+            return;
         _gameDataIndex = value;
         OnChangeSaveSlot?.Invoke(_gameDataIndex);
         LogManager.Log($"Active save slot: {_gameDataIndex}");

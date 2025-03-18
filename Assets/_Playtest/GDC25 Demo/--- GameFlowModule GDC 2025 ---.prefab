@@ -3746,7 +3746,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 102, y: -37.3}
+  m_AnchoredPosition: {x: 102, y: -37.30005}
   m_SizeDelta: {x: 156.64, y: 44.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1877310540064655729
@@ -4612,6 +4612,7 @@ GameObject:
   - component: {fileID: 2396530125506463796}
   - component: {fileID: 1963266778335049527}
   - component: {fileID: 1870661583842542510}
+  - component: {fileID: 5096899991403455024}
   m_Layer: 0
   m_Name: --- GameFlowModule GDC 2025 ---
   m_TagString: Untagged
@@ -4702,8 +4703,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f831b0b9be1be0a4384fceb9a0867f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnableSaveLoad: 1
-  FileName: GDC2025_GameSaveData.txt
+  EnableSaveLoad: 0
+  FileName: GDC2025GameData.txt
 --- !u!114 &2396530125506463796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4719,7 +4720,7 @@ MonoBehaviour:
   _stateData:
   - {fileID: 11400000, guid: 701c31f938af7c24cb7444838e762601, type: 2}
   - {fileID: 11400000, guid: 7eea56e9df51aeb429e111b4317818d0, type: 2}
-  - {fileID: 11400000, guid: 7c9df1202c7db4949a32573cf9849738, type: 2}
+  - {fileID: 11400000, guid: 25553cc2c893b9f4a84dbe6713144698, type: 2}
   - {fileID: 11400000, guid: 5d64c880e7044c245839db79bfbb57a0, type: 2}
   _startState: 2
 --- !u!114 &1963266778335049527
@@ -4762,7 +4763,35 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  Event: {fileID: 11400000, guid: d7c7223927dd5224a9ca3de158e7c0d5, type: 2}
+  Event: {fileID: 11400000, guid: 1182cbe07fc0a0b42b4335b9226e00b6, type: 2}
+--- !u!114 &5096899991403455024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8085033172866274032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33757533a5cf3cc428abab2b12d248bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventResponser:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2396530125506463796}
+        m_TargetAssemblyTypeName: StateManager, Assembly-CSharp
+        m_MethodName: NextState
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  Event: {fileID: 11400000, guid: ad5a5b989dcb84941bad9ddccffb0cc3, type: 2}
 --- !u!1 &8249854947162250525
 GameObject:
   m_ObjectHideFlags: 0

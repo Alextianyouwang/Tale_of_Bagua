@@ -26,11 +26,11 @@ public class NextLine : MonoBehaviour
 
             if (!bagua)
                 continue;
-            if (dialogueIndex == 5) 
+            if (dialogueIndex == 7) 
             {
                 bagua.SetActive(true);
             }
-            if (dialogueIndex == 6)
+            if (dialogueIndex == 12)
                 bagua.SetActive(false);
         }
 

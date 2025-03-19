@@ -50,7 +50,7 @@ public class NPC_Controller : RationalObject, IInteractable
     public void DetactPlayer() { }
     public IconType GetIconType() 
     {
-        return IconType.exclamation;
+        return IconType.space;
     }
     public bool IsActive() 
     {

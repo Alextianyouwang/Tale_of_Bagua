@@ -27,6 +27,7 @@ public class Tutorial : MonoBehaviour
     private bool hasPressedW = false, hasPressedD = false, hasPressedS = false, hasPressedA = false;
 
     [SerializeField]private bool _mirrorMoveTutorialAtStart = false;
+    [SerializeField] private bool _movementTutorialAtStart = false;
 
     [ColorUsage(true, true)]
     public Color normalCol;
@@ -107,7 +108,8 @@ public class Tutorial : MonoBehaviour
 
         InitialArrowData();
 
-        MovementTutorial();
+        if (_movementTutorialAtStart)
+            MovementTutorial();
 
     }
 
@@ -313,6 +315,7 @@ public class Tutorial : MonoBehaviour
 
         bool ping = false, pong = true;
         MaterialPropertyBlock mbp = new MaterialPropertyBlock();
+        PlayerMove.canUseWASD = false;
         int counter = 0;
         while (!exitCondition.Invoke())
         {
@@ -360,6 +363,7 @@ public class Tutorial : MonoBehaviour
             clickUI.GetComponent<Renderer>().SetPropertyBlock(mbp);
             yield return null;
         }
+        PlayerMove.canUseWASD = true;
         clickUI.SetActive(false);
     }
   

@@ -11503,6 +11503,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4880413577600400937, guid: a1913f31fdd476c4eb58eee586205917, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4880413577600400937, guid: a1913f31fdd476c4eb58eee586205917, type: 3}
+      propertyPath: _movementTutorialAtStart
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6355570089406876096, guid: a1913f31fdd476c4eb58eee586205917, type: 3}

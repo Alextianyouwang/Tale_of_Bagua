@@ -1,5 +1,4 @@
 === 0Interaction ===
-Do not step into the <color=\#F8FF30>Rice Field</color>, young man! 
-It's water and mud everywhere.
-Try to stay on the <color=\#F8FF30>platforms</color>... But how do you travel between them?
+Do not step into the <color=\#F8FF30>Rice Field</color>, young man! There's wet mud everywhere.
+You can't go further from this dock. Try finding another way around...
 -> END
